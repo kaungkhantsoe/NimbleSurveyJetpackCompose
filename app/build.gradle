@@ -20,6 +20,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -41,6 +44,45 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+    def props = new Properties()
+    new File(rootDir,"signing.properties").withInputStream { s ->
+        props.load(s)
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        prod {
+            dimension "version"
+            applicationId "com.kks.nimblesurveyjetpackcompose"
+        }
+
+        dev {
+            dimension "version"
+            // Staging AppId should be different from the real production.
+            applicationId "com.kks.nimblesurveyjetpackcomposestaging"
+        }
+    }
+
+    signingConfigs {
+        //keytool -genkey -v -keystore debug.keystore -alias debug-key-alias -keyalg RSA -keysize 2048 -validity 10000
+        debug {
+            storeFile file("../config/debug.keystore")
+            storePassword "123456"
+            keyAlias "debug-key-alias"
+            keyPassword "123456"
+        }
+        release {
+            try {
+                storeFile file("../config/nimblesurveycompose.keystore")
+                storePassword props.getProperty("KEYSTORE_PASSWORD")
+                keyAlias props.getProperty("KEY_ALIAS")
+                keyPassword props.getProperty("KEY_PASSWORD")
+            }
+            catch (ex) {
+                throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+            }
         }
     }
 }
