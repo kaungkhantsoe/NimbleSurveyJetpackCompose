@@ -37,8 +37,8 @@ jobs:
       - name: Run lint
         run: ./gradlew lint
 
-      - name: Run unit test and Jacoco Coverage
-        run: ./gradlew :app:testDevDebugUnitTestCoverage
+      - name: Run unit test and Kover Coverage
+        run: ./gradlew :app:koverXmlReport
 
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
