@@ -10,7 +10,8 @@ on:
       - 'release/**'
 
 jobs:
-  build:
+  build_and_release_job:
+    name: Build and release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
