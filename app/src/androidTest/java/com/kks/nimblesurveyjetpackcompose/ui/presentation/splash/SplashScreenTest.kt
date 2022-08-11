@@ -6,7 +6,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,5 +24,6 @@ class SplashScreenTest {
             }
         }
         composeTestRule.onNodeWithContentDescription(SPLASH_BACKGROUND_IMAGE).assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription(SPLASH_LOGO_IMAGE).assertIsDisplayed()
     }
 }
