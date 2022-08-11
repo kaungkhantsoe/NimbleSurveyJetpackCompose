@@ -1,4 +1,3 @@
-@file:Suppress("UnusedPrivateMember")
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.splash
 
 import androidx.compose.foundation.Image

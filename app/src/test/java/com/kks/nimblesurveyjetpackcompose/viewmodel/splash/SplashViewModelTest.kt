@@ -1,7 +1,7 @@
 package com.kks.nimblesurveyjetpackcompose.viewmodel.splash
 
 import com.kks.nimblesurveyjetpackcompose.base.BaseViewModelTest
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class SplashViewModelTest : BaseViewModelTest() {
 
             var actual = false
             launch {
-                delay(2000)
+                delay(SPLASH_TIME)
                 actual = viewModel.shouldNavigateToLogin.value
             }
             advanceUntilIdle()
