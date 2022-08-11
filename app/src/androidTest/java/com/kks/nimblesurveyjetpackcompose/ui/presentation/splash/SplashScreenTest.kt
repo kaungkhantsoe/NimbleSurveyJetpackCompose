@@ -17,7 +17,7 @@ class SplashScreenTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun whenSplashScreenStart_showBothBackgroundImageAndLogoImage() {
+    fun when_splash_screen_start_show_both_background_image_and_logo_image() {
         composeTestRule.setContent {
             NimbleSurveyJetpackComposeTheme {
                 SplashScreen(EmptyDestinationsNavigator)
