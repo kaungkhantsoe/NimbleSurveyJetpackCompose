@@ -16,7 +16,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun LoginScreen() {
     val activity = (LocalContext.current as? Activity)
 
-    // TODO: Remove this code when implementing UI for Login at https://github.com/kaungkhantsoe/NimbleSurveyJetpackCompose/issues/15
+    //  TODO: Remove this code when implementing UI for Login at https://github.com/kaungkhantsoe/NimbleSurveyJetpackCompose/issues/15
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
