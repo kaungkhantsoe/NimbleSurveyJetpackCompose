@@ -4,7 +4,6 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.devtools.ksp' version '1.6.10-1.0.2'
 }
-apply from: "$project.rootDir/config/jacoco.gradle"
 
 android {
     compileSdk 32
@@ -24,7 +23,6 @@ android {
 
     buildTypes {
         debug {
-            testCoverageEnabled true
             signingConfig signingConfigs.debug
         }
         release {
