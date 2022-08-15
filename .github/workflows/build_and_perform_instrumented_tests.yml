@@ -22,6 +22,11 @@ jobs:
         with:
           java-version: 11
 
+      - name: Decode google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $GOOGLE_SERVICES_JSON | base64 --decode > ./app/google-services.json
+
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
 
