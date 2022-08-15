@@ -14,13 +14,10 @@ import androidx.compose.ui.unit.dp
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
-@Suppress("UnusedPrivateMember")
 @Destination(start = true)
 @Composable
-fun SplashScreen(navigator: DestinationsNavigator) {
+fun SplashScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -44,6 +41,6 @@ fun SplashScreen(navigator: DestinationsNavigator) {
 @Composable
 fun DefaultPreview() {
     NimbleSurveyJetpackComposeTheme {
-        SplashScreen(navigator = EmptyDestinationsNavigator)
+        SplashScreen()
     }
 }
