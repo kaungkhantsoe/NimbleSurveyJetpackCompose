@@ -1,5 +1,5 @@
-# Show Danger test coverage report from Jacoco for template
-jacoco_file = "app/build/reports/jacoco/testDevDebugUnitTestCoverage/testDevDebugUnitTestCoverage.xml"
+# Show Danger test coverage report from Kover for template
+kover_file = "app/build/reports/kover/project-xml/report.xml"
 module_name = "app"
-markdown "## Jacoco report:"
-shroud.reportJacoco module_name,jacoco_file, 80, 95, false
+markdown "## KOver report:"
+shroud.reportKover module_name,kover_file, 80, 95, false
