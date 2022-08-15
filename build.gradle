@@ -5,6 +5,7 @@ buildscript {
         jacoco_version = '0.8.7'
     }
     dependencies {
+        classpath 'com.google.gms:google-services:4.3.13'
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"
     }
