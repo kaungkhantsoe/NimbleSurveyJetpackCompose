@@ -3,7 +3,7 @@ name: Build And Deploy App to Firebase Distribution
 on:
   push:
     branches:
-      - deveop
+      - develop
 
 jobs:
   build_and_release_job:
