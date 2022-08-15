@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kks.nimblesurveyjetpackcompose.R
@@ -24,13 +25,13 @@ fun SplashScreen() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.splash_bg),
-            contentDescription = "Splash Background",
+            contentDescription = stringResource(id = R.string.splash_background_content_description),
             modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
         )
         Image(
             painter = painterResource(id = R.drawable.ic_logo_white),
-            contentDescription = "Nimble Logo",
+            contentDescription = stringResource(id = R.string.splash_logo_content_description),
             modifier = Modifier
                 .size(201.0.dp, 48.0.dp)
         )
