@@ -6,12 +6,13 @@ import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class SurveyApp: Application() {
+class SurveyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         plantTimber()
     }
 
+    @Suppress("ImplicitDefaultLocale")
     private fun plantTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(object : Timber.DebugTree() {

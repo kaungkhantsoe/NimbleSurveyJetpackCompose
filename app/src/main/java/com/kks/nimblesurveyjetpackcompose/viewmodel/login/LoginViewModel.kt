@@ -15,7 +15,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginRepo: LoginRepo,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-): ViewModel() {
+) : ViewModel() {
 
     fun login() {
         viewModelScope.launch(ioDispatcher) {

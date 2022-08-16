@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 private const val TIMEOUT_SECONDS = 15L
+private const val CHUCKER_MAX_CONTENT_LENGTH = 250000L
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -71,7 +72,7 @@ object NetworkModule {
     @Provides
     fun provideChucker(@ApplicationContext appContext: Context) =
         ChuckerInterceptor.Builder(appContext)
-            .maxContentLength(250000L)
+            .maxContentLength(CHUCKER_MAX_CONTENT_LENGTH)
             .redactHeaders(listOf("Auth-Token"))
             .build()
 
@@ -104,5 +105,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideCustomKeyProvider(@ApplicationContext appContext: Context): CustomKeyProvider = CustomKeyGenerator(appContext)
+    fun provideCustomKeyProvider(@ApplicationContext appContext: Context): CustomKeyProvider =
+        CustomKeyGenerator(appContext)
 }
