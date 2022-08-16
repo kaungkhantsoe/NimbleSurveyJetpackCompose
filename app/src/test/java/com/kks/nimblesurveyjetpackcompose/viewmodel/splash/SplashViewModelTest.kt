@@ -21,8 +21,7 @@ class SplashViewModelTest : BaseViewModelTest() {
 
     @Test
     fun `When splash screen is displayed, shouldNavigateToLogin value is false at first`() {
-        val actual = viewModel.shouldNavigateToLogin.value
-        assertEquals(false, actual)
+        assertEquals(false, viewModel.shouldNavigateToLogin.value)
     }
 
     @Test
