@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private const val SPLASH_TIME = 2000L
+const val SPLASH_TIME = 2000L
 class SplashViewModel(private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
 
     val shouldNavigateToLogin = mutableStateOf(false)
