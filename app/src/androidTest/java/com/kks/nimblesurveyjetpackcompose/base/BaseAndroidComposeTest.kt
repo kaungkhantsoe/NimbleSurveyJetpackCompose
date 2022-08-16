@@ -8,5 +8,5 @@ abstract class BaseAndroidComposeTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    fun getString(resId: Int) = composeTestRule.activity.getString(resId)
+    protected fun getString(resId: Int) = composeTestRule.activity.getString(resId)
 }
