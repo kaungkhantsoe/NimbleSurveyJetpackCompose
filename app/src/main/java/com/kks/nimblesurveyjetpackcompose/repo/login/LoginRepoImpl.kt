@@ -31,10 +31,8 @@ class LoginRepoImpl @Inject constructor(
                         clientId = customKeyProvider.getClientId(),
                         clientSecret = customKeyProvider.getClientSecret()
                     )
-                )
-                    .executeOrThrow()
+                ).executeOrThrow()
             }
-
             when (apiResult) {
                 is ResourceState.Success -> {
                     apiResult.successData?.data?.let { loginResponse ->
@@ -56,9 +54,7 @@ class LoginRepoImpl @Inject constructor(
                         apiResult.error
                     )
                 )
-                else -> {
-                    emit(ResourceState.NetworkError)
-                }
+                else -> { emit(ResourceState.NetworkError) }
             }
         }.catch { error ->
             emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))

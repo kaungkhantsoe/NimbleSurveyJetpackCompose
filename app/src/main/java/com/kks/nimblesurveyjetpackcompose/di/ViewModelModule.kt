@@ -15,7 +15,7 @@ import dagger.hilt.android.components.ViewModelComponent
 object ViewModelModule {
 
     @Provides
-    fun provideLoginRepoImpl(
+    fun provideLoginRepo(
         apiInterface: ApiInterface,
         preferenceManager: PreferenceManager,
         customKeyProvider: CustomKeyProvider

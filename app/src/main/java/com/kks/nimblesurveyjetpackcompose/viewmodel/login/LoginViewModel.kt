@@ -3,6 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.viewmodel.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
+import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +22,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             val test = loginRepo.loginWithEmailAndPassword("kaung@nimblehq.co", "12345678")
             test.collect {
-                Timber.d(it.toString())
+                Timber.d("Result -> ${(it as ResourceState.Error).error}")
             }
         }
     }

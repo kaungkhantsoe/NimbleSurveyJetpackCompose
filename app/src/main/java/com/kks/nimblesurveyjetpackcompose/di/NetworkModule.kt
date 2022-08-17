@@ -9,7 +9,7 @@ import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepoImpl
 import com.kks.nimblesurveyjetpackcompose.util.CustomKeyGenerator
 import com.kks.nimblesurveyjetpackcompose.util.CustomKeyProvider
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
-import com.kks.nimblesurveyjetpackcompose.util.interceptors.CustomAccessTokenInterceptor
+import com.kks.nimblesurveyjetpackcompose.util.interceptors.AccessTokenInterceptor
 import com.kks.nimblesurveyjetpackcompose.util.interceptors.TokenAuthenticator
 import dagger.Lazy
 import dagger.Module
@@ -50,14 +50,14 @@ object NetworkModule {
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         preferenceManager: PreferenceManager,
-        tokenRepo: Lazy<TokenRepoImpl>,
+        tokenRepo: Lazy<TokenRepo>,
         chuckerInterceptor: ChuckerInterceptor,
     ): OkHttpClient {
         return OkHttpClient().newBuilder()
             .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .addInterceptor(chuckerInterceptor)
-            .addInterceptor(CustomAccessTokenInterceptor(preferenceManager, tokenRepo))
+            .addInterceptor(AccessTokenInterceptor(preferenceManager))
             .authenticator(
                 TokenAuthenticator(
                     preferenceManager,

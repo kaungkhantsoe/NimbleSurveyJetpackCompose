@@ -2,6 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.google.gson.Gson
 import com.kks.nimblesurveyjetpackcompose.R
 
@@ -17,19 +18,19 @@ class PreferenceManager(context: Context) {
         )
 
     fun setStringData(key: String, value: String) {
-        preferences.edit().putString(key, value).apply()
+        preferences.edit { putString(key, value) }
     }
 
     fun setIntegerData(key: String, value: Int) {
-        preferences.edit().putInt(key, value).apply()
+        preferences.edit { putInt(key, value) }
     }
 
     fun setLongData(key: String, value: Long) {
-        preferences.edit().putLong(key, value).apply()
+        preferences.edit { putLong(key, value) }
     }
 
     fun setBooleanData(key: String, value: Boolean) {
-        preferences.edit().putBoolean(key, value).apply()
+        preferences.edit { putBoolean(key, value) }
     }
 
     fun <T> setList(key: String?, list: List<T>?) {

@@ -1,5 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.util.interceptors
 
+import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepo
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepoImpl
 import com.kks.nimblesurveyjetpackcompose.util.PREF_ACCESS_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PREF_REFRESH_TOKEN
@@ -21,7 +22,7 @@ Reference: http://sangsoonam.github.io/2019/03/06/okhttp-how-to-refresh-access-t
 @Suppress("ReturnCount", "TooGenericExceptionCaught", "SwallowedException")
 class TokenAuthenticator(
     private val preferenceManager: PreferenceManager,
-    private val tokenRepo: Lazy<TokenRepoImpl>,
+    private val tokenRepo: Lazy<TokenRepo>,
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {

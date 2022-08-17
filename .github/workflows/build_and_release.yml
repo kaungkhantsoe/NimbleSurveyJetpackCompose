@@ -19,10 +19,10 @@ jobs:
       - name: Decode google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: echo $GOOGLE_SERVICES_JSON | base64 --decode > ./app/google-services.json
+        run: echo $GOOGLE_SERVICES_JSON | base64 --decode  --ignore-garbage > ./app/google-services.json
 
       - name: Decode local properties
-        run: echo ${{ secrets.LOCAL_PROPERTIES }} | base64 --decode > ./local.properties
+        run: echo ${{ secrets.LOCAL_PROPERTIES }} | base64 --decode  --ignore-garbage > ./local.properties
 
       - name: build release
         run: ./gradlew assembleDevRelease
