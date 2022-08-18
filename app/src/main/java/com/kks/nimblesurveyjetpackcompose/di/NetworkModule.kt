@@ -12,6 +12,8 @@ import com.kks.nimblesurveyjetpackcompose.util.CustomKeyProvider
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.util.interceptors.AccessTokenInterceptor
 import com.kks.nimblesurveyjetpackcompose.util.interceptors.TokenAuthenticator
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,13 +22,14 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 private const val TIMEOUT_SECONDS = 15L
 private const val CHUCKER_MAX_CONTENT_LENGTH = 250000L
 
+@Suppress("TooManyFunctions")
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -38,19 +41,30 @@ object NetworkModule {
 
     @ServiceQualifier
     @Provides
-    fun provideServiceRetrofit(@ServiceQualifier okHttpClient: OkHttpClient): Retrofit {
+    fun provideServiceRetrofit(
+        @ServiceQualifier okHttpClient: OkHttpClient,
+        moshi: Moshi
+    ): Retrofit {
         return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
     @AuthQualifier
     @Provides
-    fun provideAuthRetrofit(@AuthQualifier okHttpClient: OkHttpClient): Retrofit {
+    fun provideAuthRetrofit(@AuthQualifier okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
         return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun providesMoshi(): Moshi {
+        return Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
             .build()
     }
 
@@ -73,8 +87,7 @@ object NetworkModule {
                     preferenceManager,
                     tokenRepo
                 )
-            )
-            .build()
+            ).build()
     }
 
     @AuthQualifier
@@ -113,10 +126,11 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return if (BuildConfig.DEBUG)
+        return if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-        else
+        } else {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+        }
     }
 
     @Singleton

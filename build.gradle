@@ -19,6 +19,7 @@ buildscript {
         retrofit_version = "2.9.0"
         turbine_version = '0.9.0'
         timber_version = "5.0.1"
+        moshiVersion = "1.13.0"
     }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.13'

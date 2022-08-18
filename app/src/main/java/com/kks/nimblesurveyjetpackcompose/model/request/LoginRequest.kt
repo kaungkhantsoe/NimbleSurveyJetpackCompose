@@ -1,14 +1,18 @@
 package com.kks.nimblesurveyjetpackcompose.model.request
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class LoginRequest(
-    @SerializedName("grant_type")
+    @Json(name = "grant_type")
     val grantType: String = "password",
+    @Json(name = "email")
     val email: String,
+    @Json(name = "password")
     val password: String,
-    @SerializedName("client_id")
+    @Json(name = "client_id")
     val clientId: String,
-    @SerializedName("client_secret")
+    @Json(name = "client_secret")
     val clientSecret: String
 )

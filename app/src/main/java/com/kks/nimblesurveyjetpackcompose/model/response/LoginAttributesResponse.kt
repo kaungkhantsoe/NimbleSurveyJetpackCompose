@@ -1,16 +1,18 @@
 package com.kks.nimblesurveyjetpackcompose.model.response
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class LoginAttributesResponse(
-    @SerializedName("access_token")
+    @Json(name = "access_token")
     val accessToken: String?,
-    @SerializedName("token_type")
+    @Json(name = "token_type")
     val tokenType: String?,
-    @SerializedName("expires_in")
+    @Json(name = "expires_in")
     val expiresIn: Int?,
-    @SerializedName("refresh_token")
+    @Json(name = "refresh_token")
     val refreshToken: String?,
-    @SerializedName("created_at")
+    @Json(name = "created_at")
     val createdAt: Long?
 )
