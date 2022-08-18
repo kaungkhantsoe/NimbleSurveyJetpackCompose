@@ -4,7 +4,6 @@ import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepo
 import com.kks.nimblesurveyjetpackcompose.util.PREF_ACCESS_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PREF_REFRESH_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
-import dagger.Lazy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -21,7 +20,7 @@ Reference: http://sangsoonam.github.io/2019/03/06/okhttp-how-to-refresh-access-t
 @Suppress("ReturnCount", "TooGenericExceptionCaught", "SwallowedException")
 class TokenAuthenticator(
     private val preferenceManager: PreferenceManager,
-    private val tokenRepo: Lazy<TokenRepo>,
+    private val tokenRepo: TokenRepo,
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -36,8 +35,8 @@ class TokenAuthenticator(
 
             // Request new token with refreshToken
             val job = CoroutineScope(Dispatchers.IO).launch {
-                tokenRepo.get().refreshToken(
-                    preferenceManager.getStringData(PREF_REFRESH_TOKEN) ?: ""
+                tokenRepo.refreshToken(
+                    preferenceManager.getStringData(PREF_REFRESH_TOKEN).orEmpty()
                 ).collectLatest {
                     isRefreshed = true
                 }

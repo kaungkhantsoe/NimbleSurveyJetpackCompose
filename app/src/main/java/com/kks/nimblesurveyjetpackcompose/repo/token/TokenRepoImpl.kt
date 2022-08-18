@@ -1,6 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.repo.token
 
-import com.kks.nimblesurveyjetpackcompose.model.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.model.AuthInterface
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.request.RefreshTokenRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class TokenRepoImpl @Inject constructor(
-    private val apiInterface: ApiInterface,
+    private val apiInterface: AuthInterface,
     private val preferenceManager: PreferenceManager,
     private val customKeyProvider: CustomKeyProvider
 ) : TokenRepo {
@@ -36,11 +36,11 @@ class TokenRepoImpl @Inject constructor(
                     apiResult.successData?.data?.attributes?.let { response ->
                         preferenceManager.setStringData(
                             PREF_ACCESS_TOKEN,
-                            response.accessToken ?: ""
+                            response.accessToken.orEmpty()
                         )
                         preferenceManager.setStringData(
                             PREF_REFRESH_TOKEN,
-                            response.refreshToken ?: ""
+                            response.refreshToken.orEmpty()
                         )
                         emit(ResourceState.Success(apiResult.successData.data))
                     } ?: emit(ResourceState.Error(SUCCESS_WITH_NULL_ERROR))

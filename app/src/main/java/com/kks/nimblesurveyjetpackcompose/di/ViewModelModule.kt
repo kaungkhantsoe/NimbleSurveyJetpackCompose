@@ -16,7 +16,7 @@ object ViewModelModule {
 
     @Provides
     fun provideLoginRepo(
-        apiInterface: ApiInterface,
+        @ServiceQualifier apiInterface: ApiInterface,
         preferenceManager: PreferenceManager,
         customKeyProvider: CustomKeyProvider
     ): LoginRepo = LoginRepoImpl(apiInterface, preferenceManager, customKeyProvider)

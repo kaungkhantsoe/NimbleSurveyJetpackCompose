@@ -4,6 +4,7 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.kks.nimblesurveyjetpackcompose.BuildConfig
 import com.kks.nimblesurveyjetpackcompose.model.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.model.AuthInterface
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepo
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepoImpl
 import com.kks.nimblesurveyjetpackcompose.util.CustomKeyGenerator
@@ -11,7 +12,6 @@ import com.kks.nimblesurveyjetpackcompose.util.CustomKeyProvider
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.util.interceptors.AccessTokenInterceptor
 import com.kks.nimblesurveyjetpackcompose.util.interceptors.TokenAuthenticator
-import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,50 +36,79 @@ object NetworkModule {
     fun providePreferenceManager(@ApplicationContext appContext: Context): PreferenceManager =
         PreferenceManager(appContext)
 
-    @Singleton
+    @ServiceQualifier
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideServiceRetrofit(@ServiceQualifier okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    @Singleton
+    @AuthQualifier
     @Provides
-    fun provideOkHttpClient(
+    fun provideAuthRetrofit(@AuthQualifier okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @ServiceQualifier
+    @Provides
+    fun provideServiceOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         preferenceManager: PreferenceManager,
-        tokenRepo: Lazy<TokenRepo>,
         chuckerInterceptor: ChuckerInterceptor,
+        tokenRepo: TokenRepo,
     ): OkHttpClient {
         return OkHttpClient().newBuilder()
             .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .addInterceptor(chuckerInterceptor)
             .addInterceptor(AccessTokenInterceptor(preferenceManager))
+            .addInterceptor(loggingInterceptor)
             .authenticator(
                 TokenAuthenticator(
                     preferenceManager,
                     tokenRepo
                 )
-            ) /* Refresh token interceptor */
+            )
+            .build()
+    }
+
+    @AuthQualifier
+    @Provides
+    fun provideAuthOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        preferenceManager: PreferenceManager,
+        chuckerInterceptor: ChuckerInterceptor,
+    ): OkHttpClient {
+        return OkHttpClient().newBuilder()
+            .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .addInterceptor(chuckerInterceptor)
+            .addInterceptor(AccessTokenInterceptor(preferenceManager)) /* Refresh token interceptor */
             .addInterceptor(loggingInterceptor)
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideChucker(@ApplicationContext appContext: Context) =
+    fun provideChucker(@ApplicationContext appContext: Context): ChuckerInterceptor =
         ChuckerInterceptor.Builder(appContext)
             .maxContentLength(CHUCKER_MAX_CONTENT_LENGTH)
             .redactHeaders(listOf("Auth-Token"))
             .build()
 
-    @Singleton
+    @ServiceQualifier
     @Provides
-    fun provideApiService(retrofit: Retrofit): ApiInterface =
+    fun provideApiService(@ServiceQualifier retrofit: Retrofit): ApiInterface =
         retrofit.create(ApiInterface::class.java)
+
+    @Provides
+    fun provideAuthService(@AuthQualifier retrofit: Retrofit): AuthInterface =
+        retrofit.create(AuthInterface::class.java)
 
     @Singleton
     @Provides
@@ -92,13 +121,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideTokenRepoImpl(
-        apiInterface: ApiInterface,
+    fun provideTokenRepo(
+        authInterface: AuthInterface,
         preferenceManager: PreferenceManager,
         customKeyProvider: CustomKeyProvider
     ): TokenRepo =
         TokenRepoImpl(
-            apiInterface,
+            authInterface,
             preferenceManager,
             customKeyProvider
         )
