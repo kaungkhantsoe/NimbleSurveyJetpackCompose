@@ -1,6 +1,8 @@
 package com.kks.nimblesurveyjetpackcompose.viewmodel.splash
 
 import com.kks.nimblesurveyjetpackcompose.base.BaseViewModelTest
+import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -13,10 +15,11 @@ import org.junit.Test
 class SplashViewModelTest : BaseViewModelTest() {
 
     private lateinit var viewModel: SplashViewModel
+    private val loginRepo: LoginRepo = mockk()
 
     override fun setup() {
         super.setup()
-        viewModel = SplashViewModel(dispatcher = testDispatcher)
+        viewModel = SplashViewModel(loginRepo = loginRepo, ioDispatcher = testDispatcher)
     }
 
     @Test
