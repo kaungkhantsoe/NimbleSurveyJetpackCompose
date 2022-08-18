@@ -31,7 +31,6 @@ class TokenRepoImpl @Inject constructor(
                 ).executeOrThrow()
             }
             when (apiResult) {
-
                 is ResourceState.Success -> {
                     apiResult.successData?.data?.attributes?.let { response ->
                         preferenceManager.setStringData(

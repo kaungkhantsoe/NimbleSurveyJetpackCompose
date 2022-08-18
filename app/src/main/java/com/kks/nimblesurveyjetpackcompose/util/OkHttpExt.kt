@@ -8,7 +8,6 @@ import retrofit2.Call
 import retrofit2.HttpException
 import retrofit2.Response
 import java.lang.Exception
-import java.net.UnknownHostException
 
 const val UNKNOWN_ERROR = "Unknown error"
 const val SUCCESS_WITH_NULL_ERROR = "Success with null error"
@@ -61,10 +60,6 @@ fun <T> Call<T>.executeOrThrow(): T? {
             throw HttpException(Response.error<BaseResponse<T>>(httpException.code(), it))
         }
         throw httpException
-    } catch (unknownHostException: UnknownHostException) {
-        throw unknownHostException
-    } catch (e: Exception) {
-        throw e
     }
     return response.body()
 }

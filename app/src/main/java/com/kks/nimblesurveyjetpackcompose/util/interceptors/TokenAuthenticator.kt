@@ -60,6 +60,7 @@ class TokenAuthenticator(
         }
     }
 
+    // TODO: Something
     private fun hasValidHeader(response: Response): Boolean {
         val header = response.request.header("Authorization")
         return header != null && header.startsWith("Bearer")
