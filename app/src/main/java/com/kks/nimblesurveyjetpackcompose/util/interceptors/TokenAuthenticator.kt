@@ -60,7 +60,7 @@ class TokenAuthenticator(
         }
     }
 
-    // TODO: Something
+    // TODO: Improve code to retry only a certain number of times
     private fun hasValidHeader(response: Response): Boolean {
         val header = response.request.header("Authorization")
         return header != null && header.startsWith("Bearer")
