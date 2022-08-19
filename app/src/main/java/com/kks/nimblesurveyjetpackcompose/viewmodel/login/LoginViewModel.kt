@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,9 +19,7 @@ class LoginViewModel @Inject constructor(
     fun login() {
         viewModelScope.launch(ioDispatcher) {
             val test = loginRepo.loginWithEmailAndPassword("kaung@nimblehq.co", "12345678")
-            test.collect {
-                Timber.d(it.toString())
-            }
+            test.collect {}
         }
     }
 }

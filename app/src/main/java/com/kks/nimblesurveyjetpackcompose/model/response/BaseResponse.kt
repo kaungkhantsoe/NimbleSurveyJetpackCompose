@@ -2,9 +2,8 @@ package com.kks.nimblesurveyjetpackcompose.model.response
 
 import com.squareup.moshi.*
 
-@Suppress("UnusedPrivateMember")
 @JsonClass(generateAdapter = true)
-data class BaseResponse<D> constructor(
+data class BaseResponse<D> (
     @Json(name = "data")
     val data: D?,
 

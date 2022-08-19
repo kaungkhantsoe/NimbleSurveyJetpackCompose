@@ -1,18 +1,32 @@
 package com.kks.nimblesurveyjetpackcompose.util.extensions
 
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.util.INDEX_OF_ERROR_CODE
+import com.kks.nimblesurveyjetpackcompose.model.response.BaseResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 import java.net.ProtocolException
 import java.net.UnknownHostException
 
 private const val API_WAIT_TIME = 7000L
+const val UNKNOWN_ERROR = "Unknown error"
+const val SUCCESS_WITH_NULL_ERROR = "Success with null error"
+const val UNKNOWN_ERROR_MESSAGE = "Unknown error message"
+const val NETWORK_ERROR = "Network Error"
+
+const val EMAIL_EMPTY_MESSAGE = "Email cannot be empty"
+const val PASSWORD_EMPTY_MESSAGE = "Password cannot be empty"
+const val SUCCESS_MESSAGE = "success"
+
+private const val HTTP_ERROR_START = 400
+private const val HTTP_ERROR_END = 499
+const val INDEX_OF_ERROR_CODE = 0
 
 /**
  * Reference: https://medium.com/@douglas.iacovelli/how-to-handle-errors-with-retrofit-and-coroutines-33e7492a912
@@ -35,7 +49,6 @@ suspend fun <T> safeApiCall(
                 is TimeoutCancellationException -> ResourceState.NetworkError
                 is HttpException -> {
                     val code = throwable.code()
-//                    val errorResponse = convertErrorBody(throwable)
                     val errorMsg = convertErrorBody(throwable)
                     ResourceState.GenericError(
                         code,
@@ -50,7 +63,7 @@ suspend fun <T> safeApiCall(
     }
 }
 
-@Suppress("NestedBlockDepth", "TooGenericExceptionCaught", "SwallowedException")
+@Suppress("NestedBlockDepth", "SwallowedException", "TooGenericExceptionCaught")
 private fun convertErrorBody(throwable: HttpException): String? {
     try {
         throwable.response()?.errorBody()?.let { responseBody ->
@@ -75,3 +88,40 @@ private fun convertErrorBody(throwable: HttpException): String? {
     }
     return null
 }
+
+@Suppress("NestedBlockDepth", "ThrowsCount")
+suspend fun <T> executeOrThrow(apiCall: suspend () -> T): T? {
+    var response: T? = null
+    try {
+        response = apiCall.invoke()
+    } catch (httpException: HttpException) {
+        httpException.response()?.let { httpErrorResponse ->
+            val errorBody = httpErrorResponse.errorBody()
+            val errorCode = httpErrorResponse.code()
+            val errorJsonObject = JSONObject(errorBody.toString())
+            val errorJsonArray = errorJsonObject.getJSONArray("errors")
+            errorBody?.let {
+                when {
+                    errorCode in HTTP_ERROR_START..HTTP_ERROR_END -> throw HttpException(
+                        Response.error<BaseResponse<T>>(
+                            errorCode,
+                            errorBody
+                        )
+                    )
+                    hasCustomError(errorJsonObject, errorJsonArray) -> {
+                        val code =
+                            errorJsonArray.getJSONObject(INDEX_OF_ERROR_CODE).getString("code")
+                        throw java.lang.Exception(code)
+                    }
+                    else -> throw java.lang.Exception(UNKNOWN_ERROR)
+                }
+            }
+        }
+    }
+    return response
+}
+
+private fun hasCustomError(errorJsonObject: JSONObject, errorJsonArray: JSONArray): Boolean =
+    errorJsonObject.has("errors") &&
+        errorJsonArray.length() > 0 &&
+        errorJsonArray.getJSONObject(INDEX_OF_ERROR_CODE).has("code")

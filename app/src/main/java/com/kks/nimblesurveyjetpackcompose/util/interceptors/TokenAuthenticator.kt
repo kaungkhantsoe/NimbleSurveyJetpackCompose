@@ -13,12 +13,13 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import java.lang.Exception
+import javax.inject.Inject
 
 /*
 Reference: http://sangsoonam.github.io/2019/03/06/okhttp-how-to-refresh-access-token-efficiently.html
  */
 @Suppress("ReturnCount", "TooGenericExceptionCaught", "SwallowedException")
-class TokenAuthenticator(
+class TokenAuthenticator @Inject constructor(
     private val preferenceManager: PreferenceManager,
     private val tokenRepo: TokenRepo,
 ) : Authenticator {

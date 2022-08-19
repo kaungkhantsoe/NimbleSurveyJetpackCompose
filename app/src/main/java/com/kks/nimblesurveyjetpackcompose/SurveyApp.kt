@@ -1,7 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose
 
 import android.app.Application
-import com.kks.nimblesurveyjetpackcompose.util.ReleaseTree
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -12,21 +11,18 @@ class SurveyApp : Application() {
         plantTimber()
     }
 
-    @Suppress("ImplicitDefaultLocale")
     private fun plantTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(object : Timber.DebugTree() {
                 override fun createStackElementTag(element: StackTraceElement): String {
                     return String.format(
-                        "Class:%s: Line: %s, Method: %s",
+                        getString(R.string.timber_log),
                         super.createStackElementTag(element),
                         element.lineNumber,
                         element.methodName
                     )
                 }
             })
-        } else {
-            Timber.plant(ReleaseTree())
         }
     }
 }

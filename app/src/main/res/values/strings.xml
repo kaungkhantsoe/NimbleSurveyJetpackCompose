@@ -4,4 +4,5 @@
     <!--Splash-->
     <string name="splash_background_content_description">Splash Background</string>
     <string name="splash_logo_content_description">Nimble Logo</string>
+    <string name="timber_log">Class:%s: Line: %s, Method: %s</string>
 </resources>
