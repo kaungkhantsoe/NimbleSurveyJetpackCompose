@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SplashScreenTest : BaseAndroidComposeTest() {
 
-    val splashViewModel: SplashViewModel = mockk()
+    val splashViewModel: SplashViewModel = mockk(relaxed = true)
 
     @Before
     fun setup() {
