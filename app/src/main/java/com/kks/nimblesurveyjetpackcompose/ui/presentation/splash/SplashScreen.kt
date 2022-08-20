@@ -92,6 +92,7 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
     viewModel.startTimerToNavigateToLogin()
 }
 
+@Suppress("LongMethod")
 @Composable
 fun LoginComponents() {
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
