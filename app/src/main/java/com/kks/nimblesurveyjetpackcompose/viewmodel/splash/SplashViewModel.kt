@@ -20,12 +20,14 @@ class SplashViewModel @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    val shouldNavigateToLogin = mutableStateOf(false)
+    private val _shouldNavigateToLogin = mutableStateOf(false)
+
+    fun shouldNavigateToLogin() = _shouldNavigateToLogin.value
 
     fun startTimerToNavigateToLogin() {
         viewModelScope.launch(ioDispatcher) {
             delay(SPLASH_TIME)
-            shouldNavigateToLogin.value = true
+            _shouldNavigateToLogin.value = true
         }
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +31,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
@@ -47,9 +47,9 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
 
     LaunchedEffect(
-        key1 = viewModel.shouldNavigateToLogin.value
+        key1 = viewModel.shouldNavigateToLogin()
     ) {
-        showLoginComponents = viewModel.shouldNavigateToLogin.value
+        showLoginComponents = viewModel.shouldNavigateToLogin()
         if (showLoginComponents) {
             launch {
                 logoOffset.animateTo(
@@ -112,7 +112,7 @@ fun EmailTextField(modifier: Modifier) {
         singleLine = true,
         label = { Text(LocalContext.current.getString(R.string.login_email)) },
         colors = textFieldColor(),
-        modifier = modifier,
+        modifier = modifier.testTag("test"),
         trailingIcon = {
             if (emailState.isNotEmpty()) {
                 IconButton(onClick = { emailState = "" }) {

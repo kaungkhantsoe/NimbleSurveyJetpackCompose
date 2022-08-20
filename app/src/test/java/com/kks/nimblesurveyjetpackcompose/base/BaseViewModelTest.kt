@@ -3,7 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.base
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -15,7 +15,7 @@ abstract class BaseViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
-    val testDispatcher = TestCoroutineDispatcher()
+    val testDispatcher = StandardTestDispatcher()
 
     @Before
     open fun setup() {
@@ -25,6 +25,5 @@ abstract class BaseViewModelTest {
     @After
     open fun reset() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 }
