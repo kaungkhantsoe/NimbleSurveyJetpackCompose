@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
+import com.kks.nimblesurveyjetpackcompose.util.extensions.loginTextFieldModifier
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
@@ -95,79 +95,66 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
 @Composable
 fun LoginComponents() {
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-        EmailTextField(modifier = loginTextFieldModifier())
-        PasswordTextField(modifier = loginTextFieldModifier())
-        LoginButton(modifier = loginTextFieldModifier())
-    }
-}
+        var emailState by remember { mutableStateOf("") }
+        var passwordState by remember { mutableStateOf("") }
+        var enableLoginButton by remember { mutableStateOf(false) }
+        val context = LocalContext.current
 
-@Composable
-fun EmailTextField(modifier: Modifier) {
-    var emailState by remember { mutableStateOf("") }
-
-    TextField(
-        value = emailState,
-        onValueChange = { emailState = it },
-        shape = RoundedCornerShape(12.dp),
-        singleLine = true,
-        label = { Text(LocalContext.current.getString(R.string.login_email)) },
-        colors = textFieldColor(),
-        modifier = modifier.testTag("test"),
-        trailingIcon = {
-            if (emailState.isNotEmpty()) {
-                IconButton(onClick = { emailState = "" }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = null
-                    )
+        TextField(
+            value = emailState,
+            onValueChange = {
+                emailState = it
+                enableLoginButton = emailState.isNotEmpty() && passwordState.isNotEmpty()
+            },
+            shape = RoundedCornerShape(12.dp),
+            singleLine = true,
+            label = { Text(LocalContext.current.getString(R.string.login_email)) },
+            colors = textFieldColor(),
+            modifier = Modifier.loginTextFieldModifier(),
+            trailingIcon = {
+                if (emailState.isNotEmpty()) {
+                    IconButton(onClick = { emailState = "" }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Close,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
-        }
-    )
-}
-
-@Composable
-fun PasswordTextField(modifier: Modifier) {
-    var passwordState by remember { mutableStateOf("") }
-    val context = LocalContext.current
-
-    TextField(
-        value = passwordState,
-        onValueChange = { passwordState = it },
-        shape = RoundedCornerShape(12.dp),
-        singleLine = true,
-        label = { Text(context.getString(R.string.login_password)) },
-        colors = textFieldColor(),
-        modifier = modifier,
-        trailingIcon = {
-            TextButton(onClick = { }) {
-                Text(context.getString(R.string.login_forget), color = Color.White)
-            }
-        }
-    )
-}
-
-@Composable
-fun LoginButton(modifier: Modifier) {
-    Button(
-        onClick = { },
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-        modifier = modifier,
-    ) {
-        Text(
-            LocalContext.current.getString(R.string.login_log_in),
-            color = Color.Black,
-            fontSize = 17.sp,
-            fontWeight = FontWeight.Bold
         )
+        TextField(
+            value = passwordState,
+            onValueChange = {
+                passwordState = it
+                enableLoginButton = emailState.isNotEmpty() && passwordState.isNotEmpty()
+            },
+            shape = RoundedCornerShape(12.dp),
+            singleLine = true,
+            label = { Text(context.getString(R.string.login_password)) },
+            colors = textFieldColor(),
+            modifier = Modifier.loginTextFieldModifier(),
+            trailingIcon = {
+                TextButton(onClick = { }) {
+                    Text(context.getString(R.string.login_forget), color = Color.White)
+                }
+            }
+        )
+        Button(
+            onClick = { },
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+            modifier = Modifier.loginTextFieldModifier(),
+            enabled = enableLoginButton
+        ) {
+            Text(
+                LocalContext.current.getString(R.string.login_log_in),
+                color = Color.Black,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
-
-fun loginTextFieldModifier() = Modifier
-    .fillMaxWidth()
-    .padding(start = 24.dp, end = 24.dp)
-    .height(56.dp)
 
 @Composable
 fun textFieldColor() =
