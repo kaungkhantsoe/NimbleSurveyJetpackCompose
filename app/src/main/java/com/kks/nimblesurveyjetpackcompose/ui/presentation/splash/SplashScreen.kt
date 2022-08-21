@@ -10,10 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -32,8 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
+import com.kks.nimblesurveyjetpackcompose.util.extensions.loginTextFieldModifier
+import com.kks.nimblesurveyjetpackcompose.viewmodel.ErrorType
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavHostParam
@@ -48,11 +48,17 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
+    var shouldShowLoading by remember { mutableStateOf(false) }
+    var shouldShowError by remember { mutableStateOf(ErrorType.NONE to "") }
+
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
+    val context = LocalContext.current
 
     LaunchedEffect(
-        key1 = showLoginComponents
+        key1 = showLoginComponents,
+        key2 = viewModel.shouldShowLoading(),
+        key3 = viewModel.isError()
     ) {
         if (showLoginComponents) {
             launch {
@@ -65,6 +71,9 @@ fun SplashScreen(
                 )
             }
         }
+
+        shouldShowLoading = viewModel.shouldShowLoading()
+        shouldShowError = viewModel.isError()
     }
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -91,33 +100,41 @@ fun SplashScreen(
         AnimatedVisibility(visible = showLoginComponents, enter = fadeIn()) {
             LoginComponents()
         }
+        Loading(showLoading = shouldShowLoading)
+        ErrorAlertDialog(
+            errorState = shouldShowError,
+            title = context.getString(R.string.oops),
+            buttonText = context.getString(android.R.string.ok),
+            onClickButton = { viewModel.resetError() }
+        )
     }
     viewModel.startTimerToNavigateToLogin(splashTime = splashTime)
 }
 
-@Suppress("LongMethod")
 @Composable
-fun LoginComponents() {
+fun LoginComponents(viewModel: SplashViewModel = hiltViewModel()) {
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
         var enableLoginButton by remember { mutableStateOf(false) }
-        var emailState by remember { mutableStateOf("") }
-        var passwordState by remember { mutableStateOf("") }
+        var email by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
 
         EmailTextField(
-            emailState = emailState,
+            emailState = email,
             onValueChange = {
-                emailState = it
-                enableLoginButton = emailState.isNotEmpty() && passwordState.isNotEmpty()
+                email = it
+                enableLoginButton = email.isNotEmpty() && password.isNotEmpty()
             }
         )
         PasswordTextField(
-            passwordState = passwordState,
+            passwordState = password,
             onValueChange = {
-                passwordState = it
-                enableLoginButton = emailState.isNotEmpty() && passwordState.isNotEmpty()
+                password = it
+                enableLoginButton = email.isNotEmpty() && password.isNotEmpty()
             }
         )
-        LoginButton(loginButtonState = enableLoginButton)
+        LoginButton(loginButtonState = enableLoginButton) {
+            viewModel.login(email = email, password = password)
+        }
     }
 }
 
@@ -159,11 +176,9 @@ fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
 }
 
 @Composable
-fun LoginButton(loginButtonState: Boolean) {
+fun LoginButton(loginButtonState: Boolean, onClickLogin: () -> Unit) {
     Button(
-        onClick = {
-            // TODO: Implement login function
-        },
+        onClick = { onClickLogin() },
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
         modifier = Modifier.loginTextFieldModifier(),
@@ -187,7 +202,7 @@ fun textFieldColor() =
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent,
-        focusedLabelColor = Color.Transparent,
+        focusedLabelColor = Concord,
         unfocusedLabelColor = Concord,
         textColor = Color.White
     )
