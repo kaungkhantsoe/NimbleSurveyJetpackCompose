@@ -24,20 +24,18 @@ class LoginRepoImpl @Inject constructor(
         password: String
     ): Flow<ResourceState<LoginResponse>> = flow {
         val apiResult = safeApiCall(Dispatchers.IO) {
-            executeOrThrow {
-                apiInterface.loginUser(
-                    LoginRequest(
-                        email = email,
-                        password = password,
-                        clientId = customKeyProvider.getClientId(),
-                        clientSecret = customKeyProvider.getClientSecret()
-                    )
+            apiInterface.loginUser(
+                LoginRequest(
+                    email = email,
+                    password = password,
+                    clientId = customKeyProvider.getClientId(),
+                    clientSecret = customKeyProvider.getClientSecret()
                 )
-            }
+            )
         }
         when (apiResult) {
             is ResourceState.Success -> {
-                apiResult.successData?.data?.let { loginResponse ->
+                apiResult.successData.data?.let { loginResponse ->
                     preferenceManager.setStringData(
                         PREF_ACCESS_TOKEN,
                         loginResponse.attributes?.accessToken.orEmpty()
@@ -50,12 +48,6 @@ class LoginRepoImpl @Inject constructor(
                 } ?: emit(ResourceState.Error(SUCCESS_WITH_NULL_ERROR))
             }
             is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
-            is ResourceState.GenericError -> emit(
-                ResourceState.GenericError(
-                    apiResult.code,
-                    apiResult.error
-                )
-            )
             else -> {
                 emit(ResourceState.NetworkError)
             }

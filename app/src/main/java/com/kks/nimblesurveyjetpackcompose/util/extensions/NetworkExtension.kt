@@ -1,17 +1,15 @@
+@file:Suppress("UnusedPrivateMember")
 package com.kks.nimblesurveyjetpackcompose.util.extensions
 
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.response.BaseResponse
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
-import org.json.JSONArray
-import org.json.JSONObject
+import com.kks.nimblesurveyjetpackcompose.model.response.CustomErrorResponse
+import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.*
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
-import java.net.ProtocolException
 import java.net.UnknownHostException
 
 private const val API_WAIT_TIME = 7000L
@@ -41,19 +39,15 @@ suspend fun <T> safeApiCall(
             withTimeout(API_WAIT_TIME) {
                 ResourceState.Success(apiCall.invoke())
             }
-        } catch (throwable: Throwable) {
+        } catch (throwable: Exception) {
             when (throwable) {
-                is ProtocolException -> ResourceState.ProtocolError
                 is IOException -> ResourceState.NetworkError
                 is UnknownHostException -> ResourceState.NetworkError
                 is TimeoutCancellationException -> ResourceState.NetworkError
                 is HttpException -> {
-                    val code = throwable.code()
-                    val errorMsg = convertErrorBody(throwable)
-                    ResourceState.GenericError(
-                        code,
-                        errorMsg
-                    )
+                    val errorResponse = throwable.response()?.parseErrJsonResponse<CustomErrorResponse>()
+                    val errorMsg = errorResponse?.errors?.first()?.detail
+                    ResourceState.Error(errorMsg)
                 }
                 else -> {
                     ResourceState.Error(throwable.message ?: "Unknown error")
@@ -63,65 +57,18 @@ suspend fun <T> safeApiCall(
     }
 }
 
-@Suppress("NestedBlockDepth", "SwallowedException", "TooGenericExceptionCaught")
-private fun convertErrorBody(throwable: HttpException): String? {
-    try {
-        throwable.response()?.errorBody()?.let { responseBody ->
-            val jsonObject = JSONObject(responseBody.toString())
-
-            // If errorBody has "errors"
-            if (jsonObject.has("errors")) {
-                // Get error array from errorBody
-                val errorJsonArray = jsonObject.getJSONArray("errors")
-                // If errors array is not empty and first object of error array has "code" in it
-                if (errorJsonArray.length() > 0 &&
-                    errorJsonArray.getJSONObject(INDEX_OF_ERROR_CODE).has("code")
-                ) {
-                    // Get error code
-                    // Throw exception with error code
-                    return errorJsonArray.getJSONObject(INDEX_OF_ERROR_CODE).getString("code")
-                }
-            }
+// Reference: https://stackoverflow.com/a/55255097
+@Suppress("SwallowedException")
+inline fun <reified T>Response<*>.parseErrJsonResponse(): T? {
+    val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    val parser = moshi.adapter(T::class.java)
+    val response = errorBody()?.string()
+    response?.let {
+        try {
+            return parser.fromJson(it)
+        } catch (e: JsonDataException) {
+            // Do nothing
         }
-    } catch (exception: Exception) {
-        // Do Nothing
     }
     return null
 }
-
-@Suppress("NestedBlockDepth", "ThrowsCount")
-suspend fun <T> executeOrThrow(apiCall: suspend () -> T): T? {
-    var response: T? = null
-    try {
-        response = apiCall.invoke()
-    } catch (httpException: HttpException) {
-        httpException.response()?.let { httpErrorResponse ->
-            val errorBody = httpErrorResponse.errorBody()
-            val errorCode = httpErrorResponse.code()
-            val errorJsonObject = JSONObject(errorBody.toString())
-            val errorJsonArray = errorJsonObject.getJSONArray("errors")
-            errorBody?.let {
-                when {
-                    errorCode in HTTP_ERROR_START..HTTP_ERROR_END -> throw HttpException(
-                        Response.error<BaseResponse<T>>(
-                            errorCode,
-                            errorBody
-                        )
-                    )
-                    hasCustomError(errorJsonObject, errorJsonArray) -> {
-                        val code =
-                            errorJsonArray.getJSONObject(INDEX_OF_ERROR_CODE).getString("code")
-                        throw java.lang.Exception(code)
-                    }
-                    else -> throw java.lang.Exception(UNKNOWN_ERROR)
-                }
-            }
-        }
-    }
-    return response
-}
-
-private fun hasCustomError(errorJsonObject: JSONObject, errorJsonArray: JSONArray): Boolean =
-    errorJsonObject.has("errors") &&
-        errorJsonArray.length() > 0 &&
-        errorJsonArray.getJSONObject(INDEX_OF_ERROR_CODE).has("code")

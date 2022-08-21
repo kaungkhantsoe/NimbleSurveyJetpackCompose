@@ -7,7 +7,6 @@ import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.util.*
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
 import com.kks.nimblesurveyjetpackcompose.util.extensions.UNKNOWN_ERROR_MESSAGE
-import com.kks.nimblesurveyjetpackcompose.util.extensions.executeOrThrow
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -24,19 +23,17 @@ class TokenRepoImpl @Inject constructor(
     override fun refreshToken(refreshToken: String): Flow<ResourceState<LoginResponse>> =
         flow {
             val apiResult = safeApiCall(Dispatchers.IO) {
-                executeOrThrow {
-                    apiInterface.refreshToken(
-                        RefreshTokenRequest(
-                            refreshToken = refreshToken,
-                            clientId = customKeyProvider.getClientId(),
-                            clientSecret = customKeyProvider.getClientSecret()
-                        )
+                apiInterface.refreshToken(
+                    RefreshTokenRequest(
+                        refreshToken = refreshToken,
+                        clientId = customKeyProvider.getClientId(),
+                        clientSecret = customKeyProvider.getClientSecret()
                     )
-                }
+                )
             }
             when (apiResult) {
                 is ResourceState.Success -> {
-                    apiResult.successData?.data?.attributes?.let { response ->
+                    apiResult.successData.data?.attributes?.let { response ->
                         preferenceManager.setStringData(
                             PREF_ACCESS_TOKEN,
                             response.accessToken.orEmpty()
@@ -51,19 +48,10 @@ class TokenRepoImpl @Inject constructor(
                 is ResourceState.Error -> {
                     emit(ResourceState.Error(apiResult.error))
                 }
-                is ResourceState.GenericError -> {
-                    emit(
-                        ResourceState.GenericError(
-                            apiResult.code,
-                            apiResult.error
-                        )
-                    )
-                }
                 ResourceState.NetworkError -> {
                     emit(ResourceState.NetworkError)
                 }
                 ResourceState.Loading -> emit(ResourceState.Loading)
-                else -> { emit(ResourceState.NetworkError) }
             }
         }.catch { error ->
             emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))
