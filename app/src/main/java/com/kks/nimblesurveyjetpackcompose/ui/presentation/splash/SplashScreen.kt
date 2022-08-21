@@ -259,5 +259,5 @@ private fun Modifier.loginTextFieldModifier() = this
 @Preview(showBackground = true)
 @Composable
 fun SplashPreview() {
-    SplashScreen()
+    SplashScreen(EmptyDestinationsNavigator)
 }
