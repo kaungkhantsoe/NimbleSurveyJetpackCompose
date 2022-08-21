@@ -36,20 +36,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.HomeScreenDestination
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
+import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 import com.kks.nimblesurveyjetpackcompose.util.extensions.loginTextFieldModifier
-import com.kks.nimblesurveyjetpackcompose.viewmodel.ErrorType
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import kotlinx.coroutines.launch
 import com.ramcosta.composedestinations.annotation.NavHostParam
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import kotlinx.coroutines.launch
 
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun SplashScreen(
+    navigator: DestinationsNavigator,
     @NavHostParam splashTime: Long = 2000L,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
@@ -62,9 +66,12 @@ fun SplashScreen(
     val context = LocalContext.current
 
     LaunchedEffect(
-        key1 = showLoginComponents,
-        key2 = viewModel.shouldShowLoading(),
-        key3 = viewModel.isError()
+        keys = arrayOf(
+            viewModel.showLoginComponents,
+            viewModel.shouldShowLoading(),
+            viewModel.isError(),
+            viewModel.isLoginSuccess(),
+        )
     ) {
         if (showLoginComponents) {
             launch {
@@ -80,6 +87,7 @@ fun SplashScreen(
 
         shouldShowLoading = viewModel.shouldShowLoading()
         shouldShowError = viewModel.isError()
+        if (viewModel.isLoginSuccess()) navigator.navigate(HomeScreenDestination)
     }
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -161,7 +169,10 @@ fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
                 focusManager.moveFocus(FocusDirection.Down)
             }
         ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Email
+        )
     )
 }
 
@@ -235,5 +246,5 @@ private fun Modifier.loginTextFieldModifier() = this
 @Preview(showBackground = true)
 @Composable
 fun SplashPreview() {
-    SplashScreen()
+    SplashScreen(EmptyDestinationsNavigator)
 }
