@@ -23,6 +23,7 @@ class LoginRepoImpl @Inject constructor(
         email: String,
         password: String
     ): Flow<ResourceState<LoginResponse>> = flow {
+        emit(ResourceState.Loading)
         val apiResult = safeApiCall(Dispatchers.IO) {
             apiInterface.loginUser(
                 LoginRequest(
