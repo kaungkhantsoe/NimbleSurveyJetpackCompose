@@ -7,19 +7,25 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -140,6 +146,8 @@ fun LoginComponents(viewModel: SplashViewModel = hiltViewModel()) {
 
 @Composable
 fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
+    val focusManager = LocalFocusManager.current
+
     TextField(
         value = emailState,
         onValueChange = { onValueChange(it) },
@@ -147,13 +155,21 @@ fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
         singleLine = true,
         label = { Text(LocalContext.current.getString(R.string.login_email)) },
         colors = textFieldColor(),
-        modifier = Modifier.loginTextFieldModifier()
+        modifier = Modifier.loginTextFieldModifier(),
+        keyboardActions = KeyboardActions(
+            onNext = {
+                focusManager.moveFocus(FocusDirection.Down)
+            }
+        ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     TextField(
         value = passwordState,
@@ -171,7 +187,11 @@ fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
             }
         },
         visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+            }
+        )
     )
 }
 

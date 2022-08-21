@@ -9,16 +9,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kks.nimblesurveyjetpackcompose.ui.theme.CuriousBlue
 
 @Composable
 fun Loading(showLoading: Boolean) {
     if (showLoading) {
         Card(
             shape = RoundedCornerShape(10.dp),
-            backgroundColor = MaterialTheme.colors.surface,
-            modifier = Modifier.padding(all = 20.dp)
+            backgroundColor = MaterialTheme.colors.surface
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                color = CuriousBlue,
+                modifier = Modifier.padding(all = 20.dp)
+            )
         }
     }
 }
