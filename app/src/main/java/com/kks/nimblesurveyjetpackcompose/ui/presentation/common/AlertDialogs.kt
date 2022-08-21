@@ -1,8 +1,7 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -11,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CuriousBlue
-import com.kks.nimblesurveyjetpackcompose.viewmodel.ErrorType
+import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 
 @Composable
 fun ErrorAlertDialog(
@@ -24,7 +23,16 @@ fun ErrorAlertDialog(
         AlertDialog(
             shape = RoundedCornerShape(10.dp),
             onDismissRequest = { onClickButton },
-            title = { Text(text = title) },
+            title = {
+                Column {
+                    Text(text = title)
+                    Divider(
+                        color = CuriousBlue,
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            },
             text = { Text(text = errorState.second) },
             backgroundColor = Color.White,
             buttons = {
