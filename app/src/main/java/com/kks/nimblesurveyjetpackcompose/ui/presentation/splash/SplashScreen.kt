@@ -99,66 +99,92 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
 @Composable
 fun LoginComponents() {
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        var enableLoginButton by remember { mutableStateOf(false) }
         var emailState by remember { mutableStateOf("") }
         var passwordState by remember { mutableStateOf("") }
-        var enableLoginButton by remember { mutableStateOf(false) }
-        val context = LocalContext.current
 
-        TextField(
-            value = emailState,
+        EmailTextField(
+            emailState = emailState,
             onValueChange = {
                 emailState = it
                 enableLoginButton = emailState.isNotEmpty() && passwordState.isNotEmpty()
-            },
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true,
-            label = { Text(LocalContext.current.getString(R.string.login_email)) },
-            colors = textFieldColor(),
-            modifier = Modifier.loginTextFieldModifier(),
-            trailingIcon = {
-                if (emailState.isNotEmpty()) {
-                    IconButton(onClick = { emailState = "" }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Close,
-                            contentDescription = null
-                        )
-                    }
-                }
             }
         )
-        TextField(
-            value = passwordState,
+        PasswordTextField(
+            passwordState = passwordState,
             onValueChange = {
                 passwordState = it
                 enableLoginButton = emailState.isNotEmpty() && passwordState.isNotEmpty()
-            },
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true,
-            label = { Text(context.getString(R.string.login_password)) },
-            colors = textFieldColor(),
-            modifier = Modifier.loginTextFieldModifier(),
-            trailingIcon = {
-                TextButton(onClick = { }) {
-                    Text(context.getString(R.string.login_forget), color = Color.White)
-                }
-            },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            }
         )
-        Button(
-            onClick = { },
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-            modifier = Modifier.loginTextFieldModifier(),
-            enabled = enableLoginButton
-        ) {
-            Text(
-                LocalContext.current.getString(R.string.login_log_in),
-                color = Color.Black,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Bold
-            )
+        LoginButton(loginButtonState = enableLoginButton)
+    }
+}
+
+@Composable
+fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
+    TextField(
+        value = emailState,
+        onValueChange = {
+            onValueChange(it)
+        },
+        shape = RoundedCornerShape(12.dp),
+        singleLine = true,
+        label = { Text(LocalContext.current.getString(R.string.login_email)) },
+        colors = textFieldColor(),
+        modifier = Modifier.loginTextFieldModifier(),
+        trailingIcon = {
+            if (emailState.isNotEmpty()) {
+                IconButton(onClick = { onValueChange("") }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = null
+                    )
+                }
+            }
         }
+    )
+}
+
+@Composable
+fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
+    val context = LocalContext.current
+
+    TextField(
+        value = passwordState,
+        onValueChange = {
+            onValueChange(it)
+        },
+        shape = RoundedCornerShape(12.dp),
+        singleLine = true,
+        label = { Text(context.getString(R.string.login_password)) },
+        colors = textFieldColor(),
+        modifier = Modifier.loginTextFieldModifier(),
+        trailingIcon = {
+            TextButton(onClick = { }) {
+                Text(context.getString(R.string.login_forget), color = Color.White)
+            }
+        },
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+    )
+}
+
+@Composable
+fun LoginButton(loginButtonState: Boolean) {
+    Button(
+        onClick = { },
+        shape = RoundedCornerShape(12.dp),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+        modifier = Modifier.loginTextFieldModifier(),
+        enabled = loginButtonState
+    ) {
+        Text(
+            LocalContext.current.getString(R.string.login_log_in),
+            color = Color.Black,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
