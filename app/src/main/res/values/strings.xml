@@ -8,9 +8,14 @@
 
     <!--Login-->
     <string name="login_email">Email</string>
+    <string name="login_email_text_field">Login Email TextField</string>
     <string name="login_password">Password</string>
+    <string name="login_password_text_field">Login Password TextField</string>
     <string name="login_forget">Forgot?</string>
     <string name="login_log_in">Log in</string>
+    <string name="login_log_in_button">Log in</string>
+
+
     <string name="network_error">Cannot connect to internet</string>
     <string name="protocol_error">Something went wrong!!</string>
     <string name="oops">Oops!!</string>
