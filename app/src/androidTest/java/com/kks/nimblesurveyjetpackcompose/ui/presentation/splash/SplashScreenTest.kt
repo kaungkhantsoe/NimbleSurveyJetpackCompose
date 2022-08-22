@@ -4,7 +4,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.base.BaseAndroidComposeTest
-import com.kks.nimblesurveyjetpackcompose.di.RepositoryModule
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
@@ -14,7 +13,6 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -27,7 +25,6 @@ const val VALID_PASSWORD = "valid"
 const val INVALID_PASSWORD = "invalid"
 const val ERROR_MESSAGE = "error"
 
-@UninstallModules(RepositoryModule::class)
 @HiltAndroidTest
 class SplashScreenTest : BaseAndroidComposeTest() {
 
