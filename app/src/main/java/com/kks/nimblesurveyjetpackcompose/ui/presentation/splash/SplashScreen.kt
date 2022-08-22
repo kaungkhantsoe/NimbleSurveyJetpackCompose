@@ -18,12 +18,13 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -63,7 +64,6 @@ fun SplashScreen(
 
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
-    val context = LocalContext.current
 
     LaunchedEffect(
         keys = arrayOf(
@@ -117,8 +117,8 @@ fun SplashScreen(
         Loading(showLoading = shouldShowLoading)
         ErrorAlertDialog(
             errorState = shouldShowError,
-            title = context.getString(R.string.oops),
-            buttonText = context.getString(android.R.string.ok),
+            title = stringResource(id = R.string.oops),
+            buttonText = stringResource(id = android.R.string.ok),
             onClickButton = { viewModel.resetError() }
         )
     }
@@ -155,13 +155,14 @@ fun LoginComponents(viewModel: SplashViewModel = hiltViewModel()) {
 @Composable
 fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
     val focusManager = LocalFocusManager.current
+    val emailContentDescription = stringResource(id = R.string.login_email_text_field)
 
     TextField(
         value = emailState,
         onValueChange = { onValueChange(it) },
         shape = RoundedCornerShape(12.dp),
         singleLine = true,
-        label = { Text(LocalContext.current.getString(R.string.login_email)) },
+        label = { Text(stringResource(R.string.login_email)) },
         colors = textFieldColor(),
         modifier = Modifier.loginTextFieldModifier(),
         keyboardActions = KeyboardActions(
@@ -179,22 +180,25 @@ fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
-    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val passwordContentDescriptorDetachedException =
+        stringResource(id = R.string.login_password_text_field)
 
     TextField(
         value = passwordState,
         onValueChange = { onValueChange(it) },
         shape = RoundedCornerShape(12.dp),
         singleLine = true,
-        label = { Text(context.getString(R.string.login_password)) },
+        label = { Text(stringResource(id = R.string.login_password)) },
         colors = textFieldColor(),
-        modifier = Modifier.loginTextFieldModifier(),
+        modifier = Modifier
+            .loginTextFieldModifier()
+            .semantics { contentDescription = passwordContentDescriptorDetachedException },
         trailingIcon = {
             TextButton(onClick = {
                 // TODO: Implement forgot password function
             }) {
-                Text(context.getString(R.string.login_forget), color = Color.White)
+                Text(stringResource(id = R.string.login_forget), color = Color.White)
             }
         },
         visualTransformation = PasswordVisualTransformation(),
@@ -208,15 +212,18 @@ fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
 
 @Composable
 fun LoginButton(loginButtonState: Boolean, onClickLogin: () -> Unit) {
+    val loginButtonContentDescription = stringResource(id = R.string.login_log_in_button)
     Button(
         onClick = { onClickLogin() },
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-        modifier = Modifier.loginTextFieldModifier(),
+        modifier = Modifier
+            .loginTextFieldModifier()
+            .semantics { contentDescription = loginButtonContentDescription},
         enabled = loginButtonState
     ) {
         Text(
-            LocalContext.current.getString(R.string.login_log_in),
+            stringResource(R.string.login_log_in),
             color = Color.Black,
             fontSize = 17.sp,
             fontWeight = FontWeight.Bold

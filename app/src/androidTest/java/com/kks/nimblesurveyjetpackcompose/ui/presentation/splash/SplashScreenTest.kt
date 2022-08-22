@@ -30,7 +30,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @BindValue
     @JvmField
-    val splashViewModel: SplashViewModel = SplashViewModel(Dispatchers.IO)
+    val splashViewModel: SplashViewModel = SplashViewModel(FakeLoginRepo(), Dispatchers.IO)
 
     @Before
     fun setup() {
@@ -62,10 +62,84 @@ class SplashScreenTest : BaseAndroidComposeTest() {
         }
     }
 
+    @Test
+    fun when_type_email_into_email_text_field_has_email_text() {
+        setupSplashComposeRule(shouldNavigateToLogin = true)
+        with(composeTestRule) {
+            val email = "example@gmail.com"
+            onNodeWithContentDescription(getString(R.string.login_email_text_field))
+                .performTextInput(email)
+            onNodeWithContentDescription(getString(R.string.login_email_text_field))
+                .assert(hasText(email))
+        }
+    }
+
+    @Test
+    fun when_type_password_into_password_text_field_has_text_with_mask() {
+        setupSplashComposeRule(shouldNavigateToLogin = true)
+        with(composeTestRule) {
+            val password = "p"
+            onNodeWithContentDescription(getString(R.string.login_password_text_field))
+                .performTextInput(password)
+            onNodeWithContentDescription(getString(R.string.login_password_text_field))
+                .assert(hasText("\u2022"))
+        }
+    }
+
+    @Test
+    fun when_fill_in_only_one_field_login_button_is_disabled() {
+        setupSplashComposeRule(shouldNavigateToLogin = true)
+        with(composeTestRule) {
+            val email = "example@gmail.com"
+            onNodeWithContentDescription(getString(R.string.login_email_text_field))
+                .performTextInput(email)
+            onNodeWithContentDescription(getString(R.string.login_log_in_button))
+                .assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun when_both_email_and_login_fields_login_button_is_enabled() {
+        setupSplashComposeRule(shouldNavigateToLogin = true)
+        with(composeTestRule) {
+            val email = "example@gmail.com"
+            val password = "password"
+            onNodeWithContentDescription(getString(R.string.login_email_text_field))
+                .performTextInput(email)
+            onNodeWithContentDescription(getString(R.string.login_password_text_field))
+                .performTextInput(password)
+            onNodeWithContentDescription(getString(R.string.login_log_in_button))
+                .assertIsEnabled()
+            onNodeWithContentDescription(getString(R.string.login_log_in_button))
+                .assertHasClickAction()
+        }
+    }
+
     private fun setupSplashComposeRule(splashTime: Long = 0L) {
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
-                SplashScreen(splashTime = splashTime)
+                SplashScreen(splashTime = splashTime, viewModel = splashViewModel, navigator = EmptyDestinationsNavigator)
+            }
+        }
+    }
+
+    class FakeLoginRepo : LoginRepo {
+        override fun loginWithEmailAndPassword(
+            email: String,
+            password: String
+        ): Flow<ResourceState<LoginResponse>> {
+            return if (password == VALID_PASSWORD) {
+                flowOf(
+                    ResourceState.Success(
+                        LoginResponse(
+                            id = null,
+                            type = null,
+                            attributes = null
+                        )
+                    )
+                )
+            } else {
+                flowOf(ResourceState.Error(ERROR_MESSAGE))
             }
         }
     }
