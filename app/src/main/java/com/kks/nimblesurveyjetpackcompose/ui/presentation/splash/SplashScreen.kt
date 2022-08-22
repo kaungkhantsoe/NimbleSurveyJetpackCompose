@@ -61,10 +61,8 @@ fun SplashScreen(
     val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
     var shouldShowLoading by remember { mutableStateOf(false) }
     var shouldShowError by remember { mutableStateOf(ErrorType.NONE to "") }
-
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
-
     LaunchedEffect(
         keys = arrayOf(
             viewModel.showLoginComponents,
@@ -84,7 +82,6 @@ fun SplashScreen(
                 )
             }
         }
-
         shouldShowLoading = viewModel.shouldShowLoading()
         shouldShowError = viewModel.isError()
         if (viewModel.isLoginSuccess()) navigator.navigate(HomeScreenDestination)
@@ -93,15 +90,11 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painterResource(id = if (showLoginComponents) R.drawable.ic_overlay else R.drawable.splash_bg),
-            contentDescription = stringResource(id = R.string.splash_background_content_description),
+        BackgroundImage(
             modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.Crop
+            showLoginComponents = showLoginComponents
         )
-        Image(
-            painter = painterResource(id = R.drawable.ic_logo_white),
-            contentDescription = stringResource(id = R.string.splash_logo_content_description),
+        LogoImage(
             modifier = Modifier
                 .size(201.0.dp, 48.0.dp)
                 .offset {
@@ -111,9 +104,7 @@ fun SplashScreen(
                     )
                 }
         )
-        AnimatedVisibility(visible = showLoginComponents, enter = fadeIn()) {
-            LoginComponents()
-        }
+        AnimatedVisibility(visible = showLoginComponents, enter = fadeIn()) { LoginComponents() }
         Loading(showLoading = shouldShowLoading)
         ErrorAlertDialog(
             errorState = shouldShowError,
@@ -123,6 +114,25 @@ fun SplashScreen(
         )
     }
     viewModel.startTimerToNavigateToLogin(splashTime = splashTime)
+}
+
+@Composable
+fun BackgroundImage(modifier: Modifier, showLoginComponents: Boolean) {
+    Image(
+        painter = painterResource(id = if (showLoginComponents) R.drawable.ic_overlay else R.drawable.splash_bg),
+        contentDescription = stringResource(id = R.string.splash_background_content_description),
+        modifier = modifier,
+        contentScale = ContentScale.Crop
+    )
+}
+
+@Composable
+fun LogoImage(modifier: Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_logo_white),
+        contentDescription = stringResource(id = R.string.splash_logo_content_description),
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -219,7 +229,7 @@ fun LoginButton(loginButtonState: Boolean, onClickLogin: () -> Unit) {
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
         modifier = Modifier
             .loginTextFieldModifier()
-            .semantics { contentDescription = loginButtonContentDescription},
+            .semantics { contentDescription = loginButtonContentDescription },
         enabled = loginButtonState
     ) {
         Text(

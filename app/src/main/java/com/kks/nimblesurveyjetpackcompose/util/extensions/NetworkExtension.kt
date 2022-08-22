@@ -84,4 +84,3 @@ fun <T> mapError(resourceState: ResourceState<T>, isError: MutableState<Pair<Err
 enum class ErrorType {
     NONE, INFO, GENERIC, NETWORK, PROTOCOL
 }
-
