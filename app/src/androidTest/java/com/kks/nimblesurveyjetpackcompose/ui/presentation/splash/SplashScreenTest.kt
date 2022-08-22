@@ -21,6 +21,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+const val EMAIL = "example@gmail.com"
+const val VALID_PASSWORD = "valid"
+const val INVALID_PASSWORD = "invalid"
+const val ERROR_MESSAGE = "error"
+
 @UninstallModules(RepositoryModule::class)
 @HiltAndroidTest
 class SplashScreenTest : BaseAndroidComposeTest() {
@@ -64,7 +69,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_type_email_into_email_text_field_has_email_text() {
-        setupSplashComposeRule(shouldNavigateToLogin = true)
+        setupSplashComposeRule()
         with(composeTestRule) {
             val email = "example@gmail.com"
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -76,7 +81,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_type_password_into_password_text_field_has_text_with_mask() {
-        setupSplashComposeRule(shouldNavigateToLogin = true)
+        setupSplashComposeRule()
         with(composeTestRule) {
             val password = "p"
             onNodeWithContentDescription(getString(R.string.login_password_text_field))
@@ -88,7 +93,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_fill_in_only_one_field_login_button_is_disabled() {
-        setupSplashComposeRule(shouldNavigateToLogin = true)
+        setupSplashComposeRule()
         with(composeTestRule) {
             val email = "example@gmail.com"
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -100,7 +105,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_both_email_and_login_fields_login_button_is_enabled() {
-        setupSplashComposeRule(shouldNavigateToLogin = true)
+        setupSplashComposeRule()
         with(composeTestRule) {
             val email = "example@gmail.com"
             val password = "password"
@@ -112,6 +117,37 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .assertIsEnabled()
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .assertHasClickAction()
+        }
+    }
+
+    @Test
+    fun when_with_incorrect_email_and_password_error_dialog_is_shown() {
+        setupSplashComposeRule()
+        with(composeTestRule) {
+            onNodeWithContentDescription(getString(R.string.login_email_text_field))
+                .performTextInput(EMAIL)
+            onNodeWithContentDescription(getString(R.string.login_password_text_field))
+                .performTextInput(INVALID_PASSWORD)
+            onNodeWithContentDescription(getString(R.string.login_log_in_button))
+                .performClick()
+            onNodeWithText(ERROR_MESSAGE).assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun when_with_correct_email_and_password_goes_to_home() {
+        setupSplashComposeRule()
+        with(composeTestRule) {
+            onNodeWithContentDescription(getString(R.string.login_email_text_field))
+                .performTextInput(EMAIL)
+            onNodeWithContentDescription(getString(R.string.login_password_text_field))
+                .performTextInput(VALID_PASSWORD)
+            onNodeWithContentDescription(getString(R.string.login_log_in_button))
+                .performClick()
+            waitUntil(2000) {
+               splashViewModel.isLoginSuccess()
+            }
+            assert(splashViewModel.isLoginSuccess())
         }
     }
 
