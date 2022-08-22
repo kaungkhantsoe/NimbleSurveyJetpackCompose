@@ -15,7 +15,7 @@ import dagger.hilt.android.components.ViewModelComponent
 object RepositoryModule {
     @Provides
     fun provideLoginRepo(
-        @ServiceQualifier apiInterface: ApiInterface,
+        apiInterface: ApiInterface,
         preferenceManager: PreferenceManager,
         customKeyProvider: CustomKeyProvider
     ): LoginRepo = LoginRepoImpl(apiInterface, preferenceManager, customKeyProvider)

@@ -91,7 +91,7 @@ interface NetworkModule {
             loggingInterceptor: HttpLoggingInterceptor,
             chuckerInterceptor: ChuckerInterceptor,
             tokenAuthenticator: TokenAuthenticator,
-            @ServiceQualifier accessTokenInterceptor: AccessTokenInterceptor
+            accessTokenInterceptor: AccessTokenInterceptor
         ): OkHttpClient {
             return OkHttpClient().newBuilder()
                 .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -108,7 +108,7 @@ interface NetworkModule {
         fun provideAuthOkHttpClient(
             loggingInterceptor: HttpLoggingInterceptor,
             chuckerInterceptor: ChuckerInterceptor,
-            @AuthQualifier accessTokenInterceptor: AccessTokenInterceptor
+            accessTokenInterceptor: AccessTokenInterceptor
         ): OkHttpClient {
             return OkHttpClient().newBuilder()
                 .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -127,11 +127,11 @@ interface NetworkModule {
                 .redactHeaders(listOf("Auth-Token"))
                 .build()
 
-        @ServiceQualifier
         @Provides
         fun provideApiService(@ServiceQualifier retrofit: Retrofit): ApiInterface =
             retrofit.create(ApiInterface::class.java)
 
+        @Singleton
         @Provides
         fun provideAuthService(@AuthQualifier retrofit: Retrofit): AuthInterface =
             retrofit.create(AuthInterface::class.java)
