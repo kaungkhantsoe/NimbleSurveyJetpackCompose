@@ -1,6 +1,8 @@
 package com.kks.nimblesurveyjetpackcompose.di
 
 import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
+import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepoImpl
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepoImpl
 import com.kks.nimblesurveyjetpackcompose.util.CustomKeyProvider
@@ -19,4 +21,9 @@ object RepositoryModule {
         preferenceManager: PreferenceManager,
         customKeyProvider: CustomKeyProvider
     ): LoginRepo = LoginRepoImpl(apiInterface, preferenceManager, customKeyProvider)
+
+    @Provides
+    fun provideHomeRepoImpl(
+        apiInterface: ApiInterface
+    ): HomeRepo = HomeRepoImpl(apiInterface)
 }
