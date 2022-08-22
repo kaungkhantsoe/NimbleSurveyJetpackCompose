@@ -46,7 +46,31 @@ class SplashViewModelTest : BaseViewModelTest() {
 
             assertEquals(true, actual)
         }
+
+    @Test
+    fun `When login with incorrect email or password, show error`() = runTest {
+        val errorMessage = "error"
+        val errorState: ResourceState<LoginResponse> = ResourceState.Error(errorMessage)
+        coEvery { loginRepo.loginWithEmailAndPassword(any(), any()) } returns flowOf(errorState)
+
+        viewModel.login("example@gmail.com", "invalid")
+        advanceUntilIdle()
+
+        assertEquals(errorMessage, viewModel.isError().second)
     }
+
+    @Test
+    fun `When login with correct email or password, login success`() = runTest {
+        val loginResponse = LoginResponse(id = 0, type = null, attributes = null)
+        val errorState: ResourceState<LoginResponse> = ResourceState.Success(loginResponse)
+        coEvery { loginRepo.loginWithEmailAndPassword(any(), any()) } returns flowOf(errorState)
+
+        viewModel.login("example@gmail.com", "valid")
+        advanceUntilIdle()
+
+        assertEquals(true, viewModel.isLoginSuccess())
+    }
+}
 
     @Test
     fun `When login with incorrect email or password, show error`() = runTest {
