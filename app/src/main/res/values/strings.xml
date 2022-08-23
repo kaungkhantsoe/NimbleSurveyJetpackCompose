@@ -19,4 +19,8 @@
     <string name="protocol_error">Something went wrong!!</string>
     <string name="oops">Oops!!</string>
 
+    <!--Home-->
+    <string name="home_user_image">User Image</string>
+    <string name="home_survey_detail_button">Home survey detail button</string>
+    <string name="home_survey_background_image">Home survey background image</string>
 </resources>
