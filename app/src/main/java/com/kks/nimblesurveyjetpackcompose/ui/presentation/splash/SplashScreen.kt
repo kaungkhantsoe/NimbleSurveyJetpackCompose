@@ -60,6 +60,7 @@ fun SplashScreen(
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
     val errorState by viewModel.getError.collectAsState()
     val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
+    val isAlreadyLoggedIn by viewModel.isAlreadyLoggedIn.collectAsState()
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
 
@@ -77,6 +78,9 @@ fun SplashScreen(
                 )
             }
         }
+    }
+    if (isLoginSuccess || isAlreadyLoggedIn) {
+        navigator.navigate(HomeScreenDestination)
     }
     Box(
         modifier = Modifier.fillMaxSize(),

@@ -3,13 +3,11 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.home
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -61,12 +59,7 @@ fun HomeScreen() {
     }
 }
 
-@Suppress(
-    "LongMethod",
-    "DestructuringDeclarationWithTooManyEntries",
-    "ComplexCondition",
-    "MagicNumber"
-)
+@Suppress("ComplexCondition", "MagicNumber")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(viewModel: HomeViewModel = hiltViewModel()) {
@@ -100,119 +93,139 @@ fun HomeContent(viewModel: HomeViewModel = hiltViewModel()) {
     })
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { }
+        onRefresh = { },
+        modifier = Modifier.fillMaxSize()
     ) {
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(Color.Gray)
-                .swipeable(
-                    state = swipeableState,
-                    anchors = anchors,
-                    thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
-                    orientation = Orientation.Horizontal
+        LazyColumn {
+            item {
+                SurveyContent(
+                    modifier = Modifier
+                        .fillParentMaxSize()
+                        .swipeable(
+                            state = swipeableState,
+                            anchors = anchors,
+                            thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
+                            orientation = Orientation.Horizontal
+                        )
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onPress = { /* Called when the gesture starts */ }
+                            )
+                        },
+                    numberOfPage = numberOfPage,
+                    currentPage = currentPage
                 )
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = { /* Called when the gesture starts */ }
-                    )
+            }
+        }
+    }
+}
+
+@Suppress("DestructuringDeclarationWithTooManyEntries")
+@Composable
+fun SurveyContent(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
+    ConstraintLayout(modifier = modifier) {
+        val (date, today, userImage, bottomView) = createRefs()
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_background),
+            contentDescription = stringResource(id = R.string.home_survey_background_image),
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+        SurveyText(
+            text = "MONDAY,JUNE 15",
+            modifier = Modifier.constrainAs(date) {
+                top.linkTo(parent.top, 60.dp)
+                start.linkTo(parent.start, 20.dp)
+            },
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+        SurveyText(
+            text = "Today",
+            modifier = Modifier.constrainAs(today) {
+                top.linkTo(date.bottom, 4.dp)
+                start.linkTo(parent.start, 20.dp)
+            },
+            fontSize = 34.sp,
+            fontWeight = FontWeight.Bold
+        )
+        UserIcon(
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(36.dp)
+                .constrainAs(userImage) {
+                    end.linkTo(parent.end, 20.dp)
+                    top.linkTo(parent.top, 79.dp)
                 }
+        )
+        BottomView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(bottomView) {
+                    bottom.linkTo(parent.bottom, 54.dp)
+                },
+            numberOfPage = numberOfPage,
+            currentPage = currentPage
+        )
+    }
+}
+
+@Composable
+fun UserIcon(modifier: Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        contentDescription = stringResource(
+            id = R.string.home_user_image
+        ),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun BottomView(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
+    Column(
+        modifier = modifier
+    ) {
+        DotsIndicator(
+            totalDots = numberOfPage,
+            selectedIndex = currentPage,
+            selectedColor = Color.White,
+            unSelectedColor = White20,
+            indicatorSize = 8.dp,
+            space = 5.dp
+        )
+        Spacer(modifier = Modifier.height(26.dp))
+        SurveyText(
+            text = "Working from home Check-In",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            val (date, today, userImage, bottomView, backgroundImage) = createRefs()
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
-                contentDescription = stringResource(id = R.string.home_survey_background_image),
+            SurveyText(
+                text = "We would like to know how you feel about our work from home...",
+                fontSize = 17.sp,
+                color = White70,
                 modifier = Modifier
-                    .constrainAs(backgroundImage) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                    .fillMaxSize(),
-                contentScale = ContentScale.Crop
+                    .weight(1f)
+                    .padding(start = 20.dp, end = 20.dp)
             )
-            SurveyText(
-                text = "MONDAY,JUNE 15",
-                modifier = Modifier.constrainAs(date) {
-                    top.linkTo(parent.top, 60.dp)
-                    start.linkTo(parent.start, 20.dp)
-                },
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
-            )
-            SurveyText(
-                text = "Today",
-                modifier = Modifier.constrainAs(today) {
-                    top.linkTo(date.bottom, 4.dp)
-                    start.linkTo(parent.start, 20.dp)
-                },
-                fontSize = 34.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = stringResource(
-                    id = R.string.home_user_image
-                ),
+            Button(
+                onClick = { },
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(36.dp)
-                    .constrainAs(userImage) {
-                        end.linkTo(parent.end, 20.dp)
-                        top.linkTo(parent.top, 79.dp)
-                    }
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .constrainAs(bottomView) {
-                        bottom.linkTo(parent.bottom, 54.dp)
-                    }
+                    .size(56.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
             ) {
-                DotsIndicator(
-                    totalDots = numberOfPage,
-                    selectedIndex = currentPage,
-                    selectedColor = Color.White,
-                    unSelectedColor = White20,
-                    indicatorSize = 8.dp,
-                    space = 5.dp
+                Image(
+                    painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
+                    contentDescription = stringResource(id = R.string.home_survey_detail_button)
                 )
-                Spacer(modifier = Modifier.height(26.dp))
-                SurveyText(
-                    text = "Working from home Check-In",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    SurveyText(
-                        text = "We would like to know how you feel about our work from home...",
-                        fontSize = 17.sp,
-                        color = White70,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 20.dp, end = 20.dp)
-                    )
-                    Button(
-                        onClick = { },
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(56.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
-                            contentDescription = stringResource(id = R.string.home_survey_detail_button)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(20.dp))
-                }
             }
+            Spacer(modifier = Modifier.width(20.dp))
         }
     }
 }
