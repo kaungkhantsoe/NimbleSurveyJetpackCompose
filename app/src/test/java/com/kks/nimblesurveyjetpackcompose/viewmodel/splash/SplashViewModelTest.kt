@@ -45,6 +45,7 @@ class SplashViewModelTest : BaseViewModelTest() {
 
             assertEquals(true, actual)
         }
+    }
 
     @Test
     fun `When login with incorrect email or password, show error`() = runTest {
