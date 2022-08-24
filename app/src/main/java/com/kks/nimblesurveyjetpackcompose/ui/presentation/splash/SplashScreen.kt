@@ -40,7 +40,6 @@ import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.HomeScreenDestination
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
-import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 import com.kks.nimblesurveyjetpackcompose.util.extensions.loginTextFieldModifier
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -59,18 +58,12 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
-    var shouldShowLoading by remember { mutableStateOf(false) }
-    var shouldShowError by remember { mutableStateOf(ErrorType.NONE to "") }
+    val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
+    val shouldShowError by viewModel.isError.collectAsState()
+    val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
-    LaunchedEffect(
-        keys = arrayOf(
-            viewModel.showLoginComponents,
-            viewModel.shouldShowLoading(),
-            viewModel.isError(),
-            viewModel.isLoginSuccess(),
-        )
-    ) {
+    LaunchedEffect(keys = arrayOf(showLoginComponents)) {
         if (showLoginComponents) {
             launch {
                 logoOffset.animateTo(
@@ -82,10 +75,8 @@ fun SplashScreen(
                 )
             }
         }
-        shouldShowLoading = viewModel.shouldShowLoading()
-        shouldShowError = viewModel.isError()
-        if (viewModel.isLoginSuccess()) navigator.navigate(HomeScreenDestination)
     }
+    if (isLoginSuccess) navigator.navigate(HomeScreenDestination)
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

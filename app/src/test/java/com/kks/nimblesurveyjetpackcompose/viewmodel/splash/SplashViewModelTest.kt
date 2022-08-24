@@ -4,7 +4,6 @@ import com.kks.nimblesurveyjetpackcompose.base.BaseViewModelTest
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
-import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
@@ -12,7 +11,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -57,7 +55,7 @@ class SplashViewModelTest : BaseViewModelTest() {
         viewModel.login("example@gmail.com", "invalid")
         advanceUntilIdle()
 
-        assertEquals(errorMessage, viewModel.isError().second)
+        assertEquals(errorMessage, viewModel.isError.value.second)
     }
 
     @Test
@@ -69,6 +67,6 @@ class SplashViewModelTest : BaseViewModelTest() {
         viewModel.login("example@gmail.com", "valid")
         advanceUntilIdle()
 
-        assertEquals(true, viewModel.isLoginSuccess())
+        assertEquals(true, viewModel.isLoginSuccess.value)
     }
 }

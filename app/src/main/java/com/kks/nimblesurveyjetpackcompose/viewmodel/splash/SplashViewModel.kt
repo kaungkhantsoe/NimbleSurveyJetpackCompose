@@ -1,6 +1,5 @@
 package com.kks.nimblesurveyjetpackcompose.viewmodel.splash
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
@@ -14,21 +13,22 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collect
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val loginRepo: LoginRepo,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
-    private val _isLoading = mutableStateOf(false)
+    private val _isLoading = MutableStateFlow(false)
     private val _shouldNavigateToLogin = MutableStateFlow(false)
-    private val _isLoginSuccess = mutableStateOf(false)
-    private var _isError = mutableStateOf(ErrorType.NONE to "")
+    private val _isLoginSuccess = MutableStateFlow(false)
+    private var _isError = MutableStateFlow(ErrorType.NONE to "")
 
-    fun isError() = _isError.value
+    val isError: StateFlow<Pair<ErrorType, String>>
+        get() = _isError.asStateFlow()
 
     fun resetError() {
         _isError.value = ErrorType.NONE to ""
@@ -37,9 +37,13 @@ class SplashViewModel @Inject constructor(
     val shouldNavigateToLogin: StateFlow<Boolean>
         get() = _shouldNavigateToLogin.asStateFlow()
 
-    fun shouldShowLoading() = _isLoading.value
+    val shouldShowLoading: StateFlow<Boolean>
+        get() = _isLoading.asStateFlow()
 
-    fun startTimerToNavigateToLogin(splashTime: Long = 2000L) {
+    val isLoginSuccess: StateFlow<Boolean>
+        get() = _isLoginSuccess.asStateFlow()
+
+    fun startTimerToNavigateToLogin() {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
             _shouldNavigateToLogin.value = true
