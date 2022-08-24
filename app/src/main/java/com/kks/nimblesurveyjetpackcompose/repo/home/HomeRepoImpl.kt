@@ -5,7 +5,6 @@ import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
-import com.kks.nimblesurveyjetpackcompose.util.extensions.UNKNOWN_ERROR_MESSAGE
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +35,7 @@ class HomeRepoImpl @Inject constructor(
             }
         }
     }.catch { error ->
-        emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))
+        emit(ResourceState.Error(error.message.orEmpty()))
     }
 
     override fun fetchUserDetail(): Flow<ResourceState<UserResponse>> =
@@ -54,6 +53,6 @@ class HomeRepoImpl @Inject constructor(
                 }
             }
         }.catch { error ->
-            emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))
+            emit(ResourceState.Error(error.message.orEmpty()))
         }
 }
