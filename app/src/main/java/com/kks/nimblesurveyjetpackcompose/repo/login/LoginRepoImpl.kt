@@ -45,6 +45,7 @@ class LoginRepoImpl @Inject constructor(
                         PREF_REFRESH_TOKEN,
                         loginResponse.attributes?.refreshToken
                     )
+                    preferenceManager.setBooleanData(PREF_LOGGED_IN, true)
                     emit(ResourceState.Success(loginResponse))
                 } ?: emit(ResourceState.Error(SUCCESS_WITH_NULL_ERROR))
             }
