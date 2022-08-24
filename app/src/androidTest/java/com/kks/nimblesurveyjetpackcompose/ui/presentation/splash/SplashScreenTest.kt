@@ -94,9 +94,8 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     fun when_fill_in_only_one_field_login_button_is_disabled() {
         setupSplashComposeRule()
         with(composeTestRule) {
-            val email = "example@gmail.com"
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
-                .performTextInput(email)
+                .performTextInput("example@gmail.com")
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .assertIsNotEnabled()
         }
