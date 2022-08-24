@@ -2,13 +2,13 @@
 
 package com.kks.nimblesurveyjetpackcompose.util.extensions
 
-import androidx.compose.runtime.MutableState
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.CustomErrorResponse
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -71,7 +71,7 @@ inline fun <reified T> Response<*>.parseJsonErrorResponse(): T? {
     }
 }
 
-fun <T> mapError(resourceState: ResourceState<T>, isError: MutableState<Pair<ErrorType, String>>) {
+fun <T> mapError(resourceState: ResourceState<T>, isError: MutableStateFlow<Pair<ErrorType, String>>) {
     when (resourceState) {
         is ResourceState.Error -> isError.value = ErrorType.INFO to (resourceState.error ?: "")
         is ResourceState.NetworkError -> isError.value = ErrorType.NETWORK to ""
