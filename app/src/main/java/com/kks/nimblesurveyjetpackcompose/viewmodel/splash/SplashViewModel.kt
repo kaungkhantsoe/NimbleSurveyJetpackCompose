@@ -8,7 +8,6 @@ import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
-import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -28,6 +27,7 @@ class SplashViewModel @Inject constructor(
     private val _shouldShowLoading = MutableStateFlow(false)
     private val _shouldNavigateToLogin = MutableStateFlow(false)
     private val _isLoginSuccess = MutableStateFlow(false)
+    private val _isAlreadyLoggedIn = MutableStateFlow(false)
     private var _error = MutableStateFlow<ErrorModel?>(null)
 
     val getError: StateFlow<ErrorModel?>
@@ -42,16 +42,18 @@ class SplashViewModel @Inject constructor(
     val isLoginSuccess: StateFlow<Boolean>
         get() = _isLoginSuccess.asStateFlow()
 
-    fun isAlreadyLoggedIn() = _shouldNavigateToHome.value
+    val isAlreadyLoggedIn: StateFlow<Boolean>
+        get() = _isAlreadyLoggedIn.asStateFlow()
 
     fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
             if (preferenceManager.getBooleanData(PREF_LOGGED_IN)) {
-                _shouldNavigateToHome.value = true
+                _isAlreadyLoggedIn.value = true
             } else {
                 _shouldNavigateToLogin.value = true
-            }        }
+            }
+        }
     }
 
     fun login(email: String, password: String) {
