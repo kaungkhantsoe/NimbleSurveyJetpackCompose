@@ -24,7 +24,7 @@ class SplashViewModelTest : BaseViewModelTest() {
 
     @Test
     fun `When splash screen is displayed, shouldNavigateToLogin value is false at first`() {
-        assertEquals(false, viewModel.shouldNavigateToLogin())
+        assertEquals(false, viewModel.shouldNavigateToLogin.value)
     }
 
     @Test
@@ -35,7 +35,7 @@ class SplashViewModelTest : BaseViewModelTest() {
             var actual = false
             launch {
                 delay(SPLASH_TIME)
-                actual = viewModel.shouldNavigateToLogin()
+                actual = viewModel.shouldNavigateToLogin.value
             }
             advanceUntilIdle()
 

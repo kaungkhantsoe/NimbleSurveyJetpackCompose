@@ -45,14 +45,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun SplashScreen(viewModel: SplashViewModel = viewModel()) {
 fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
-    var showLoginComponents by remember { mutableStateOf(false) }
+    val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
 
     LaunchedEffect(
-        key1 = viewModel.shouldNavigateToLogin()
+        key1 = showLoginComponents
     ) {
-        showLoginComponents = viewModel.shouldNavigateToLogin()
         if (showLoginComponents) {
             launch {
                 logoOffset.animateTo(

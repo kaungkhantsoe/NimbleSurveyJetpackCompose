@@ -18,7 +18,7 @@ android {
         versionCode 1
         versionName "0.1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.kks.nimblesurveyjetpackcompose.di.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -191,4 +191,11 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    // For instrumented tests.
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    // ...with Kotlin.
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.38.1'
+    // ...with Java.
+    androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.38.1'
 }
