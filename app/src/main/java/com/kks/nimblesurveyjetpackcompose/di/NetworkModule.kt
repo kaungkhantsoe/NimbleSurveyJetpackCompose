@@ -21,6 +21,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Authenticator
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,13 +39,8 @@ interface NetworkModule {
     @Binds
     fun provideTokenAuthenticator(tokenAuthenticator: TokenAuthenticator): Authenticator
 
-    @ServiceQualifier
     @Binds
-    fun provideServiceAccessTokenInterceptor(accessTokenInterceptor: AccessTokenInterceptor): AccessTokenInterceptor
-
-    @AuthQualifier
-    @Binds
-    fun provideAuthAccessTokenInterceptor(accessTokenInterceptor: AccessTokenInterceptor): AccessTokenInterceptor
+    fun provideAuthAccessTokenInterceptor(accessTokenInterceptor: AccessTokenInterceptor): Interceptor
 
     @Suppress("TooManyFunctions")
     companion object {
@@ -91,7 +87,7 @@ interface NetworkModule {
             loggingInterceptor: HttpLoggingInterceptor,
             chuckerInterceptor: ChuckerInterceptor,
             tokenAuthenticator: TokenAuthenticator,
-            accessTokenInterceptor: AccessTokenInterceptor
+            accessTokenInterceptor: Interceptor
         ): OkHttpClient {
             return OkHttpClient().newBuilder()
                 .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -108,7 +104,7 @@ interface NetworkModule {
         fun provideAuthOkHttpClient(
             loggingInterceptor: HttpLoggingInterceptor,
             chuckerInterceptor: ChuckerInterceptor,
-            accessTokenInterceptor: AccessTokenInterceptor
+            accessTokenInterceptor: Interceptor
         ): OkHttpClient {
             return OkHttpClient().newBuilder()
                 .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
