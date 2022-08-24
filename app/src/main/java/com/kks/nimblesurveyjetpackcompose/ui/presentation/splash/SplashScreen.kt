@@ -71,8 +71,7 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
         Image(
             painter = painterResource(id = if (showLoginComponents) R.drawable.ic_overlay else R.drawable.splash_bg),
             contentDescription = stringResource(id = R.string.splash_background_content_description),
-            modifier = Modifier
-                .matchParentSize(),
+            modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
         )
         Image(
