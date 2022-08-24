@@ -2,6 +2,7 @@
 
 package com.kks.nimblesurveyjetpackcompose.util.extensions
 
+import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.CustomErrorResponse
 import com.squareup.moshi.JsonDataException
@@ -61,10 +62,12 @@ inline fun <reified T> Response<*>.parseJsonErrorResponse(): T? {
     }
 }
 
-fun <T> mapError(resourceState: ResourceState<T>, isError: MutableStateFlow<Pair<ErrorType, String>>) {
+fun <T> mapError(resourceState: ResourceState<T>, isError: MutableStateFlow<ErrorModel>) {
     when (resourceState) {
-        is ResourceState.Error -> isError.value = ErrorType.INFO to (resourceState.error ?: "")
-        is ResourceState.NetworkError -> isError.value = ErrorType.NETWORK to ""
+        is ResourceState.Error ->
+            isError.value =
+                ErrorModel(errorType = ErrorType.INFO, errorMessage = resourceState.error.orEmpty())
+        is ResourceState.NetworkError -> isError.value = ErrorModel(errorType = ErrorType.NETWORK)
         else -> {
             // Do nothing
         }
@@ -72,5 +75,5 @@ fun <T> mapError(resourceState: ResourceState<T>, isError: MutableStateFlow<Pair
 }
 
 enum class ErrorType {
-    NONE, INFO, GENERIC, NETWORK, PROTOCOL
+    INFO, NETWORK
 }

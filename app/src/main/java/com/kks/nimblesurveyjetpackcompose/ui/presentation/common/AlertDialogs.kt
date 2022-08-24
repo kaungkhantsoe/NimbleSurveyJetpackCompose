@@ -8,20 +8,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CuriousBlue
-import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 
 @Composable
 fun ErrorAlertDialog(
-    errorState: Pair<ErrorType, String>,
+    errorState: ErrorModel,
     title: String,
     buttonText: String,
     onClickButton: () -> Unit,
 ) {
-    if (errorState.first != ErrorType.NONE) {
+    errorState.errorType?.let {
         AlertDialog(
             shape = RoundedCornerShape(10.dp),
-            onDismissRequest = { onClickButton },
+            onDismissRequest = { onClickButton() },
             title = {
                 Column {
                     Text(text = title)
@@ -32,7 +32,7 @@ fun ErrorAlertDialog(
                     )
                 }
             },
-            text = { Text(text = errorState.second) },
+            text = { Text(text = errorState.errorMessage.orEmpty()) },
             backgroundColor = Color.White,
             buttons = {
                 Box(

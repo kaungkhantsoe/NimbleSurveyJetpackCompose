@@ -83,9 +83,8 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     fun when_type_password_into_password_text_field_has_text_with_mask() {
         setupSplashComposeRule()
         with(composeTestRule) {
-            val password = "p"
             onNodeWithContentDescription(getString(R.string.login_password_text_field))
-                .performTextInput(password)
+                .performTextInput("p")
             onNodeWithContentDescription(getString(R.string.login_password_text_field))
                 .assert(hasText("\u2022"))
         }
@@ -107,12 +106,10 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     fun when_both_email_and_login_fields_login_button_is_enabled() {
         setupSplashComposeRule()
         with(composeTestRule) {
-            val email = "example@gmail.com"
-            val password = "password"
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
-                .performTextInput(email)
+                .performTextInput("example@gmail.com")
             onNodeWithContentDescription(getString(R.string.login_password_text_field))
-                .performTextInput(password)
+                .performTextInput("p")
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .assertIsEnabled()
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
@@ -144,9 +141,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .performTextInput(VALID_PASSWORD)
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
-            waitUntil(2000) {
-               splashViewModel.isLoginSuccess.value
-            }
+            waitForIdle()
             assert(splashViewModel.isLoginSuccess.value)
         }
     }
