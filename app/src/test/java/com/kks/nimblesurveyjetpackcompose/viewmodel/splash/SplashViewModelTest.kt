@@ -31,7 +31,7 @@ class SplashViewModelTest : BaseViewModelTest() {
     fun `When splash screen is displayed, shouldNavigateToLogin value is true after 2 seconds`() {
         val twoSeconds = 2000L
         runTest {
-            viewModel.startTimerToNavigateToLogin(splashTime = twoSeconds)
+            viewModel.startTimerToNavigateToLogin()
 
             var actual = false
             launch {
