@@ -59,7 +59,7 @@ fun SplashScreen(
 ) {
     val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
-    val shouldShowError by viewModel.isError.collectAsState()
+    val shouldShowError by viewModel.hasError.collectAsState()
     val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
@@ -215,7 +215,7 @@ fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
 fun LoginButton(loginButtonState: Boolean, onClickLogin: () -> Unit) {
     val loginButtonContentDescription = stringResource(id = R.string.login_log_in_button)
     Button(
-        onClick = { onClickLogin() },
+        onClick = onClickLogin,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
         modifier = Modifier

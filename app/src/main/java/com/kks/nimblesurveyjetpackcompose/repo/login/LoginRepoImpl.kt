@@ -52,6 +52,6 @@ class LoginRepoImpl @Inject constructor(
             else -> emit(ResourceState.NetworkError)
         }
     }.catch { error ->
-        emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))
+        emit(ResourceState.Error(error.message.orEmpty()))
     }
 }

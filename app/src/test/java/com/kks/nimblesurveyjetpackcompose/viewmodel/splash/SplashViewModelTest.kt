@@ -55,7 +55,7 @@ class SplashViewModelTest : BaseViewModelTest() {
         viewModel.login("example@gmail.com", "invalid")
         advanceUntilIdle()
 
-        assertEquals(errorMessage, viewModel.isError.value.second)
+        assertEquals(errorMessage, viewModel.hasError.value.errorMessage)
     }
 
     @Test

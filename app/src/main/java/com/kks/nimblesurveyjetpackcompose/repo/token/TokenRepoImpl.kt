@@ -6,7 +6,6 @@ import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.network.AuthInterface
 import com.kks.nimblesurveyjetpackcompose.util.*
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
-import com.kks.nimblesurveyjetpackcompose.util.extensions.UNKNOWN_ERROR_MESSAGE
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -50,6 +49,6 @@ class TokenRepoImpl @Inject constructor(
                 ResourceState.Loading -> emit(ResourceState.Loading)
             }
         }.catch { error ->
-            emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))
+            emit(ResourceState.Error(error.message.orEmpty()))
         }
 }
