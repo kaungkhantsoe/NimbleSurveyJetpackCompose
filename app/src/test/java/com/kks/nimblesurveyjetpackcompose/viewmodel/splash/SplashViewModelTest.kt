@@ -20,9 +20,11 @@ class SplashViewModelTest : BaseViewModelTest() {
 
     private lateinit var viewModel: SplashViewModel
 
+    private val loginRepo: LoginRepo = mockk()
+
     override fun setup() {
         super.setup()
-        viewModel = SplashViewModel(ioDispatcher = testDispatcher)
+        viewModel = SplashViewModel(loginRepo = loginRepo, ioDispatcher = testDispatcher)
     }
 
     @Test
@@ -34,7 +36,7 @@ class SplashViewModelTest : BaseViewModelTest() {
     fun `When splash screen is displayed, shouldNavigateToLogin value is true after 2 seconds`() {
         val twoSeconds = 2000L
         runTest {
-            viewModel.startTimerToNavigateToLogin()
+            viewModel.startTimerToNavigateToLogin(twoSeconds)
 
             var actual = false
             launch {

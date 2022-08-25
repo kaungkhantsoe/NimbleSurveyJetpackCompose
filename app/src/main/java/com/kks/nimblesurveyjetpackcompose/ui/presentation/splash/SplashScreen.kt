@@ -40,14 +40,13 @@ import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.HomeScreenDestination
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
-import com.kks.nimblesurveyjetpackcompose.util.extensions.loginTextFieldModifier
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavHostParam
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
-import com.ramcosta.composedestinations.annotation.NavHostParam
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 
 @RootNavGraph(start = true)
 @Destination
@@ -165,7 +164,9 @@ fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
         singleLine = true,
         label = { Text(stringResource(R.string.login_email)) },
         colors = textFieldColor(),
-        modifier = Modifier.loginTextFieldModifier(),
+        modifier = Modifier
+            .loginTextFieldModifier()
+            .semantics { contentDescription = emailContentDescription },
         keyboardActions = KeyboardActions(
             onNext = {
                 focusManager.moveFocus(FocusDirection.Down)
