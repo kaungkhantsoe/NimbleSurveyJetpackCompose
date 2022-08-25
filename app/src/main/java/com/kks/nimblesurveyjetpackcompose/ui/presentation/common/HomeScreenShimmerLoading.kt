@@ -1,12 +1,13 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -19,11 +20,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 
 @Composable
 fun HomeScreenShimmerLoading() {
-    val shimmerColors = listOf(
-        Color.LightGray.copy(alpha = 0.4f),
-        Color.LightGray.copy(alpha = 0.2f),
-        Color.LightGray.copy(alpha = 0.4f),
-    )
 
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
@@ -33,18 +29,11 @@ fun HomeScreenShimmerLoading() {
             animation = tween(
                 durationMillis = 1000,
                 easing = FastOutSlowInEasing
-            ),
-            repeatMode = RepeatMode.Reverse
+            )
         )
     )
 
-    val brush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset.Zero,
-        end = Offset(x = translateAnimation.value, y = translateAnimation.value)
-    )
-
-    ShimmerHomeScreen(brush = brush)
+    ShimmerHomeScreen(brush = shimmerBrush(translateAnimation))
 }
 
 @Composable
@@ -93,6 +82,18 @@ fun ShimmerHomeScreen(brush: Brush) {
 }
 
 @Composable
+fun shimmerBrush(translateAnimation: State<Float> = mutableStateOf(0f)) =
+    Brush.linearGradient(
+        colors = listOf(
+            Color.LightGray.copy(alpha = 0.4f),
+            Color.LightGray.copy(alpha = 0.2f),
+            Color.LightGray.copy(alpha = 0.4f),
+        ),
+        start = Offset.Zero,
+        end = Offset(x = translateAnimation.value, y = translateAnimation.value)
+    )
+
+@Composable
 fun CustomSpacerRectangle(brush: Brush, width: Dp, topPadding: Dp = 0.dp) {
     Column {
         Spacer(modifier = Modifier.height(topPadding))
@@ -109,26 +110,6 @@ fun CustomSpacerRectangle(brush: Brush, width: Dp, topPadding: Dp = 0.dp) {
 @Preview(showBackground = true)
 fun ShimmerHomeScreenPreview() {
     ShimmerHomeScreen(
-        brush = Brush.linearGradient(
-            listOf(
-                Color.LightGray.copy(alpha = 0.4f),
-                Color.LightGray.copy(alpha = 0.2f),
-                Color.LightGray.copy(alpha = 0.4f),
-            )
-        )
-    )
-}
-
-@Composable
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-fun ShimmerHomeScreenPreviewNight() {
-    ShimmerHomeScreen(
-        brush = Brush.linearGradient(
-            listOf(
-                Color.LightGray.copy(alpha = 0.4f),
-                Color.LightGray.copy(alpha = 0.2f),
-                Color.LightGray.copy(alpha = 0.4f),
-            )
-        )
+        brush = shimmerBrush()
     )
 }
