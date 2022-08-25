@@ -17,12 +17,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 @Destination(start = true)
 @Composable
-fun SplashScreen(navigator: DestinationsNavigator, viewModel: SplashViewModel = viewModel()) {
+fun SplashScreen(viewModel: SplashViewModel = viewModel()) {
     LaunchedEffect(
         key1 = viewModel.shouldNavigateToLogin.value
     ) {
@@ -53,5 +51,5 @@ fun SplashScreen(navigator: DestinationsNavigator, viewModel: SplashViewModel = 
 @Preview(showBackground = true)
 @Composable
 fun SplashPreview() {
-    SplashScreen(EmptyDestinationsNavigator)
+    SplashScreen()
 }
