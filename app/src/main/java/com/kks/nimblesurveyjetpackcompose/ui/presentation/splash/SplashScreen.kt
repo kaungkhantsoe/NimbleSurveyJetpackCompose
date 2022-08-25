@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,15 +34,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
-import com.kks.nimblesurveyjetpackcompose.util.extensions.loginTextFieldModifier
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavHostParam
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import kotlinx.coroutines.launch
 
-@Destination(start = true)
+@RootNavGraph(start = true)
+@Destination
 @Composable
-fun SplashScreen(viewModel: SplashViewModel = viewModel()) {
-fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
+fun SplashScreen(
+    @NavHostParam splashTime: Long = 2000L,
+    viewModel: SplashViewModel = hiltViewModel()
+) {
     val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
@@ -90,7 +92,7 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
             LoginComponents()
         }
     }
-    viewModel.startTimerToNavigateToLogin()
+    viewModel.startTimerToNavigateToLogin(splashTime = splashTime)
 }
 
 @Suppress("LongMethod")
@@ -123,24 +125,12 @@ fun LoginComponents() {
 fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
     TextField(
         value = emailState,
-        onValueChange = {
-            onValueChange(it)
-        },
+        onValueChange = { onValueChange(it) },
         shape = RoundedCornerShape(12.dp),
         singleLine = true,
         label = { Text(LocalContext.current.getString(R.string.login_email)) },
         colors = textFieldColor(),
-        modifier = Modifier.loginTextFieldModifier(),
-        trailingIcon = {
-            if (emailState.isNotEmpty()) {
-                IconButton(onClick = { onValueChange("") }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = null
-                    )
-                }
-            }
-        }
+        modifier = Modifier.loginTextFieldModifier()
     )
 }
 
@@ -150,16 +140,16 @@ fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
 
     TextField(
         value = passwordState,
-        onValueChange = {
-            onValueChange(it)
-        },
+        onValueChange = { onValueChange(it) },
         shape = RoundedCornerShape(12.dp),
         singleLine = true,
         label = { Text(context.getString(R.string.login_password)) },
         colors = textFieldColor(),
         modifier = Modifier.loginTextFieldModifier(),
         trailingIcon = {
-            TextButton(onClick = { }) {
+            TextButton(onClick = {
+                // TODO: Implement forgot password function
+            }) {
                 Text(context.getString(R.string.login_forget), color = Color.White)
             }
         },
@@ -171,7 +161,9 @@ fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
 @Composable
 fun LoginButton(loginButtonState: Boolean) {
     Button(
-        onClick = { },
+        onClick = {
+            // TODO: Implement login function
+        },
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
         modifier = Modifier.loginTextFieldModifier(),
@@ -199,6 +191,11 @@ fun textFieldColor() =
         unfocusedLabelColor = Concord,
         textColor = Color.White
     )
+
+private fun Modifier.loginTextFieldModifier() = this
+    .fillMaxWidth()
+    .padding(start = 24.dp, end = 24.dp)
+    .height(56.dp)
 
 @Preview(showBackground = true)
 @Composable

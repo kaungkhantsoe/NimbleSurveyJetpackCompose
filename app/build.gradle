@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
-    id 'com.google.devtools.ksp' version '1.6.10-1.0.2'
+    id 'com.google.devtools.ksp' version '1.7.0-1.0.6'
     id 'kotlin-kapt'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'dagger.hilt.android.plugin'
@@ -161,9 +161,9 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version"
 
     //Dagger - Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation 'com.google.dagger:hilt-android:2.42'
+    kapt 'com.google.dagger:hilt-compiler:2.42'
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_compose_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Timber
     implementation("com.jakewharton.timber:timber:$timber_version")

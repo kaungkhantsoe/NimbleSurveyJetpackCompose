@@ -13,12 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-var SPLASH_TIME = 2000L
-
-@Suppress("UnusedPrivateMember")
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val loginRepo: LoginRepo,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -27,9 +23,9 @@ class SplashViewModel @Inject constructor(
     val shouldNavigateToLogin: StateFlow<Boolean>
         get() = _shouldNavigateToLogin.asStateFlow()
 
-    fun startTimerToNavigateToLogin() {
+    fun startTimerToNavigateToLogin(splashTime: Long = 2000L) {
         viewModelScope.launch(ioDispatcher) {
-            delay(SPLASH_TIME)
+            delay(splashTime)
             _shouldNavigateToLogin.value = true
         }
     }
