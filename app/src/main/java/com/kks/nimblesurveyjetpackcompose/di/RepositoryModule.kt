@@ -1,6 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.di
 
-import com.kks.nimblesurveyjetpackcompose.model.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepoImpl
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo

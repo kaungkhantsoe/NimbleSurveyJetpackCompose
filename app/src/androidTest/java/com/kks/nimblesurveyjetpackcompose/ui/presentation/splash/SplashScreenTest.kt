@@ -10,7 +10,6 @@ import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
-import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SPLASH_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import dagger.hilt.android.testing.BindValue
@@ -54,7 +53,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_splash_screen_start_show_both_background_image_and_logo_image() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.splash_background_content_description))
@@ -66,7 +64,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_navigate_to_login_show_emil_password_and_login_button() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             onNodeWithText(getString(R.string.login_email)).assertIsDisplayed()
@@ -81,7 +78,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_type_email_into_email_text_field_has_email_text() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             val email = "example@gmail.com"
@@ -94,7 +90,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_type_password_into_password_text_field_has_text_with_mask() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_password_text_field))
@@ -106,7 +101,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_fill_in_only_one_field_login_button_is_disabled() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -118,7 +112,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_both_email_and_login_fields_login_button_is_enabled() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -134,7 +127,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_with_incorrect_email_and_password_error_dialog_is_shown() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -149,7 +141,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_with_correct_email_and_password_goes_to_home() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         setupSplashComposeRule()
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -163,7 +154,8 @@ class SplashScreenTest : BaseAndroidComposeTest() {
         }
     }
 
-    private fun setupSplashComposeRule(splashTime: Long = 0L) {
+    private fun setupSplashComposeRule(splashTime: Long = 0L, isLoggedIn: Boolean = false) {
+        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns isLoggedIn
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
                 SplashScreen(

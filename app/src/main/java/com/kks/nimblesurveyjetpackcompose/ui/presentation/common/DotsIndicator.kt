@@ -1,4 +1,4 @@
-package com.kks.nimblesurveyjetpackcompose.util
+package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +27,6 @@ fun DotsIndicator(
             .wrapContentWidth()
             .wrapContentHeight()
             .padding(start = 20.dp, end = 20.dp)
-
     ) {
         items(totalDots) { index ->
             if (index == selectedIndex) {
@@ -45,7 +44,6 @@ fun DotsIndicator(
                         .background(unSelectedColor)
                 )
             }
-
             if (index != totalDots - 1) {
                 Spacer(modifier = Modifier.padding(horizontal = space))
             }

@@ -27,7 +27,6 @@ class SplashViewModel @Inject constructor(
     private val _shouldShowLoading = MutableStateFlow(false)
     private val _shouldNavigateToLogin = MutableStateFlow(false)
     private val _isLoginSuccess = MutableStateFlow(false)
-    private val _isAlreadyLoggedIn = MutableStateFlow(false)
     private var _error = MutableStateFlow<ErrorModel?>(null)
 
     val getError: StateFlow<ErrorModel?>
@@ -42,14 +41,11 @@ class SplashViewModel @Inject constructor(
     val isLoginSuccess: StateFlow<Boolean>
         get() = _isLoginSuccess.asStateFlow()
 
-    val isAlreadyLoggedIn: StateFlow<Boolean>
-        get() = _isAlreadyLoggedIn.asStateFlow()
-
     fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
             if (preferenceManager.getBooleanData(PREF_LOGGED_IN)) {
-                _isAlreadyLoggedIn.value = true
+                _isLoginSuccess.value = true
             } else {
                 _shouldNavigateToLogin.value = true
             }

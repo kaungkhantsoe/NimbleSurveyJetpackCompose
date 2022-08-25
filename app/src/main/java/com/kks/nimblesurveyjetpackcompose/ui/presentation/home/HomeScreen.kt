@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -14,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -31,11 +29,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.HomeScreenShimmerLoading
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
-import com.kks.nimblesurveyjetpackcompose.util.DotsIndicator
-import com.kks.nimblesurveyjetpackcompose.util.neuzeitFamily
+import com.kks.nimblesurveyjetpackcompose.ui.theme.neuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -49,11 +47,8 @@ private const val RIGHT_SWIPE = -1
 @Composable
 fun HomeScreen() {
     val activity = LocalContext.current as? Activity
-
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        HomeScreenShimmerLoading()
-        HomeContent()
-    }
+    HomeScreenShimmerLoading()
+    HomeContent()
     BackHandler {
         activity?.finish()
     }
@@ -106,12 +101,7 @@ fun HomeContent(viewModel: HomeViewModel = hiltViewModel()) {
                             anchors = anchors,
                             thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
                             orientation = Orientation.Horizontal
-                        )
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onPress = { /* Called when the gesture starts */ }
-                            )
-                        },
+                        ),
                     numberOfPage = numberOfPage,
                     currentPage = currentPage
                 )
@@ -161,9 +151,7 @@ fun SurveyContent(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
         BottomView(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(bottomView) {
-                    bottom.linkTo(parent.bottom, 54.dp)
-                },
+                .constrainAs(bottomView) { bottom.linkTo(parent.bottom, 54.dp) },
             numberOfPage = numberOfPage,
             currentPage = currentPage
         )
@@ -183,9 +171,7 @@ fun UserIcon(modifier: Modifier) {
 
 @Composable
 fun BottomView(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         DotsIndicator(
             totalDots = numberOfPage,
             selectedIndex = currentPage,
