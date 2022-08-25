@@ -26,8 +26,6 @@ class TokenAuthenticator @Inject constructor(
 
     override fun authenticate(route: Route?, response: Response): Request? {
         var isRefreshed = false
-        val accessToken = preferenceManager.getStringData(PREF_ACCESS_TOKEN)
-
         try {
             if (!hasValidHeader(response) ||
                 preferenceManager.getStringData(PREF_ACCESS_TOKEN).isNullOrEmpty()
@@ -36,7 +34,7 @@ class TokenAuthenticator @Inject constructor(
             }
 
             // Request new token with refreshToken
-            val job = CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 tokenRepo.refreshToken(
                     preferenceManager.getStringData(PREF_REFRESH_TOKEN).orEmpty()
                 ).collectLatest {

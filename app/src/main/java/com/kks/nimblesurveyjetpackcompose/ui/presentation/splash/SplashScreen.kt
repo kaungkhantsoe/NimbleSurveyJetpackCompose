@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.LoginScreenDestination
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -28,7 +27,7 @@ fun SplashScreen(navigator: DestinationsNavigator, viewModel: SplashViewModel = 
         key1 = viewModel.shouldNavigateToLogin.value
     ) {
         if (viewModel.shouldNavigateToLogin.value) {
-            navigator.navigate(LoginScreenDestination)
+            // TODO: Navigate to Login
         }
     }
 

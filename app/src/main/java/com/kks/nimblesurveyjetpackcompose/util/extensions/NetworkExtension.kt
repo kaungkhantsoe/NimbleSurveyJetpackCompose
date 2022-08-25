@@ -65,7 +65,7 @@ inline fun <reified T> Response<*>.parseJsonErrorResponse(): T? {
     val response = errorBody()?.string()
     return try {
         response?.let { parser.fromJson(it) }
-    }catch (e: JsonDataException) {
+    } catch (e: JsonDataException) {
         null
     }
 }
