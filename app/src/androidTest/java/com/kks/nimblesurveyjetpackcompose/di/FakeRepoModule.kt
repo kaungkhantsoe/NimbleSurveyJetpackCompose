@@ -1,8 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.di
 
-import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.home.HomeScreenKtTest
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.splash.SplashScreenTest
 import dagger.Module
 import dagger.Provides
@@ -19,8 +17,4 @@ class FakeRepoModule {
     @Singleton
     @Provides
     fun provideFakeLoginRepo(): LoginRepo = SplashScreenTest.FakeLoginRepo()
-
-    @Singleton
-    @Provides
-    fun provideFakeHomeRepo(): HomeRepo = HomeScreenKtTest.FakeHomeRepo()
 }
