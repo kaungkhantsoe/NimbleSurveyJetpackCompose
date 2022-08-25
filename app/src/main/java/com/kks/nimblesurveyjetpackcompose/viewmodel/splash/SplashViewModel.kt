@@ -3,7 +3,6 @@ package com.kks.nimblesurveyjetpackcompose.viewmodel.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
-import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay

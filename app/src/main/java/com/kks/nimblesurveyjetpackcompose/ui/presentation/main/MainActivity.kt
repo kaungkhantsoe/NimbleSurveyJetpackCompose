@@ -9,7 +9,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.splash.NavGraphs
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.annotation.NavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
