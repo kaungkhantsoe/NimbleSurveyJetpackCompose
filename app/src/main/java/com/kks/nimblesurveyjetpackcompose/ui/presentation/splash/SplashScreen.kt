@@ -58,11 +58,14 @@ fun SplashScreen(
 ) {
     val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
-    val shouldShowError by viewModel.hasError.collectAsState()
+    val errorState by viewModel.getError.collectAsState()
     val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
-    LaunchedEffect(keys = arrayOf(showLoginComponents)) {
+
+    if (isLoginSuccess) navigator.navigate(HomeScreenDestination)
+
+    LaunchedEffect(key1 = showLoginComponents) {
         if (showLoginComponents) {
             launch {
                 logoOffset.animateTo(
@@ -75,14 +78,13 @@ fun SplashScreen(
             }
         }
     }
-    if (isLoginSuccess) navigator.navigate(HomeScreenDestination)
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         BackgroundImage(
             modifier = Modifier.matchParentSize(),
-            showLoginComponents = showLoginComponents
+            isBlurred = showLoginComponents
         )
         LogoImage(
             modifier = Modifier
@@ -95,21 +97,23 @@ fun SplashScreen(
                 }
         )
         AnimatedVisibility(visible = showLoginComponents, enter = fadeIn()) { LoginComponents() }
-        Loading(showLoading = shouldShowLoading)
-        ErrorAlertDialog(
-            errorState = shouldShowError,
-            title = stringResource(id = R.string.oops),
-            buttonText = stringResource(id = android.R.string.ok),
-            onClickButton = { viewModel.resetError() }
-        )
+        if (shouldShowLoading) Loading()
+        errorState?.let { error ->
+            ErrorAlertDialog(
+                errorState = error,
+                title = stringResource(id = R.string.oops),
+                buttonText = stringResource(id = android.R.string.ok),
+                onClickButton = { viewModel.resetError() }
+            )
+        }
     }
     viewModel.startTimerToNavigateToLogin(splashTime = splashTime)
 }
 
 @Composable
-fun BackgroundImage(modifier: Modifier, showLoginComponents: Boolean) {
+fun BackgroundImage(modifier: Modifier, isBlurred: Boolean) {
     Image(
-        painter = painterResource(id = if (showLoginComponents) R.drawable.ic_overlay else R.drawable.splash_bg),
+        painter = painterResource(id = if (isBlurred) R.drawable.ic_overlay else R.drawable.splash_bg),
         contentDescription = stringResource(id = R.string.splash_background_content_description),
         modifier = modifier,
         contentScale = ContentScale.Crop

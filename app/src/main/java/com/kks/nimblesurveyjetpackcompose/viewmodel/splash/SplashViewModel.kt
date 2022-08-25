@@ -13,7 +13,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,14 +24,10 @@ class SplashViewModel @Inject constructor(
     private val _shouldShowLoading = MutableStateFlow(false)
     private val _shouldNavigateToLogin = MutableStateFlow(false)
     private val _isLoginSuccess = MutableStateFlow(false)
-    private var _hasError = MutableStateFlow(ErrorModel())
+    private var _error = MutableStateFlow<ErrorModel?>(null)
 
-    val hasError: StateFlow<ErrorModel>
-        get() = _hasError.asStateFlow()
-
-    fun resetError() {
-        _hasError.value = ErrorModel()
-    }
+    val getError: StateFlow<ErrorModel?>
+        get() = _error.asStateFlow()
 
     val shouldNavigateToLogin: StateFlow<Boolean>
         get() = _shouldNavigateToLogin.asStateFlow()
@@ -65,10 +60,16 @@ class SplashViewModel @Inject constructor(
                     }
                     else -> {
                         _shouldShowLoading.value = false
-                        mapError(it, _hasError)
+                        it.mapError()?.let { errorModel ->
+                            _error.value = errorModel
+                        }
                     }
                 }
             }
         }
+    }
+
+    fun resetError() {
+        _error.value = null
     }
 }
