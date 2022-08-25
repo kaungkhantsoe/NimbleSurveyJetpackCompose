@@ -1,10 +1,10 @@
 package com.kks.nimblesurveyjetpackcompose.repo.login
 
 import com.kks.nimblesurveyjetpackcompose.di.ServiceQualifier
-import com.kks.nimblesurveyjetpackcompose.model.ApiInterface
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.request.LoginRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
+import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
 import com.kks.nimblesurveyjetpackcompose.util.*
 import com.kks.nimblesurveyjetpackcompose.util.extensions.*
 import kotlinx.coroutines.Dispatchers
@@ -35,22 +35,20 @@ class LoginRepoImpl @Inject constructor(
         }
         when (apiResult) {
             is ResourceState.Success -> {
-                apiResult.successData.data?.let { loginResponse ->
+                apiResult.data.data?.let { loginResponse ->
                     preferenceManager.setStringData(
                         PREF_ACCESS_TOKEN,
-                        loginResponse.attributes?.accessToken.orEmpty()
+                        loginResponse.attributes?.accessToken
                     )
                     preferenceManager.setStringData(
                         PREF_REFRESH_TOKEN,
-                        loginResponse.attributes?.refreshToken.orEmpty()
+                        loginResponse.attributes?.refreshToken
                     )
                     emit(ResourceState.Success(loginResponse))
                 } ?: emit(ResourceState.Error(SUCCESS_WITH_NULL_ERROR))
             }
             is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
-            else -> {
-                emit(ResourceState.NetworkError)
-            }
+            else -> emit(ResourceState.NetworkError)
         }
     }.catch { error ->
         emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))

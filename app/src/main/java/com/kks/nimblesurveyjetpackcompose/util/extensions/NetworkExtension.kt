@@ -1,4 +1,5 @@
 @file:Suppress("UnusedPrivateMember")
+
 package com.kks.nimblesurveyjetpackcompose.util.extensions
 
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
@@ -41,17 +42,16 @@ suspend fun <T> safeApiCall(
             }
         } catch (throwable: Exception) {
             when (throwable) {
-                is IOException -> ResourceState.NetworkError
-                is UnknownHostException -> ResourceState.NetworkError
+                is IOException,
+                is UnknownHostException,
                 is TimeoutCancellationException -> ResourceState.NetworkError
                 is HttpException -> {
-                    val errorResponse = throwable.response()?.parseErrJsonResponse<CustomErrorResponse>()
-                    val errorMsg = errorResponse?.errors?.first()?.detail
+                    val errorResponse =
+                        throwable.response()?.parseJsonErrorResponse<CustomErrorResponse>()
+                    val errorMsg = errorResponse?.errors?.first()?.detail ?: "Unknown error"
                     ResourceState.Error(errorMsg)
                 }
-                else -> {
-                    ResourceState.Error(throwable.message ?: "Unknown error")
-                }
+                else -> ResourceState.Error(throwable.message ?: "Unknown error")
             }
         }
     }
@@ -59,16 +59,13 @@ suspend fun <T> safeApiCall(
 
 // Reference: https://stackoverflow.com/a/55255097
 @Suppress("SwallowedException")
-inline fun <reified T>Response<*>.parseErrJsonResponse(): T? {
+inline fun <reified T> Response<*>.parseJsonErrorResponse(): T? {
     val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     val parser = moshi.adapter(T::class.java)
     val response = errorBody()?.string()
-    response?.let {
-        try {
-            return parser.fromJson(it)
-        } catch (e: JsonDataException) {
-            // Do nothing
-        }
+    return try {
+        response?.let { parser.fromJson(it) }
+    }catch (e: JsonDataException) {
+        null
     }
-    return null
 }

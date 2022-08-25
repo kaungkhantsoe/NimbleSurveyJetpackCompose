@@ -13,14 +13,10 @@ class AccessTokenInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken: String =
             preferenceManager.getStringData(PREF_ACCESS_TOKEN).orEmpty()
-        val request: Request = newRequestWithAccessToken(chain.request(), accessToken)
-        return chain.proceed(request)
-    }
-
-    private fun newRequestWithAccessToken(request: Request, accessToken: String): Request =
-        // Create new request with new accessToken fetched earlier
-        request.newBuilder().header(
+        val request: Request = chain.request().newBuilder().header(
             "Authorization",
             "Bearer $accessToken"
         ).build()
+        return chain.proceed(request)
+    }
 }

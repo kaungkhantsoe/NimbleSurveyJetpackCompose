@@ -3,8 +3,8 @@ package com.kks.nimblesurveyjetpackcompose.di
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.kks.nimblesurveyjetpackcompose.BuildConfig
-import com.kks.nimblesurveyjetpackcompose.model.ApiInterface
-import com.kks.nimblesurveyjetpackcompose.model.AuthInterface
+import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.network.AuthInterface
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepo
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepoImpl
 import com.kks.nimblesurveyjetpackcompose.util.CustomKeyProvider

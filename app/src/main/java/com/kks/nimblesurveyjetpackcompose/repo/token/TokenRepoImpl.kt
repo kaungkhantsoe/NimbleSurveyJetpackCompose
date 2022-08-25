@@ -1,9 +1,9 @@
 package com.kks.nimblesurveyjetpackcompose.repo.token
 
-import com.kks.nimblesurveyjetpackcompose.model.AuthInterface
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.request.RefreshTokenRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
+import com.kks.nimblesurveyjetpackcompose.network.AuthInterface
 import com.kks.nimblesurveyjetpackcompose.util.*
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
 import com.kks.nimblesurveyjetpackcompose.util.extensions.UNKNOWN_ERROR_MESSAGE
@@ -33,24 +33,20 @@ class TokenRepoImpl @Inject constructor(
             }
             when (apiResult) {
                 is ResourceState.Success -> {
-                    apiResult.successData.data?.attributes?.let { response ->
+                    apiResult.data.data?.attributes?.let { response ->
                         preferenceManager.setStringData(
                             PREF_ACCESS_TOKEN,
-                            response.accessToken.orEmpty()
+                            response.accessToken
                         )
                         preferenceManager.setStringData(
                             PREF_REFRESH_TOKEN,
-                            response.refreshToken.orEmpty()
+                            response.refreshToken
                         )
-                        emit(ResourceState.Success(apiResult.successData.data))
+                        emit(ResourceState.Success(apiResult.data.data))
                     } ?: emit(ResourceState.Error(SUCCESS_WITH_NULL_ERROR))
                 }
-                is ResourceState.Error -> {
-                    emit(ResourceState.Error(apiResult.error))
-                }
-                ResourceState.NetworkError -> {
-                    emit(ResourceState.NetworkError)
-                }
+                is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
+                ResourceState.NetworkError -> emit(ResourceState.NetworkError)
                 ResourceState.Loading -> emit(ResourceState.Loading)
             }
         }.catch { error ->

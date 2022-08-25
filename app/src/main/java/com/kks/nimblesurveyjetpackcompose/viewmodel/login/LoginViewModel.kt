@@ -14,12 +14,4 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginRepo: LoginRepo,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : ViewModel() {
-
-    fun login() {
-        viewModelScope.launch(ioDispatcher) {
-            val test = loginRepo.loginWithEmailAndPassword("kaung@nimblehq.co", "12345678")
-            test.collect {}
-        }
-    }
-}
+) : ViewModel()

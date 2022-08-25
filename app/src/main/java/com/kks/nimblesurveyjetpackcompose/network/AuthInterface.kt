@@ -1,4 +1,4 @@
-package com.kks.nimblesurveyjetpackcompose.model
+package com.kks.nimblesurveyjetpackcompose.network
 
 import com.kks.nimblesurveyjetpackcompose.model.request.RefreshTokenRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.BaseResponse

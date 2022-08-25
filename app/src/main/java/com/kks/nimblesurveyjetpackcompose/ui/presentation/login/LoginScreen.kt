@@ -11,7 +11,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Suppress("UnusedPrivateMember")
 @Destination
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen() {
     val activity = (LocalContext.current as? Activity)
     BackHandler {
         activity?.finish()

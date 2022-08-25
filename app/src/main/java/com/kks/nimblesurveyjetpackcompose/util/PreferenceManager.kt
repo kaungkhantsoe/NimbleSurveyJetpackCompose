@@ -3,7 +3,6 @@ package com.kks.nimblesurveyjetpackcompose.util
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.google.gson.Gson
 import com.kks.nimblesurveyjetpackcompose.R
 
 const val PREF_ACCESS_TOKEN = "access_token"
@@ -17,7 +16,7 @@ class PreferenceManager(context: Context) {
             Context.MODE_PRIVATE
         )
 
-    fun setStringData(key: String, value: String) {
+    fun setStringData(key: String, value: String?) {
         preferences.edit { putString(key, value) }
     }
 
@@ -31,12 +30,6 @@ class PreferenceManager(context: Context) {
 
     fun setBooleanData(key: String, value: Boolean) {
         preferences.edit { putBoolean(key, value) }
-    }
-
-    fun <T> setList(key: String?, list: List<T>?) {
-        val gson = Gson()
-        val json = gson.toJson(list)
-        preferences.edit().putString(key, json).apply()
     }
 
     fun getStringData(key: String): String? {

@@ -26,6 +26,7 @@ class TokenAuthenticator @Inject constructor(
 
     override fun authenticate(route: Route?, response: Response): Request? {
         var isRefreshed = false
+        val accessToken = preferenceManager.getStringData(PREF_ACCESS_TOKEN)
 
         try {
             if (!hasValidHeader(response) ||
@@ -47,10 +48,8 @@ class TokenAuthenticator @Inject constructor(
                 while (!isRefreshed) {
                     // Wait for cache
                 }
-                isRefreshed = false
                 // Create new request with new accessToken fetched earlier
                 val newToken = preferenceManager.getStringData(PREF_ACCESS_TOKEN)
-                job.cancel()
                 return response.request.newBuilder().header(
                     "Authorization",
                     "Bearer $newToken"
