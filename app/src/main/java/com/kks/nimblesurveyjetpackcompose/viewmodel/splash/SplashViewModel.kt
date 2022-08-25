@@ -43,7 +43,7 @@ class SplashViewModel @Inject constructor(
     val isLoginSuccess: StateFlow<Boolean>
         get() = _isLoginSuccess.asStateFlow()
 
-    fun startTimerToNavigateToLogin() {
+    fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
             _shouldNavigateToLogin.value = true

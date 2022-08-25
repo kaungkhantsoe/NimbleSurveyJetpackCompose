@@ -10,6 +10,7 @@ import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -148,7 +149,11 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     private fun setupSplashComposeRule(splashTime: Long = 0L) {
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
-                SplashScreen(splashTime = splashTime, viewModel = splashViewModel, navigator = EmptyDestinationsNavigator)
+                SplashScreen(
+                    splashTime = splashTime,
+                    viewModel = splashViewModel,
+                    navigator = EmptyDestinationsNavigator
+                )
             }
         }
     }
