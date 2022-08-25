@@ -12,22 +12,20 @@ import androidx.compose.ui.unit.dp
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CuriousBlue
 
 @Composable
-fun Loading(showLoading: Boolean) {
-    if (showLoading) {
-        Card(
-            shape = RoundedCornerShape(10.dp),
-            backgroundColor = MaterialTheme.colors.surface
-        ) {
-            CircularProgressIndicator(
-                color = CuriousBlue,
-                modifier = Modifier.padding(all = 20.dp)
-            )
-        }
+fun Loading() {
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        backgroundColor = MaterialTheme.colors.surface
+    ) {
+        CircularProgressIndicator(
+            color = CuriousBlue,
+            modifier = Modifier.padding(20.dp)
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LoadingPreview() {
-    Loading(showLoading = true)
+    Loading()
 }

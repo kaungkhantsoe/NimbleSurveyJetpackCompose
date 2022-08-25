@@ -9,7 +9,6 @@ import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -37,8 +36,7 @@ suspend fun <T> safeApiCall(
                 is UnknownHostException,
                 is TimeoutCancellationException -> ResourceState.NetworkError
                 is HttpException -> {
-                    val errorResponse =
-                        throwable.response()?.parseJsonErrorResponse<CustomErrorResponse>()
+                    val errorResponse = throwable.response()?.parseJsonErrorResponse<CustomErrorResponse>()
                     val errorMsg = errorResponse?.errors?.first()?.detail ?: "Unknown error"
                     ResourceState.Error(errorMsg)
                 }
@@ -61,15 +59,11 @@ inline fun <reified T> Response<*>.parseJsonErrorResponse(): T? {
     }
 }
 
-fun <T> mapError(resourceState: ResourceState<T>, isError: MutableStateFlow<ErrorModel>) {
-    when (resourceState) {
-        is ResourceState.Error ->
-            isError.value =
-                ErrorModel(errorType = ErrorType.INFO, errorMessage = resourceState.error.orEmpty())
-        is ResourceState.NetworkError -> isError.value = ErrorModel(errorType = ErrorType.NETWORK)
-        else -> {
-            // Do nothing
-        }
+fun <T> ResourceState<T>.mapError(): ErrorModel? {
+    return when (this) {
+        is ResourceState.Error -> ErrorModel(errorType = ErrorType.INFO, errorMessage = error.orEmpty())
+        is ResourceState.NetworkError -> ErrorModel(errorType = ErrorType.NETWORK)
+        else -> null
     }
 }
 

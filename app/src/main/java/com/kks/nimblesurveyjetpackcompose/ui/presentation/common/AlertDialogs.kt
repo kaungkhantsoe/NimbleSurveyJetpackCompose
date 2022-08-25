@@ -18,37 +18,35 @@ fun ErrorAlertDialog(
     buttonText: String,
     onClickButton: () -> Unit,
 ) {
-    errorState.errorType?.let {
-        AlertDialog(
-            shape = RoundedCornerShape(10.dp),
-            onDismissRequest = { onClickButton() },
-            title = {
-                Column {
-                    Text(text = title)
-                    Divider(
-                        color = CuriousBlue,
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
-            },
-            text = { Text(text = errorState.errorMessage.orEmpty()) },
-            backgroundColor = Color.White,
-            buttons = {
-                Box(
-                    modifier = Modifier
-                        .padding(all = 8.dp)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.CenterEnd
+    AlertDialog(
+        shape = RoundedCornerShape(10.dp),
+        onDismissRequest = { onClickButton() },
+        title = {
+            Column {
+                Text(text = title)
+                Divider(
+                    color = CuriousBlue,
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        },
+        text = { Text(text = errorState.errorMessage.orEmpty()) },
+        backgroundColor = Color.White,
+        buttons = {
+            Box(
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Button(
+                    onClick = { onClickButton() },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = CuriousBlue),
                 ) {
-                    Button(
-                        onClick = { onClickButton() },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = CuriousBlue),
-                    ) {
-                        Text(text = buttonText, color = Color.White)
-                    }
+                    Text(text = buttonText, color = Color.White)
                 }
             }
-        )
-    }
+        }
+    )
 }
