@@ -30,10 +30,9 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.HomeScreenShimmerLoading
+import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
-import com.kks.nimblesurveyjetpackcompose.ui.theme.neuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -226,7 +225,7 @@ fun SurveyText(
 ) {
     Text(
         text = text,
-        fontFamily = neuzeitFamily,
+        fontFamily = NeuzeitFamily,
         fontWeight = fontWeight,
         color = color,
         fontSize = fontSize,

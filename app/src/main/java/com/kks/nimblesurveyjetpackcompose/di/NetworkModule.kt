@@ -81,7 +81,7 @@ interface NetworkModule {
         fun provideServiceOkHttpClient(
             loggingInterceptor: HttpLoggingInterceptor,
             chuckerInterceptor: ChuckerInterceptor,
-            tokenAuthenticator: TokenAuthenticator,
+            tokenAuthenticator: Authenticator,
             accessTokenInterceptor: Interceptor
         ): OkHttpClient {
             return OkHttpClient().newBuilder()

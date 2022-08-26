@@ -29,7 +29,7 @@ val Typography = Typography(
     */
 )
 
-val neuzeitFamily = FontFamily(
+val NeuzeitFamily = FontFamily(
     Font(R.font.neuzeit_heavy, FontWeight.Bold),
     Font(R.font.neuzeit_book, FontWeight.Normal)
 )
