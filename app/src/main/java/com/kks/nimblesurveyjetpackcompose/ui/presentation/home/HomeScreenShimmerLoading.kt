@@ -40,11 +40,9 @@ fun HomeScreenShimmerLoading(modifier: Modifier) {
 
 @Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
-fun ShimmerHomeScreen(brush: Brush, modifier: Modifier) {
+fun ShimmerHomeScreen(modifier: Modifier,brush: Brush) {
     ConstraintLayout(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
+        modifier = modifier.background(Color.Black)
     ) {
         val (text1, text2, text3, text4, text5, text6, text7, circle) = createRefs()
 
@@ -148,5 +146,5 @@ fun CustomSpacerRectangle(brush: Brush, modifier: Modifier) =
 @Composable
 @Preview(showBackground = true)
 fun ShimmerHomeScreenPreview() {
-    ShimmerHomeScreen(brush = shimmerBrush(), modifier = Modifier)
+    ShimmerHomeScreen(brush = shimmerBrush(), modifier = Modifier.fillMaxSize())
 }

@@ -24,6 +24,7 @@ class HomeRepoImpl @Inject constructor(
         pageSize: Int,
         getNumberOfPage: (totalPage: Int) -> Unit
     ): Flow<ResourceState<Unit>> = flow {
+        emit(ResourceState.Loading)
         val apiResult = safeApiCall(Dispatchers.IO) { apiInterface.getSurveyList(pageNumber, pageSize) }
         when (apiResult) {
             is ResourceState.Success -> {
@@ -42,6 +43,7 @@ class HomeRepoImpl @Inject constructor(
 
     override fun fetchUserDetail(): Flow<ResourceState<UserResponse>> =
         flow {
+            emit(ResourceState.Loading)
             val apiResult = safeApiCall(Dispatchers.IO) { apiInterface.getUserDetail() }
             when (apiResult) {
                 is ResourceState.Success -> {

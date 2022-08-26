@@ -3,6 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.home
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,18 +34,22 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
+import com.kks.nimblesurveyjetpackcompose.util.DateUtil
+import com.kks.nimblesurveyjetpackcompose.viewmodel.home.DEFAULT_PAGE_SIZE
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import timber.log.Timber
 
 private const val FRACTION = 0.3f
 private const val IDLE = 0
 private const val LEFT_SWIPE = 1
 private const val RIGHT_SWIPE = -1
 
-@Suppress("ComplexCondition", "MagicNumber", "ComplexMethod")
+@Suppress("ComplexCondition", "MagicNumber")
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
@@ -88,6 +93,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                                 (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
                             ) {
                                 selectedSurveyNumber += threshold
+                                if (selectedSurveyNumber == (surveyList.size) - 2) viewModel.getNextPage()
                             }
                             threshold = IDLE
                         }
@@ -108,6 +114,24 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                     )
                 }
             }
+            error?.let { error ->
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ErrorAlertDialog(
+                            errorModel = error,
+                            title = stringResource(id = R.string.oops),
+                            buttonText = stringResource(id = android.R.string.ok),
+                            onClickButton = { viewModel.resetError() }
+                        )
+                    }
+                }
+            }
+
         }
     }
 
@@ -143,7 +167,7 @@ fun SurveyContent(
             contentScale = ContentScale.Crop
         )
         SurveyText(
-            text = "Monday, JUNE 15",
+            text = DateUtil.getBeautifiedCurrentDate(),
             modifier = Modifier.constrainAs(date) {
                 top.linkTo(parent.top, 60.dp)
                 start.linkTo(parent.start, 20.dp)
@@ -262,5 +286,4 @@ fun SurveyText(
 @Preview(showBackground = true)
 @Composable
 fun HomeContentPreview() {
-    HomeScreen()
 }
