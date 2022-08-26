@@ -20,7 +20,6 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class SplashViewModelTest : BaseViewModelTest() {
-
     private lateinit var viewModel: SplashViewModel
     private val loginRepo: LoginRepo = mockk()
     private val preferenceManager: PreferenceManager = mockk()

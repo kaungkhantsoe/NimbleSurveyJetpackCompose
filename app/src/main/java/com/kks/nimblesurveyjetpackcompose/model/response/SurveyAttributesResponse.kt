@@ -2,6 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.model.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class SurveyAttributesResponse(
@@ -20,7 +21,7 @@ data class SurveyAttributesResponse(
     @Json(name = "created_at")
     val createdAt: String?,
     @Json(name = "active_at")
-    val activeAt: String?,
+    val activeAt: Date?,
     @Json(name = "survey_type")
     val surveyType: String?
 )

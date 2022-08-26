@@ -66,6 +66,8 @@ fun HomeContent(viewModel: HomeViewModel = hiltViewModel()) {
     var threshold by remember { mutableStateOf(IDLE) }
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
+    viewModel.getSurveyList(pageNumber = 1, pageSize = 3)
+
     LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
         val currentSwipeState = swipeableState.offset.value
         if (currentSwipeState < sizePx / 2 && threshold == IDLE) {

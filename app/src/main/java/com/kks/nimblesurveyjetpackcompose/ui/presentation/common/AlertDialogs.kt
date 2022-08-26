@@ -7,13 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CuriousBlue
+import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 
 @Composable
 fun ErrorAlertDialog(
-    errorState: ErrorModel,
+    errorModel: ErrorModel,
     title: String,
     buttonText: String,
     onClickButton: () -> Unit,
@@ -31,7 +33,7 @@ fun ErrorAlertDialog(
                 )
             }
         },
-        text = { Text(text = errorState.errorMessage.orEmpty()) },
+        text = { Text(text = errorModel.errorMessage.orEmpty()) },
         backgroundColor = Color.White,
         buttons = {
             Box(
@@ -48,5 +50,16 @@ fun ErrorAlertDialog(
                 }
             }
         }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ErrorAlertDialogPreview() {
+    ErrorAlertDialog(
+        errorModel = ErrorModel(ErrorType.INFO, "Error"),
+        title = "Error Title",
+        buttonText = "Ok",
+        onClickButton = {}
     )
 }
