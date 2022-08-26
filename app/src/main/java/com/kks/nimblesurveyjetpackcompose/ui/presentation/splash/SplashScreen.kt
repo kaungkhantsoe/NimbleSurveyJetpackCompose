@@ -1,6 +1,7 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.splash
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.Spring.StiffnessVeryLow
 import androidx.compose.animation.fadeIn
@@ -39,6 +40,7 @@ import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialo
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.HomeScreenDestination
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
+import com.kks.nimblesurveyjetpackcompose.ui.theme.CornerRadius
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -48,7 +50,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
 
-const val SPLASH_TIME = 2000L
+private const val SPLASH_TIME = 2000L
+private const val TWEEN_ANIM_TIME = 1000
 
 @RootNavGraph(start = true)
 @Destination
@@ -87,7 +90,6 @@ fun SplashScreen(
         contentAlignment = Alignment.Center
     ) {
         BackgroundImage(
-            modifier = Modifier.matchParentSize(),
             isBlurred = showLoginComponents
         )
         LogoImage(
@@ -104,7 +106,7 @@ fun SplashScreen(
         if (shouldShowLoading) Loading()
         errorState?.let { error ->
             ErrorAlertDialog(
-                errorState = error,
+                errorModel = error,
                 title = stringResource(id = R.string.oops),
                 buttonText = stringResource(id = android.R.string.ok),
                 onClickButton = { viewModel.resetError() }
@@ -115,13 +117,18 @@ fun SplashScreen(
 }
 
 @Composable
-fun BackgroundImage(modifier: Modifier, isBlurred: Boolean) {
-    Image(
-        painter = painterResource(id = if (isBlurred) R.drawable.ic_overlay else R.drawable.splash_bg),
-        contentDescription = stringResource(id = R.string.splash_background_content_description),
-        modifier = modifier,
-        contentScale = ContentScale.Crop
-    )
+fun BackgroundImage(isBlurred: Boolean) {
+    Crossfade(
+        targetState = isBlurred,
+        animationSpec = tween(TWEEN_ANIM_TIME)
+    ) {
+        Image(
+            painter = painterResource(id = if (it) R.drawable.ic_overlay else R.drawable.splash_bg),
+            contentDescription = stringResource(id = R.string.splash_background_content_description),
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
 }
 
 @Composable
@@ -168,7 +175,7 @@ fun EmailTextField(emailState: String, onValueChange: (String) -> Unit) {
     TextField(
         value = emailState,
         onValueChange = { onValueChange(it) },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(CornerRadius),
         singleLine = true,
         label = { Text(stringResource(R.string.login_email)) },
         colors = textFieldColor(),
@@ -197,7 +204,7 @@ fun PasswordTextField(passwordState: String, onValueChange: (String) -> Unit) {
     TextField(
         value = passwordState,
         onValueChange = { onValueChange(it) },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(CornerRadius),
         singleLine = true,
         label = { Text(stringResource(id = R.string.login_password)) },
         colors = textFieldColor(),
@@ -225,7 +232,7 @@ fun LoginButton(loginButtonState: Boolean, onClickLogin: () -> Unit) {
     val loginButtonContentDescription = stringResource(id = R.string.login_log_in_button)
     Button(
         onClick = onClickLogin,
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(CornerRadius),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
         modifier = Modifier
             .loginTextFieldModifier()
