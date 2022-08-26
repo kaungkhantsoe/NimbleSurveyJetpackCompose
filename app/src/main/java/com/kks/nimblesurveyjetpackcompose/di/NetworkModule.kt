@@ -3,8 +3,8 @@ package com.kks.nimblesurveyjetpackcompose.di
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.kks.nimblesurveyjetpackcompose.BuildConfig
-import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
-import com.kks.nimblesurveyjetpackcompose.network.AuthInterface
+import com.kks.nimblesurveyjetpackcompose.network.Api
+import com.kks.nimblesurveyjetpackcompose.network.AuthApi
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepo
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepoImpl
 import com.kks.nimblesurveyjetpackcompose.util.CustomKeyProvider
@@ -124,13 +124,13 @@ interface NetworkModule {
                 .build()
 
         @Provides
-        fun provideApiService(@ServiceQualifier retrofit: Retrofit): ApiInterface =
-            retrofit.create(ApiInterface::class.java)
+        fun provideApiService(@ServiceQualifier retrofit: Retrofit): Api =
+            retrofit.create(Api::class.java)
 
         @Singleton
         @Provides
-        fun provideAuthService(@AuthQualifier retrofit: Retrofit): AuthInterface =
-            retrofit.create(AuthInterface::class.java)
+        fun provideAuthService(@AuthQualifier retrofit: Retrofit): AuthApi =
+            retrofit.create(AuthApi::class.java)
 
         @Singleton
         @Provides
@@ -142,11 +142,11 @@ interface NetworkModule {
         @Singleton
         @Provides
         fun provideTokenRepo(
-            authInterface: AuthInterface,
+            authApi: AuthApi,
             preferenceManager: PreferenceManager,
             customKeyProvider: CustomKeyProvider
         ): TokenRepo = TokenRepoImpl(
-            authInterface,
+            authApi,
             preferenceManager,
             customKeyProvider
         )

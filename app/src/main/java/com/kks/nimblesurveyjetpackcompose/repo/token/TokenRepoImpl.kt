@@ -3,7 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.repo.token
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.request.RefreshTokenRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
-import com.kks.nimblesurveyjetpackcompose.network.AuthInterface
+import com.kks.nimblesurveyjetpackcompose.network.AuthApi
 import com.kks.nimblesurveyjetpackcompose.util.*
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
 import com.kks.nimblesurveyjetpackcompose.util.extensions.UNKNOWN_ERROR_MESSAGE
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class TokenRepoImpl @Inject constructor(
-    private val apiInterface: AuthInterface,
+    private val apiInterface: AuthApi,
     private val preferenceManager: PreferenceManager,
     private val customKeyProvider: CustomKeyProvider
 ) : TokenRepo {

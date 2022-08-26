@@ -14,18 +14,8 @@ import java.io.IOException
 import java.net.UnknownHostException
 
 private const val API_WAIT_TIME = 7000L
-const val UNKNOWN_ERROR = "Unknown error"
 const val SUCCESS_WITH_NULL_ERROR = "Success with null error"
 const val UNKNOWN_ERROR_MESSAGE = "Unknown error message"
-const val NETWORK_ERROR = "Network Error"
-
-const val EMAIL_EMPTY_MESSAGE = "Email cannot be empty"
-const val PASSWORD_EMPTY_MESSAGE = "Password cannot be empty"
-const val SUCCESS_MESSAGE = "success"
-
-private const val HTTP_ERROR_START = 400
-private const val HTTP_ERROR_END = 499
-const val INDEX_OF_ERROR_CODE = 0
 
 /**
  * Reference: https://medium.com/@douglas.iacovelli/how-to-handle-errors-with-retrofit-and-coroutines-33e7492a912

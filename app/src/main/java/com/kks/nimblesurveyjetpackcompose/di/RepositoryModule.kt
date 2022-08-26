@@ -1,6 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.di
 
-import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.network.Api
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepoImpl
 import com.kks.nimblesurveyjetpackcompose.util.CustomKeyProvider
@@ -15,8 +15,8 @@ import dagger.hilt.android.components.ViewModelComponent
 object RepositoryModule {
     @Provides
     fun provideLoginRepo(
-        apiInterface: ApiInterface,
+        api: Api,
         preferenceManager: PreferenceManager,
         customKeyProvider: CustomKeyProvider
-    ): LoginRepo = LoginRepoImpl(apiInterface, preferenceManager, customKeyProvider)
+    ): LoginRepo = LoginRepoImpl(api, preferenceManager, customKeyProvider)
 }

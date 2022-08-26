@@ -6,7 +6,7 @@ import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface AuthInterface {
+interface AuthApi {
     @POST("api/v1/oauth/token")
     suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): BaseResponse<LoginResponse>
 }

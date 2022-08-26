@@ -4,7 +4,7 @@ import com.kks.nimblesurveyjetpackcompose.di.ServiceQualifier
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.request.LoginRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
-import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.network.Api
 import com.kks.nimblesurveyjetpackcompose.util.*
 import com.kks.nimblesurveyjetpackcompose.util.extensions.*
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class LoginRepoImpl @Inject constructor(
-    @ServiceQualifier private val apiInterface: ApiInterface,
+    @ServiceQualifier private val api: Api,
     private val preferenceManager: PreferenceManager,
     private val customKeyProvider: CustomKeyProvider
 ) : LoginRepo {
@@ -24,7 +24,7 @@ class LoginRepoImpl @Inject constructor(
         password: String
     ): Flow<ResourceState<LoginResponse>> = flow {
         val apiResult = safeApiCall(Dispatchers.IO) {
-            apiInterface.loginUser(
+            api.loginUser(
                 LoginRequest(
                     email = email,
                     password = password,
