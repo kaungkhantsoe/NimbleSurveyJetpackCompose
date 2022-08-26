@@ -44,7 +44,7 @@ private const val IDLE = 0
 private const val LEFT_SWIPE = 1
 private const val RIGHT_SWIPE = -1
 
-@Suppress("ComplexCondition", "MagicNumber")
+@Suppress("ComplexCondition", "MagicNumber", "ComplexMethod")
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
@@ -252,4 +252,5 @@ fun SurveyText(
 @Preview(showBackground = true)
 @Composable
 fun HomeContentPreview() {
+    HomeScreen()
 }
