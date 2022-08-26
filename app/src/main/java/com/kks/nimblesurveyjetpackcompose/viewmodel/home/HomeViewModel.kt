@@ -3,6 +3,8 @@ package com.kks.nimblesurveyjetpackcompose.viewmodel.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
+import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
+import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -19,6 +21,14 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isRefreshing = MutableStateFlow(false)
+    private var _error = MutableStateFlow<ErrorModel?>(null)
+    private var _surveyList = MutableStateFlow<ArrayList<SurveyResponse>>(arrayListOf())
+
+    val error: StateFlow<ErrorModel?>
+        get() = _error.asStateFlow()
+
+    val surveyList: StateFlow<ArrayList<SurveyResponse>>
+        get() = _surveyList.asStateFlow()
 
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()

@@ -22,7 +22,7 @@ private const val TARGET_VALUE = 1000f
 private const val ANIMATE_DURATION = 1000
 
 @Composable
-fun HomeScreenShimmerLoading() {
+fun HomeScreenShimmerLoading(modifier: Modifier) {
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
         initialValue = INITIAL_VALUE,
@@ -35,14 +35,14 @@ fun HomeScreenShimmerLoading() {
         )
     )
 
-    ShimmerHomeScreen(brush = shimmerBrush(translateAnimation))
+    ShimmerHomeScreen(brush = shimmerBrush(translateAnimation), modifier = modifier)
 }
 
 @Suppress("LongMethod", "DestructuringDeclarationWithTooManyEntries")
 @Composable
-fun ShimmerHomeScreen(brush: Brush) {
+fun ShimmerHomeScreen(brush: Brush, modifier: Modifier) {
     ConstraintLayout(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
@@ -148,5 +148,5 @@ fun CustomSpacerRectangle(brush: Brush, modifier: Modifier) =
 @Composable
 @Preview(showBackground = true)
 fun ShimmerHomeScreenPreview() {
-    ShimmerHomeScreen(brush = shimmerBrush())
+    ShimmerHomeScreen(brush = shimmerBrush(), modifier = Modifier)
 }

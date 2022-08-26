@@ -26,9 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
@@ -41,24 +44,16 @@ private const val IDLE = 0
 private const val LEFT_SWIPE = 1
 private const val RIGHT_SWIPE = -1
 
-// TODO: Replace texts and image placeholder when integrate
-@Destination
-@Composable
-fun HomeScreen() {
-    val activity = LocalContext.current as? Activity
-    HomeScreenShimmerLoading()
-    HomeContent()
-    BackHandler {
-        activity?.finish()
-    }
-}
-
 @Suppress("ComplexCondition", "MagicNumber")
 @OptIn(ExperimentalMaterialApi::class)
+@Destination
 @Composable
-fun HomeContent(viewModel: HomeViewModel = hiltViewModel()) {
-    val numberOfPage by remember { mutableStateOf(3) }
-    var currentPage by remember { mutableStateOf(0) }
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+    val activity = LocalContext.current as? Activity
+
+    val surveyList by viewModel.surveyList.collectAsState()
+    val error by viewModel.error.collectAsState()
+    var selectedSurveyNumber by remember { mutableStateOf(0) }
     val swipeableState = rememberSwipeableState(initialValue = "M")
     val sizePx = LocalDensity.current.run { LocalConfiguration.current.screenWidthDp.toDp().toPx() }
     // Maps anchor points (in px) to states
@@ -66,64 +61,82 @@ fun HomeContent(viewModel: HomeViewModel = hiltViewModel()) {
     var threshold by remember { mutableStateOf(IDLE) }
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    viewModel.getSurveyList(pageNumber = 1, pageSize = 3)
-
-    LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
-        val currentSwipeState = swipeableState.offset.value
-        if (currentSwipeState < sizePx / 2 && threshold == IDLE) {
-            // Swipe to left
-            threshold = LEFT_SWIPE
-        } else if (currentSwipeState > sizePx / 2 && threshold == IDLE) {
-            // Swipe to right
-            threshold = RIGHT_SWIPE
-        } else if ((currentSwipeState == sizePx / 2)) {
-            if (
-                (currentPage < numberOfPage - 1 && threshold == LEFT_SWIPE) ||
-                (currentPage != 0 && threshold == RIGHT_SWIPE)
-            ) {
-                currentPage += threshold
-            }
-            threshold = IDLE
-        }
-        swipeableState.snapTo(targetValue = "M")
-    })
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = { },
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn {
-            item {
-                SurveyContent(
-                    modifier = Modifier
-                        .fillParentMaxSize()
-                        .swipeable(
-                            state = swipeableState,
-                            anchors = anchors,
-                            thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
-                            orientation = Orientation.Horizontal
-                        ),
-                    numberOfPage = numberOfPage,
-                    currentPage = currentPage
-                )
+            if (isRefreshing && surveyList.isEmpty()) {
+                item { HomeScreenShimmerLoading(modifier = Modifier.fillParentMaxSize()) }
+            }
+            if (surveyList.isNotEmpty() && error == null) {
+                item {
+                    LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
+                        val currentSwipeState = swipeableState.offset.value
+                        if (currentSwipeState < sizePx / 2 && threshold == IDLE) {
+                            // Swipe to left
+                            threshold = LEFT_SWIPE
+                        } else if (currentSwipeState > sizePx / 2 && threshold == IDLE) {
+                            // Swipe to right
+                            threshold = RIGHT_SWIPE
+                        } else if ((currentSwipeState == sizePx / 2)) {
+                            if (
+                                (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
+                                (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
+                            ) {
+                                selectedSurveyNumber += threshold
+                            }
+                            threshold = IDLE
+                        }
+                        swipeableState.snapTo(targetValue = "M")
+                    })
+                    SurveyContent(
+                        modifier = Modifier
+                            .fillParentMaxSize()
+                            .swipeable(
+                                state = swipeableState,
+                                anchors = anchors,
+                                thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
+                                orientation = Orientation.Horizontal
+                            ),
+                        numberOfPage = surveyList.size,
+                        selectedSurveyNumber = selectedSurveyNumber,
+                        surveyResponse = surveyList[selectedSurveyNumber]
+                    )
+                }
             }
         }
+    }
+
+    BackHandler {
+        activity?.finish()
     }
 }
 
 @Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
-fun SurveyContent(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
+fun SurveyContent(modifier: Modifier, surveyResponse: SurveyResponse, numberOfPage: Int, selectedSurveyNumber: Int) {
     ConstraintLayout(modifier = modifier) {
         val (date, today, userImage, bottomView) = createRefs()
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(surveyResponse.attributes?.coverImageUrl)
+                .crossfade(true)
+                .build(),
+            placeholder = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = stringResource(id = R.string.home_survey_background_image),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+        Image(
+            painter = painterResource(id = R.drawable.survey_overlay),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
         SurveyText(
-            text = "MONDAY,JUNE 15",
+            text = "Monday, JUNE 15",
             modifier = Modifier.constrainAs(date) {
                 top.linkTo(parent.top, 60.dp)
                 start.linkTo(parent.start, 20.dp)
@@ -154,7 +167,8 @@ fun SurveyContent(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
                 .fillMaxWidth()
                 .constrainAs(bottomView) { bottom.linkTo(parent.bottom, 54.dp) },
             numberOfPage = numberOfPage,
-            currentPage = currentPage
+            currentPage = selectedSurveyNumber,
+            surveyResponse = surveyResponse
         )
     }
 }
@@ -171,7 +185,7 @@ fun UserIcon(modifier: Modifier) {
 }
 
 @Composable
-fun BottomView(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
+fun BottomView(modifier: Modifier, surveyResponse: SurveyResponse, numberOfPage: Int, currentPage: Int) {
     Column(modifier = modifier) {
         DotsIndicator(
             totalDots = numberOfPage,
@@ -183,7 +197,7 @@ fun BottomView(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
         )
         Spacer(modifier = Modifier.height(26.dp))
         SurveyText(
-            text = "Working from home Check-In",
+            text = surveyResponse.attributes?.title.orEmpty(),
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 20.dp, end = 20.dp)
@@ -193,7 +207,7 @@ fun BottomView(modifier: Modifier, numberOfPage: Int, currentPage: Int) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             SurveyText(
-                text = "We would like to know how you feel about our work from home...",
+                text = surveyResponse.attributes?.description.orEmpty(),
                 fontSize = 17.sp,
                 color = White70,
                 modifier = Modifier
@@ -238,5 +252,4 @@ fun SurveyText(
 @Preview(showBackground = true)
 @Composable
 fun HomeContentPreview() {
-    HomeContent()
 }
