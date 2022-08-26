@@ -4,7 +4,7 @@ buildscript {
         chucker_version = '3.5.2'
         core_testing_version = '2.1.0'
         coroutines_test_version = '1.5.2'
-        coil_version = '1.4.0'
+        coil_version = '2.2.0'
         compose_version = '1.2.0'
         constraint_compose_version = '1.0.1'
         compose_destination_version = '1.6.16-beta'
