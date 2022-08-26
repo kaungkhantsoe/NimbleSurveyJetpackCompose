@@ -48,17 +48,19 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
 
+const val SPLASH_TIME = 2000L
+
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun SplashScreen(
     navigator: DestinationsNavigator,
-    @NavHostParam splashTime: Long = 2000L,
+    @NavHostParam splashTime: Long = SPLASH_TIME,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
-    val errorState by viewModel.getError.collectAsState()
+    val errorState by viewModel.error.collectAsState()
     val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
     val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }

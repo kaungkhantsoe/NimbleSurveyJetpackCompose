@@ -1,4 +1,4 @@
-package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
+package com.kks.nimblesurveyjetpackcompose.ui.presentation.home
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -17,15 +17,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 
+private const val INITIAL_VALUE = 0f
+private const val TARGET_VALUE = 1000f
+private const val ANIMATE_DURATION = 1000
+
 @Composable
 fun HomeScreenShimmerLoading() {
     val transition = rememberInfiniteTransition()
     val translateAnimation = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
+        initialValue = INITIAL_VALUE,
+        targetValue = TARGET_VALUE,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = 1000,
+                durationMillis = ANIMATE_DURATION,
                 easing = FastOutSlowInEasing
             )
         )

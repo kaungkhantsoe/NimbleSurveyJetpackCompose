@@ -4,9 +4,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.base.BaseAndroidComposeTest
-import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
-import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
@@ -18,8 +15,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -163,27 +158,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                     viewModel = splashViewModel,
                     navigator = EmptyDestinationsNavigator
                 )
-            }
-        }
-    }
-
-    class FakeLoginRepo : LoginRepo {
-        override fun loginWithEmailAndPassword(
-            email: String,
-            password: String
-        ): Flow<ResourceState<LoginResponse>> {
-            return if (password == VALID_PASSWORD) {
-                flowOf(
-                    ResourceState.Success(
-                        LoginResponse(
-                            id = null,
-                            type = null,
-                            attributes = null
-                        )
-                    )
-                )
-            } else {
-                flowOf(ResourceState.Error(ERROR_MESSAGE))
             }
         }
     }

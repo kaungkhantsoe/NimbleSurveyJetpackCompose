@@ -29,7 +29,7 @@ class SplashViewModel @Inject constructor(
     private val _isLoginSuccess = MutableStateFlow(false)
     private var _error = MutableStateFlow<ErrorModel?>(null)
 
-    val getError: StateFlow<ErrorModel?>
+    val error: StateFlow<ErrorModel?>
         get() = _error.asStateFlow()
 
     val shouldNavigateToLogin: StateFlow<Boolean>
