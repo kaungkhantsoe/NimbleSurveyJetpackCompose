@@ -20,9 +20,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     @Test
     fun when_splash_screen_start_show_both_background_image_and_logo_image() {
         composeTestRule.setContent {
-            NimbleSurveyJetpackComposeTheme {
-                SplashScreen(EmptyDestinationsNavigator)
-            }
+            NimbleSurveyJetpackComposeTheme { SplashScreen() }
         }
         composeTestRule.onNodeWithContentDescription(getString(R.string.splash_background_content_description))
             .assertIsDisplayed()
