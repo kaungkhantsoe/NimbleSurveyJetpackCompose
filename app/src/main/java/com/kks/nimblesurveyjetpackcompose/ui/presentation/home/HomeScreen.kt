@@ -56,7 +56,7 @@ private const val LEFT_STATE = "L"
 private const val RIGHT_STATE = "R"
 private const val MID_STATE = "M"
 
-@Suppress("ComplexCondition")
+@Suppress("ComplexCondition", "LongMethod", "ComplexMethod")
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
@@ -67,9 +67,9 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val error by viewModel.error.collectAsState()
     var selectedSurveyNumber by remember { mutableStateOf(START_SURVEY_NUMBER) }
     val swipeableState = rememberSwipeableState(initialValue = MID_STATE)
-    val endEnchor = LocalDensity.current.run { LocalConfiguration.current.screenWidthDp.toDp().toPx() }
+    val endAnchor = LocalDensity.current.run { LocalConfiguration.current.screenWidthDp.toDp().toPx() }
     // Maps anchor points (in px) to states
-    val anchors = mapOf(START_ANCHOR to LEFT_STATE, endEnchor / 2 to MID_STATE, endEnchor to RIGHT_STATE)
+    val anchors = mapOf(START_ANCHOR to LEFT_STATE, endAnchor / 2 to MID_STATE, endAnchor to RIGHT_STATE)
     var threshold by remember { mutableStateOf(IDLE) }
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val userAvatar by viewModel.userAvatar.collectAsState()
@@ -89,13 +89,13 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 item {
                     LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
                         val currentSwipeState = swipeableState.offset.value
-                        if (currentSwipeState < endEnchor / 2 && threshold == IDLE) {
+                        if (currentSwipeState < endAnchor / 2 && threshold == IDLE) {
                             // Swipe to left
                             threshold = LEFT_SWIPE
-                        } else if (currentSwipeState > endEnchor / 2 && threshold == IDLE) {
+                        } else if (currentSwipeState > endAnchor / 2 && threshold == IDLE) {
                             // Swipe to right
                             threshold = RIGHT_SWIPE
-                        } else if ((currentSwipeState == endEnchor / 2)) {
+                        } else if ((currentSwipeState == endAnchor / 2)) {
                             if (
                                 (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
                                 (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
@@ -140,10 +140,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                     }
                 }
             }
-
         }
     }
-
     BackHandler {
         activity?.finish()
     }
@@ -314,4 +312,5 @@ fun SurveyText(
 @Preview(showBackground = true)
 @Composable
 fun HomeContentPreview() {
+    HomeScreen()
 }

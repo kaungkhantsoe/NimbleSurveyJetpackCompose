@@ -20,7 +20,7 @@ class FakeHomeRepo : HomeRepo {
         return flowOf(ResourceState.Loading)
     }
 
-    override fun getSurveyListFromDb(): Flow<ResourceState<List<Survey>>> {
-        return flowOf(ResourceState.Loading)
+    override fun getSurveyListFromDb(): Flow<List<Survey>> {
+        return flowOf(listOf())
     }
 }

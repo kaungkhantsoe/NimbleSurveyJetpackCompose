@@ -3,12 +3,12 @@ package com.kks.nimblesurveyjetpackcompose.util
 import java.text.SimpleDateFormat
 import java.util.*
 
-const val EEEE_comma_MMMMM_d_format = "EEEE, MMM d"
+const val EEEE_MMM_D = "EEEE, MMM d"
 
 object DateUtil {
 
     private val EEEE_comma_MMMMM_d =
-        SimpleDateFormat(EEEE_comma_MMMMM_d_format, Locale.ENGLISH)
+        SimpleDateFormat(EEEE_MMM_D, Locale.ENGLISH)
 
     fun getBeautifiedCurrentDate(): String = EEEE_comma_MMMMM_d.format(Date())
 }
