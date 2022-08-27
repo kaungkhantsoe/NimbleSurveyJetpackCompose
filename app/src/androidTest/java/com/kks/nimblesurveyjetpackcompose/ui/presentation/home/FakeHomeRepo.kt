@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.flowOf
 class FakeHomeRepo : HomeRepo {
     override fun fetchSurveyList(
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        getNumberOfPage: (totalPage: Int) -> Unit
     ): Flow<ResourceState<List<SurveyResponse>>> {
         return flowOf(ResourceState.Loading)
     }
@@ -22,5 +23,9 @@ class FakeHomeRepo : HomeRepo {
 
     override fun getSurveyListFromDb(): Flow<List<Survey>> {
         return flowOf(listOf())
+    }
+
+    override suspend fun clearSurveyList() {
+        // Do nothing
     }
 }

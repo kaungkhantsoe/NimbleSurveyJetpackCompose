@@ -5,7 +5,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,18 +22,19 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
 import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
@@ -77,7 +77,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = {
-            // TODO: Implement swipe refresh here
+            viewModel.clearCacheAndFetch()
+            selectedSurveyNumber = START_SURVEY_NUMBER
         },
         modifier = Modifier.fillMaxSize()
     ) {
@@ -127,8 +128,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 item {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.White),
+                            .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         ErrorAlertDialog(
@@ -257,23 +257,32 @@ fun BottomView(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 20.dp, end = 20.dp)
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+            val (description, detailBtn) = createRefs()
             SurveyText(
                 text = survey.description,
                 fontSize = 17.sp,
                 color = White70,
                 modifier = Modifier
-                    .weight(1f)
                     .padding(start = 20.dp, end = 20.dp)
+                    .constrainAs(description) {
+                        start.linkTo(parent.start)
+                        end.linkTo(detailBtn.start, 20.dp)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        width = Dimension.fillToConstraints
+                    }
             )
             Button(
                 onClick = { },
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(56.dp),
+                    .size(56.dp)
+                    .constrainAs(detailBtn) {
+                        end.linkTo(parent.end, 20.dp)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
             ) {
                 Image(
@@ -296,7 +305,8 @@ fun SurveyText(
 ) {
     Crossfade(
         targetState = text,
-        animationSpec = tween(TWEEN_ANIM_TIME)
+        animationSpec = tween(TWEEN_ANIM_TIME),
+        modifier = modifier
     ) {
         Text(
             text = it,
@@ -304,7 +314,8 @@ fun SurveyText(
             fontWeight = fontWeight,
             color = color,
             fontSize = fontSize,
-            modifier = modifier
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

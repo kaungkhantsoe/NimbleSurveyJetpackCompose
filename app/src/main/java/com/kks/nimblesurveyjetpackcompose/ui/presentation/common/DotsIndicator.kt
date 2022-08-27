@@ -3,8 +3,10 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,9 +23,11 @@ fun DotsIndicator(
     selectedColor: Color,
     unSelectedColor: Color,
     indicatorSize: Dp,
-    space: Dp
+    space: Dp,
 ) {
+    val listState = rememberLazyListState()
     LazyRow(
+        state = listState,
         modifier = Modifier
             .wrapContentWidth()
             .wrapContentHeight()
@@ -49,6 +53,9 @@ fun DotsIndicator(
                 Spacer(modifier = Modifier.padding(horizontal = space))
             }
         }
+    }
+    LaunchedEffect(key1 = selectedIndex) {
+        listState.scrollToItem(selectedIndex)
     }
 }
 
