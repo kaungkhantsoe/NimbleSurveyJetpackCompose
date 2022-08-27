@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
+import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,14 +26,17 @@ class HomeViewModel @Inject constructor(
 
     private var _error = MutableStateFlow<ErrorModel?>(null)
     private val _isRefreshing = MutableStateFlow(false)
-    private val _surveyList = MutableStateFlow<ArrayList<SurveyResponse>>(arrayListOf())
+    private val _surveyList = MutableStateFlow<List<Survey>>(listOf())
     private val _currentPageNumber = MutableStateFlow(1)
+    private val _userAvatar = MutableStateFlow<String?>(null)
 
     init {
+        getUserDetail()
+        getSurveyListFromDb()
         getSurveyList()
     }
 
-    val surveyList: StateFlow<List<SurveyResponse>>
+    val surveyList: StateFlow<List<Survey>>
         get() = _surveyList.asStateFlow()
 
     val isRefreshing: StateFlow<Boolean>
@@ -42,12 +45,24 @@ class HomeViewModel @Inject constructor(
     val error: StateFlow<ErrorModel?>
         get() = _error.asStateFlow()
 
-    val currentPageNumber: StateFlow<Int>
-        get() = _currentPageNumber.asStateFlow()
+    val userAvatar: StateFlow<String?>
+        get() = _userAvatar.asStateFlow()
 
-    fun getUserDetail() {
+    private fun getUserDetail() {
         viewModelScope.launch(ioDispatcher) {
-            homeRepo.fetchUserDetail().collect { }
+            homeRepo.fetchUserDetail().collect { result ->
+                when (result) {
+                    is ResourceState.Success -> {
+                        _userAvatar.value = result.data.attributes?.avatarUrl
+                        resetError()
+                    }
+                    else -> {
+                        result.mapError()?.let { errorModel ->
+                            _error.value = errorModel
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -55,6 +70,15 @@ class HomeViewModel @Inject constructor(
         if (!_isRefreshing.value) {
             _currentPageNumber.value += 1
             getSurveyList()
+        }
+    }
+
+    private fun getSurveyListFromDb() {
+        viewModelScope.launch(ioDispatcher) {
+            homeRepo.getSurveyListFromDb().collect {
+                _surveyList.value = it
+                _isRefreshing.value = _surveyList.value.isEmpty()
+            }
         }
     }
 
@@ -68,9 +92,6 @@ class HomeViewModel @Inject constructor(
                     }
                     is ResourceState.Success -> {
                         _isRefreshing.value = false
-                        _surveyList.value = _surveyList.value.also {
-                            it.addAll(result.data)
-                        }
                         resetError()
                     }
                     else -> {

@@ -3,7 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.util
 import java.text.SimpleDateFormat
 import java.util.*
 
-const val EEEE_comma_MMMMM_d_format = "EEEE,MMMM d"
+const val EEEE_comma_MMMMM_d_format = "EEEE, MMM d"
 
 object DateUtil {
 

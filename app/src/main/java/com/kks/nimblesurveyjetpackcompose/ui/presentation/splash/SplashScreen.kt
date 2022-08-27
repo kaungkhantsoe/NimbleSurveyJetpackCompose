@@ -51,7 +51,7 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
 
 private const val SPLASH_TIME = 2000L
-private const val TWEEN_ANIM_TIME = 1000
+const val TWEEN_ANIM_TIME = 1000
 
 @RootNavGraph(start = true)
 @Destination
