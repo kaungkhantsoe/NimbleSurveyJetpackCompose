@@ -21,5 +21,5 @@ interface ApiInterface {
     suspend fun getSurveyList(
         @Query("page[number]") pageNumber: Int,
         @Query("page[size]") pageSize: Int,
-    ): BaseResponse<List<SurveyResponse>>?
+    ): BaseResponse<List<SurveyResponse>>
 }

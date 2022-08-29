@@ -1,8 +1,11 @@
 package com.kks.nimblesurveyjetpackcompose.repo.home
 
+import com.kks.nimblesurveyjetpackcompose.cache.SurveyDao
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
+import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
 import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
+import com.kks.nimblesurveyjetpackcompose.model.response.toSurvey
 import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
@@ -13,19 +16,23 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class HomeRepoImpl @Inject constructor(
-    private val apiInterface: ApiInterface
+    private val apiInterface: ApiInterface,
+    private val surveyDao: SurveyDao
 ) : HomeRepo {
 
     override fun fetchSurveyList(
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
+        getNumberOfPage: (totalPage: Int) -> Unit
     ): Flow<ResourceState<List<SurveyResponse>>> = flow {
         val apiResult = safeApiCall(Dispatchers.IO) { apiInterface.getSurveyList(pageNumber, pageSize) }
         when (apiResult) {
             is ResourceState.Success -> {
-                apiResult.data?.data?.let {
-                    emit(ResourceState.Success(it))
-                } ?: emit(ResourceState.Success(listOf()))
+                apiResult.data.data?.let { surveyResponseList ->
+                    surveyDao.addSurveys(surveyResponseList.map { it.toSurvey() })
+                    getNumberOfPage(apiResult.data.meta?.pages ?: 0)
+                }
+                emit(ResourceState.Success(emptyList<SurveyResponse>()))
             }
             is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
             else -> emit(ResourceState.NetworkError)
@@ -49,4 +56,8 @@ class HomeRepoImpl @Inject constructor(
         }.catch { error ->
             emit(ResourceState.Error(error.message.orEmpty()))
         }
+
+    override fun getSurveyListFromDb(): Flow<List<Survey>> = surveyDao.getSurveys()
+
+    override suspend fun clearSurveyList() = surveyDao.clearSurveys()
 }

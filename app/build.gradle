@@ -124,6 +124,12 @@ android {
             exclude group: 'io.mockk', module: 'mockk-agent-jvm'
         }
     }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+    }
 }
 
 dependencies {
@@ -171,6 +177,11 @@ dependencies {
     // Chucker
     debugImplementation "com.github.chuckerteam.chucker:library:$chucker_version"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:$chucker_version"
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
 
     // Mockk
     testImplementation "io.mockk:mockk:$mockk_version"
