@@ -8,11 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 
 // Reference https://medium.com/@prashantappdeveloper/viewpager-in-jetpack-compose-with-dot-indicators-within-minutes-a2779970534e
-@Suppress("LongParameterList")
 @Composable
 fun DotsIndicator(
     totalDots: Int,
@@ -49,4 +50,17 @@ fun DotsIndicator(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DotsIndicatorPreview() {
+    DotsIndicator(
+        totalDots = 3,
+        selectedIndex = 0,
+        selectedColor = Color.White,
+        unSelectedColor = White20,
+        indicatorSize = 8.dp,
+        space = 5.dp
+    )
 }

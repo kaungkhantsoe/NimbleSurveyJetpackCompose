@@ -23,7 +23,7 @@ const val EMAIL = "example@gmail.com"
 const val VALID_PASSWORD = "valid"
 const val INVALID_PASSWORD = "invalid"
 const val ERROR_MESSAGE = "error"
-private val SPLASH_TIME = 0L
+private const val SPLASH_TIME = 0L
 
 @HiltAndroidTest
 class SplashScreenTest : BaseAndroidComposeTest() {
@@ -50,7 +50,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_splash_screen_start_show_both_background_image_and_logo_image() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.splash_background_content_description))
                 .assertIsDisplayed()
@@ -61,7 +60,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_navigate_to_login_show_email_password_and_login_button() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             onNodeWithText(getString(R.string.login_email)).assertIsDisplayed()
             onNodeWithText(getString(R.string.login_password)).assertIsDisplayed()
@@ -75,7 +73,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_type_email_into_email_text_field_has_email_text() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             val email = "example@gmail.com"
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -87,7 +84,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_type_password_into_password_text_field_has_text_with_mask() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_password_text_field))
                 .performTextInput("p")
@@ -98,7 +94,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_fill_in_only_one_field_login_button_is_disabled() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
                 .performTextInput("example@gmail.com")
@@ -109,7 +104,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_both_email_and_login_fields_login_button_is_enabled() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
                 .performTextInput("example@gmail.com")
@@ -124,7 +118,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_with_incorrect_email_and_password_error_dialog_is_shown() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
                 .performTextInput(EMAIL)
@@ -138,7 +131,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_with_correct_email_and_password_goes_to_home() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
                 .performTextInput(EMAIL)
@@ -152,6 +144,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     }
 
     private fun setupSplashComposeRule() {
+        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
                 SplashScreen(
