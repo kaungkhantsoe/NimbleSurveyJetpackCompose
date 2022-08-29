@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
+import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,7 +29,7 @@ class HomeViewModel @Inject constructor(
 
     private var _error = MutableStateFlow<ErrorModel?>(null)
     private val _isRefreshing = MutableStateFlow(false)
-    private val _surveyList = MutableStateFlow<List<Survey>>(listOf())
+    private val _surveyList = MutableStateFlow<List<SurveyModel>>(listOf())
     private val _currentPageNumber = MutableStateFlow(DEFAULT_CURRENT_PAGE)
     private val _userAvatar = MutableStateFlow<String?>(null)
     private var totalNumberOfPage = DEFAULT_NUMBER_OF_PAGE
@@ -39,7 +40,7 @@ class HomeViewModel @Inject constructor(
         getSurveyList()
     }
 
-    val surveyList: StateFlow<List<Survey>>
+    val surveyList: StateFlow<List<SurveyModel>>
         get() = _surveyList.asStateFlow()
 
     val isRefreshing: StateFlow<Boolean>

@@ -1,7 +1,8 @@
 package com.kks.nimblesurveyjetpackcompose.repo.home
 
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
+import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
+import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +13,6 @@ interface HomeRepo {
         getNumberOfPage: (totalPage: Int) -> Unit
     ): Flow<ResourceState<Unit>>
     fun fetchUserDetail(): Flow<ResourceState<UserResponse>>
-    fun getSurveyListFromDb(): Flow<List<Survey>>
+    fun getSurveyListFromDb(): Flow<List<SurveyModel>>
     suspend fun clearSurveyList()
 }

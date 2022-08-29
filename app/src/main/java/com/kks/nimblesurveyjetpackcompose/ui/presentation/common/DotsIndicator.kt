@@ -31,7 +31,7 @@ fun DotsIndicator(
         modifier = Modifier
             .wrapContentWidth()
             .wrapContentHeight()
-            .padding(start = 20.dp, end = 20.dp)
+            .padding(horizontal = 20.dp)
     ) {
         items(totalDots) { index ->
             if (index == selectedIndex) {

@@ -10,5 +10,5 @@ object DateUtil {
     private val EEEE_comma_MMMMM_d =
         SimpleDateFormat(EEEE_MMM_D, Locale.ENGLISH)
 
-    fun getBeautifiedCurrentDate(): String = EEEE_comma_MMMMM_d.format(Date())
+    fun getBeautifiedCurrentDate(date: Date = Date()): String = EEEE_comma_MMMMM_d.format(date)
 }

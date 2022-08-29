@@ -35,14 +35,14 @@ import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
+import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.splash.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
 import com.kks.nimblesurveyjetpackcompose.util.DateUtil
+import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -127,8 +127,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
             error?.let { error ->
                 item {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         ErrorAlertDialog(
@@ -149,10 +148,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
 @Composable
 fun SurveyContent(
-    modifier: Modifier,
-    survey: Survey,
+    survey: SurveyModel,
     numberOfPage: Int,
     selectedSurveyNumber: Int,
+    modifier: Modifier,
     userAvatar: String?
 ) {
     ConstraintLayout(modifier = modifier) {
@@ -236,10 +235,10 @@ fun UserIcon(userAvatar: String?, modifier: Modifier) {
 
 @Composable
 fun BottomView(
-    survey: Survey,
+    modifier: Modifier,
+    survey: SurveyModel,
     numberOfPage: Int,
-    currentPage: Int,
-    modifier: Modifier
+    currentPage: Int
 ) {
     Column(modifier = modifier) {
         DotsIndicator(
@@ -255,7 +254,7 @@ fun BottomView(
             text = survey.title,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+            modifier = Modifier.padding(horizontal = 20.dp)
         )
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (description, detailBtn) = createRefs()
@@ -264,7 +263,7 @@ fun BottomView(
                 fontSize = 17.sp,
                 color = White70,
                 modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp)
+                    .padding(horizontal = 20.dp)
                     .constrainAs(description) {
                         start.linkTo(parent.start)
                         end.linkTo(detailBtn.start, 20.dp)

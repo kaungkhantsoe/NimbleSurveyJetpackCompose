@@ -44,10 +44,10 @@ class SplashViewModel @Inject constructor(
     fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
-            if (preferenceManager.getStringData(PREF_REFRESH_TOKEN).orEmpty().isNotEmpty()) {
-                _isLoginSuccess.value = true
-            } else {
+            if (preferenceManager.getStringData(PREF_REFRESH_TOKEN).isNullOrEmpty()) {
                 _shouldNavigateToLogin.value = true
+            } else {
+                _isLoginSuccess.value = true
             }
         }
     }

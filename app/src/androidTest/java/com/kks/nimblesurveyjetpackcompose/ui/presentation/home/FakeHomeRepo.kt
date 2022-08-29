@@ -1,6 +1,7 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.home
 
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
+import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
 import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
 import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
@@ -21,7 +22,7 @@ class FakeHomeRepo : HomeRepo {
         return flowOf(ResourceState.Loading)
     }
 
-    override fun getSurveyListFromDb(): Flow<List<Survey>> {
+    override fun getSurveyListFromDb(): Flow<List<SurveyModel>> {
         return flowOf(listOf())
     }
 

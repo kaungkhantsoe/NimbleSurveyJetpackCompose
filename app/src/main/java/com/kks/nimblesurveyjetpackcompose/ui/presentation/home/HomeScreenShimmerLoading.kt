@@ -40,7 +40,7 @@ fun HomeScreenShimmerLoading(modifier: Modifier) {
 
 @Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
-fun ShimmerHomeScreen(modifier: Modifier, brush: Brush) {
+fun ShimmerHomeScreen(brush: Brush, modifier: Modifier) {
     ConstraintLayout(
         modifier = modifier.background(Color.Black)
     ) {
