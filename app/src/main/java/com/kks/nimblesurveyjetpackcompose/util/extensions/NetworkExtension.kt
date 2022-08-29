@@ -16,7 +16,6 @@ import java.net.UnknownHostException
 
 private const val API_WAIT_TIME = 7000L
 const val SUCCESS_WITH_NULL_ERROR = "Success with null error"
-const val UNKNOWN_ERROR_MESSAGE = "Unknown error message"
 
 /**
  * Reference: https://medium.com/@douglas.iacovelli/how-to-handle-errors-with-retrofit-and-coroutines-33e7492a912
