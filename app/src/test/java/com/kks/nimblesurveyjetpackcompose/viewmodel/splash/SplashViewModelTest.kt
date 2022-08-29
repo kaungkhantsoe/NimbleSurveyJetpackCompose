@@ -19,7 +19,6 @@ import org.junit.Test
 class SplashViewModelTest : BaseViewModelTest() {
 
     private lateinit var viewModel: SplashViewModel
-
     private val loginRepo: LoginRepo = mockk()
 
     override fun setup() {

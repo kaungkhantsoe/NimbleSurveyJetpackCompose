@@ -10,7 +10,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun HomeScreen() {
     val activity = LocalContext.current as? Activity
-
     BackHandler {
         activity?.finish()
     }
