@@ -1,7 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,32 +20,19 @@ fun ErrorAlertDialog(
     onClickButton: () -> Unit,
 ) {
     AlertDialog(
-        shape = RoundedCornerShape(10.dp),
         onDismissRequest = { onClickButton() },
-        title = {
-            Column {
-                Text(text = title)
-                Divider(
-                    color = CuriousBlue,
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
-        },
+        title = { Text(text = title) },
         text = { Text(text = errorModel.errorMessage.orEmpty()) },
         backgroundColor = Color.White,
-        buttons = {
+        confirmButton = {
             Box(
                 modifier = Modifier
                     .padding(all = 8.dp)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Button(
-                    onClick = { onClickButton() },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = CuriousBlue),
-                ) {
-                    Text(text = buttonText, color = Color.White)
+                TextButton(onClick = { onClickButton() }) {
+                    Text(text = buttonText, color = CuriousBlue)
                 }
             }
         }
@@ -59,7 +45,7 @@ fun ErrorAlertDialogPreview() {
     ErrorAlertDialog(
         errorModel = ErrorModel(ErrorType.INFO, "Error"),
         title = "Error Title",
-        buttonText = "Ok",
+        buttonText = "OK",
         onClickButton = {}
     )
 }

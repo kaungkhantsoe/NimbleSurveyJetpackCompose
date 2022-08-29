@@ -118,7 +118,12 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
 @Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
-fun SurveyContent(modifier: Modifier, surveyResponse: SurveyResponse, numberOfPage: Int, selectedSurveyNumber: Int) {
+fun SurveyContent(
+    modifier: Modifier,
+    surveyResponse: SurveyResponse,
+    numberOfPage: Int,
+    selectedSurveyNumber: Int
+) {
     ConstraintLayout(modifier = modifier) {
         val (date, today, userImage, bottomView) = createRefs()
         AsyncImage(
@@ -185,7 +190,12 @@ fun UserIcon(modifier: Modifier) {
 }
 
 @Composable
-fun BottomView(modifier: Modifier, surveyResponse: SurveyResponse, numberOfPage: Int, currentPage: Int) {
+fun BottomView(
+    modifier: Modifier,
+    surveyResponse: SurveyResponse,
+    numberOfPage: Int,
+    currentPage: Int
+) {
     Column(modifier = modifier) {
         DotsIndicator(
             totalDots = numberOfPage,
