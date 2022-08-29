@@ -3,7 +3,6 @@ package com.kks.nimblesurveyjetpackcompose.repo.home
 import com.kks.nimblesurveyjetpackcompose.cache.SurveyDao
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
-import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurvey
 import com.kks.nimblesurveyjetpackcompose.network.Api
@@ -24,7 +23,7 @@ class HomeRepoImpl @Inject constructor(
         pageNumber: Int,
         pageSize: Int,
         getNumberOfPage: (totalPage: Int) -> Unit
-    ): Flow<ResourceState<List<SurveyResponse>>> = flow {
+    ): Flow<ResourceState<Unit>> = flow {
         val apiResult = safeApiCall(Dispatchers.IO) { apiInterface.getSurveyList(pageNumber, pageSize) }
         when (apiResult) {
             is ResourceState.Success -> {
@@ -32,7 +31,7 @@ class HomeRepoImpl @Inject constructor(
                     surveyDao.addSurveys(surveyResponseList.map { it.toSurvey() })
                     getNumberOfPage(apiResult.data.meta?.pages ?: 0)
                 }
-                emit(ResourceState.Success(emptyList<SurveyResponse>()))
+                emit(ResourceState.Success(Unit))
             }
             is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
             else -> emit(ResourceState.NetworkError)
