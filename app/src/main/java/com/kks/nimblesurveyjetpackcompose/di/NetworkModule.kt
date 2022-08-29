@@ -44,11 +44,6 @@ interface NetworkModule {
 
     @Suppress("TooManyFunctions")
     companion object {
-        @Singleton
-        @Provides
-        fun providePreferenceManager(@ApplicationContext appContext: Context): PreferenceManager =
-            PreferenceManager(appContext)
-
         @ServiceQualifier
         @Provides
         fun provideServiceRetrofit(
