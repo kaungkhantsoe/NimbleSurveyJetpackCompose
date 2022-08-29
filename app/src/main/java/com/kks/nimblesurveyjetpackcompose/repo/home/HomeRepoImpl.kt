@@ -6,7 +6,7 @@ import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
 import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurvey
-import com.kks.nimblesurveyjetpackcompose.network.ApiInterface
+import com.kks.nimblesurveyjetpackcompose.network.Api
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class HomeRepoImpl @Inject constructor(
-    private val apiInterface: ApiInterface,
+    private val apiInterface: Api,
     private val surveyDao: SurveyDao
 ) : HomeRepo {
 
