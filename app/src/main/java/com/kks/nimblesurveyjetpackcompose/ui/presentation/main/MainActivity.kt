@@ -31,6 +31,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     NimbleSurveyJetpackComposeTheme {
-        DestinationsNavHost(navGraph = NavGraphs.root)
+//        DestinationsNavHost(navGraph = NavGraphs.root)
     }
 }

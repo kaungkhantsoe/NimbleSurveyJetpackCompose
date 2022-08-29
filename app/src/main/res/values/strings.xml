@@ -5,4 +5,11 @@
     <string name="splash_background_content_description">Splash Background</string>
     <string name="splash_logo_content_description">Nimble Logo</string>
     <string name="timber_log">Class:%s: Line: %s, Method: %s</string>
+
+    <!--Login-->
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_forget">Forgot?</string>
+    <string name="login_log_in">Log in</string>
+
 </resources>

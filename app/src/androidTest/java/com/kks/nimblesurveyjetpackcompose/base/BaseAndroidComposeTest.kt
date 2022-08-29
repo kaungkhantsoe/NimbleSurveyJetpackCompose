@@ -5,7 +5,7 @@ import com.kks.nimblesurveyjetpackcompose.ui.presentation.main.MainActivity
 import org.junit.Rule
 
 abstract class BaseAndroidComposeTest {
-    @get:Rule
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     protected fun getString(resId: Int) = composeTestRule.activity.getString(resId)

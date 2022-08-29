@@ -1,22 +1,31 @@
 package com.kks.nimblesurveyjetpackcompose.viewmodel.splash
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-const val SPLASH_TIME = 2000L
-class SplashViewModel(private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) : ViewModel() {
 
-    val shouldNavigateToLogin = mutableStateOf(false)
+    private val _shouldNavigateToLogin = MutableStateFlow(false)
 
-    fun startTimerToNavigateToLogin() {
-        viewModelScope.launch(dispatcher) {
-            delay(SPLASH_TIME)
-            shouldNavigateToLogin.value = true
+    val shouldNavigateToLogin: StateFlow<Boolean>
+        get() = _shouldNavigateToLogin.asStateFlow()
+
+    fun startTimerToNavigateToLogin(splashTime: Long = 2000L) {
+        viewModelScope.launch(ioDispatcher) {
+            delay(splashTime)
+            _shouldNavigateToLogin.value = true
         }
     }
 }

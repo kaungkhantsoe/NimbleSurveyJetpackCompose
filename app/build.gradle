@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
-    id 'com.google.devtools.ksp' version '1.6.10-1.0.2'
+    id 'com.google.devtools.ksp' version '1.7.0-1.0.6'
     id 'kotlin-kapt'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'dagger.hilt.android.plugin'
@@ -18,7 +18,7 @@ android {
         versionCode 1
         versionName "0.1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.kks.nimblesurveyjetpackcompose.di.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -118,6 +118,12 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    configurations {
+        androidTestImplementation {
+            exclude group: 'io.mockk', module: 'mockk-agent-jvm'
+        }
+    }
 }
 
 dependencies {
@@ -155,9 +161,9 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version"
 
     //Dagger - Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation 'com.google.dagger:hilt-android:2.42'
+    kapt 'com.google.dagger:hilt-compiler:2.42'
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_compose_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Timber
     implementation("com.jakewharton.timber:timber:$timber_version")
@@ -169,6 +175,8 @@ dependencies {
     // Mockk
     testImplementation "io.mockk:mockk:$mockk_version"
     testImplementation "io.mockk:mockk-agent-jvm:$mockk_version"
+    androidTestImplementation "io.mockk:mockk-android:$mockk_version"
+    androidTestImplementation "io.mockk:mockk-agent-jvm:$mockk_version"
 
     testImplementation 'junit:junit:4.13.2'
     // For runBlockingTest, CoroutineDispatcher etc.
@@ -183,4 +191,9 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    // For instrumented tests.
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    // ...with Kotlin.
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.38.1'
 }
