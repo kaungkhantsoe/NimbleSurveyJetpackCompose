@@ -63,7 +63,9 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { },
+        onRefresh = {
+            // TODO: Implement swipe refresh here
+        },
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn {
@@ -177,9 +179,7 @@ fun SurveyContent(modifier: Modifier, surveyResponse: SurveyResponse, numberOfPa
 fun UserIcon(modifier: Modifier) {
     Image(
         painter = painterResource(id = R.drawable.ic_launcher_foreground),
-        contentDescription = stringResource(
-            id = R.string.home_user_image
-        ),
+        contentDescription = stringResource(id = R.string.home_user_image),
         modifier = modifier
     )
 }
