@@ -4,7 +4,7 @@ import com.kks.nimblesurveyjetpackcompose.base.BaseViewModelTest
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
-import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
+import com.kks.nimblesurveyjetpackcompose.util.PREF_REFRESH_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import io.mockk.coEvery
 import io.mockk.every
@@ -40,7 +40,7 @@ class SplashViewModelTest : BaseViewModelTest() {
 
     @Test
     fun `When splash screen is displayed, shouldNavigateToLogin value is true after 2 seconds`() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
+        every { preferenceManager.getStringData(PREF_REFRESH_TOKEN) } returns ""
         val twoSeconds = 2000L
         runTest {
             viewModel.startTimerToNavigateToLogin(twoSeconds)
