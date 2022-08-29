@@ -2,12 +2,12 @@ package com.kks.nimblesurveyjetpackcompose.di
 
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.home.FakeHomeRepo
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.splash.FakeLoginRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import io.mockk.mockk
 import javax.inject.Singleton
 
 @Module
@@ -22,5 +22,5 @@ class FakeRepoModule {
 
     @Singleton
     @Provides
-    fun provideFakeHomeRepo(): HomeRepo = FakeHomeRepo()
+    fun provideFakeHomeRepo(): HomeRepo =  mockk()
 }

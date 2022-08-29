@@ -21,6 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,6 +76,9 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val userAvatar by viewModel.userAvatar.collectAsState()
 
+    val shimmerDescription = stringResource(id = R.string.home_shimmer)
+    val surveyContentDescription = stringResource(id = R.string.home_survey_content)
+
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = {
@@ -84,7 +89,13 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     ) {
         LazyColumn {
             if (isRefreshing && surveyList.isEmpty()) {
-                item { HomeScreenShimmerLoading(modifier = Modifier.fillParentMaxSize()) }
+                item {
+                    HomeScreenShimmerLoading(
+                        modifier = Modifier
+                            .fillParentMaxSize()
+                            .semantics { contentDescription = shimmerDescription }
+                    )
+                }
             }
             if (surveyList.isNotEmpty() && error == null) {
                 item {
@@ -116,7 +127,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                                 anchors = anchors,
                                 thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
                                 orientation = Orientation.Horizontal
-                            ),
+                            )
+                            .semantics { contentDescription = surveyContentDescription },
                         numberOfPage = surveyList.size,
                         selectedSurveyNumber = selectedSurveyNumber,
                         survey = surveyList[selectedSurveyNumber],
@@ -254,7 +266,7 @@ fun BottomView(
             text = survey.title,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 20.dp),
         )
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (description, detailBtn) = createRefs()

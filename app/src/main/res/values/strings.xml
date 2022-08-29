@@ -24,4 +24,7 @@
     <string name="home_survey_detail_button">Home survey detail button</string>
     <string name="home_survey_background_image">Home survey background image</string>
     <string name="home_today">Today</string>
+    <string name="home_shimmer">Home shimmer</string>
+    <string name="home_dot">Home dots</string>
+    <string name="home_survey_content">Home survey content</string>
 </resources>

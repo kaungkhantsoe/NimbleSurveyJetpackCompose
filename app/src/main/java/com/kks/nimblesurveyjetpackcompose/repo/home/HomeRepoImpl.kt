@@ -5,7 +5,6 @@ import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
 import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
 import com.kks.nimblesurveyjetpackcompose.model.entities.toSurveyModel
-import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurvey
 import com.kks.nimblesurveyjetpackcompose.network.Api

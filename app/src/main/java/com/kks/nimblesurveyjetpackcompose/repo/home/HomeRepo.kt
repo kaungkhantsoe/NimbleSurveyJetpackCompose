@@ -2,7 +2,6 @@ package com.kks.nimblesurveyjetpackcompose.repo.home
 
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
-import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import kotlinx.coroutines.flow.Flow
 
