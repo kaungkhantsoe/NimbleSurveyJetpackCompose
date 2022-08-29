@@ -38,7 +38,7 @@ fun HomeScreenShimmerLoading(modifier: Modifier) {
     ShimmerHomeScreen(brush = shimmerBrush(translateAnimation), modifier = modifier)
 }
 
-@Suppress("LongMethod", "DestructuringDeclarationWithTooManyEntries")
+@Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
 fun ShimmerHomeScreen(brush: Brush, modifier: Modifier) {
     ConstraintLayout(

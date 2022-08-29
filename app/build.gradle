@@ -142,6 +142,7 @@ dependencies {
     implementation "androidx.activity:activity-compose:$activity_compose_version"
     implementation "androidx.constraintlayout:constraintlayout-compose:$constraint_compose_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+    implementation 'com.google.android.material:material:1.6.1'
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:30.3.1')
