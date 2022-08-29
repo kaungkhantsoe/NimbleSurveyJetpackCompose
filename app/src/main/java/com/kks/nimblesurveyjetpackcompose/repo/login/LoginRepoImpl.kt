@@ -23,6 +23,7 @@ class LoginRepoImpl @Inject constructor(
         email: String,
         password: String
     ): Flow<ResourceState<LoginResponse>> = flow {
+        emit(ResourceState.Loading)
         val apiResult = safeApiCall(Dispatchers.IO) {
             api.loginUser(
                 LoginRequest(
@@ -51,6 +52,6 @@ class LoginRepoImpl @Inject constructor(
             else -> emit(ResourceState.NetworkError)
         }
     }.catch { error ->
-        emit(ResourceState.Error(error.message ?: UNKNOWN_ERROR_MESSAGE))
+        emit(ResourceState.Error(error.message.orEmpty()))
     }
 }

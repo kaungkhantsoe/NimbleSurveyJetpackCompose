@@ -2,6 +2,7 @@
 
 package com.kks.nimblesurveyjetpackcompose.util.extensions
 
+import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.CustomErrorResponse
 import com.squareup.moshi.JsonDataException
@@ -15,7 +16,6 @@ import java.net.UnknownHostException
 
 private const val API_WAIT_TIME = 7000L
 const val SUCCESS_WITH_NULL_ERROR = "Success with null error"
-const val UNKNOWN_ERROR_MESSAGE = "Unknown error message"
 
 /**
  * Reference: https://medium.com/@douglas.iacovelli/how-to-handle-errors-with-retrofit-and-coroutines-33e7492a912
@@ -36,8 +36,7 @@ suspend fun <T> safeApiCall(
                 is UnknownHostException,
                 is TimeoutCancellationException -> ResourceState.NetworkError
                 is HttpException -> {
-                    val errorResponse =
-                        throwable.response()?.parseJsonErrorResponse<CustomErrorResponse>()
+                    val errorResponse = throwable.response()?.parseJsonErrorResponse<CustomErrorResponse>()
                     val errorMsg = errorResponse?.errors?.first()?.detail ?: "Unknown error"
                     ResourceState.Error(errorMsg)
                 }
@@ -58,4 +57,16 @@ inline fun <reified T> Response<*>.parseJsonErrorResponse(): T? {
     } catch (e: JsonDataException) {
         null
     }
+}
+
+fun <T> ResourceState<T>.mapError(): ErrorModel? {
+    return when (this) {
+        is ResourceState.Error -> ErrorModel(errorType = ErrorType.INFO, errorMessage = error.orEmpty())
+        is ResourceState.NetworkError -> ErrorModel(errorType = ErrorType.NETWORK)
+        else -> null
+    }
+}
+
+enum class ErrorType {
+    INFO, NETWORK
 }
