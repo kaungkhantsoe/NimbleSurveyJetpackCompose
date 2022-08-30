@@ -54,7 +54,7 @@ class HomeScreenTest : BaseAndroidComposeTest() {
     }
 
     @Test
-    fun when_get_survey_list_is_success_show_first_survey() {
+    fun when_get_survey_list_is_successful_show_first_survey() {
         with(composeTestRule) {
             every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Unit))
             every { homeRepo.getSurveyListFromDb() } returns flowOf(surveyLists)

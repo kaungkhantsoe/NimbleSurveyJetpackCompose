@@ -18,14 +18,14 @@ import dagger.hilt.android.components.ViewModelComponent
 object RepositoryModule {
     @Provides
     fun provideLoginRepo(
-        apiInterface: Api,
+        api: Api,
         preferenceManager: PreferenceManager,
         customKeyProvider: CustomKeyProvider
-    ): LoginRepo = LoginRepoImpl(apiInterface, preferenceManager, customKeyProvider)
+    ): LoginRepo = LoginRepoImpl(api, preferenceManager, customKeyProvider)
 
     @Provides
     fun provideHomeRepoImpl(
-        apiInterface: Api,
+        api: Api,
         surveyDao: SurveyDao
-    ): HomeRepo = HomeRepoImpl(apiInterface, surveyDao)
+    ): HomeRepo = HomeRepoImpl(api, surveyDao)
 }
