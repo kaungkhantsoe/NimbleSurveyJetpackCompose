@@ -191,10 +191,10 @@ fun UserIcon(modifier: Modifier) {
 
 @Composable
 fun BottomView(
-    modifier: Modifier,
     surveyResponse: SurveyResponse,
     numberOfPage: Int,
-    currentPage: Int
+    currentPage: Int,
+    modifier: Modifier
 ) {
     Column(modifier = modifier) {
         DotsIndicator(
@@ -244,8 +244,8 @@ fun BottomView(
 @Composable
 fun SurveyText(
     text: String,
-    modifier: Modifier = Modifier,
     fontSize: TextUnit,
+    modifier: Modifier = Modifier,
     fontWeight: FontWeight = FontWeight.Normal,
     color: Color = Color.White
 ) {
