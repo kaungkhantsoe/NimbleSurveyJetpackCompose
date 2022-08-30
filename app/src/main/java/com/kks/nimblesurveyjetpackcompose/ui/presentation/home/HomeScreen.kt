@@ -101,21 +101,25 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 item {
                     LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
                         val currentSwipeState = swipeableState.offset.value
-                        if (currentSwipeState < endAnchor / 2 && threshold == IDLE) {
-                            // Swipe to left
-                            threshold = LEFT_SWIPE
-                        } else if (currentSwipeState > endAnchor / 2 && threshold == IDLE) {
-                            // Swipe to right
-                            threshold = RIGHT_SWIPE
-                        } else if ((currentSwipeState == endAnchor / 2)) {
-                            if (
-                                (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
-                                (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
-                            ) {
-                                selectedSurveyNumber += threshold
-                                if (selectedSurveyNumber == (surveyList.size) - 2) viewModel.getNextPage()
+                        when {
+                            currentSwipeState < endAnchor / 2 && threshold == IDLE -> {
+                                // Swipe to left
+                                threshold = LEFT_SWIPE
                             }
-                            threshold = IDLE
+                            currentSwipeState > endAnchor / 2 && threshold == IDLE -> {
+                                // Swipe to right
+                                threshold = RIGHT_SWIPE
+                            }
+                            currentSwipeState == endAnchor / 2 -> {
+                                if (
+                                    (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
+                                    (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
+                                ) {
+                                    selectedSurveyNumber += threshold
+                                    if (selectedSurveyNumber == (surveyList.size) - 2) viewModel.getNextPage()
+                                }
+                                threshold = IDLE
+                            }
                         }
                         swipeableState.snapTo(targetValue = MID_STATE)
                     })

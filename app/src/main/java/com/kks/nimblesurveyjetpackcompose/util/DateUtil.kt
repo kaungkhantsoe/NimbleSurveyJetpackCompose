@@ -6,9 +6,5 @@ import java.util.*
 const val EEEE_MMM_D = "EEEE, MMM d"
 
 object DateUtil {
-
-    private val EEEE_comma_MMMMM_d =
-        SimpleDateFormat(EEEE_MMM_D, Locale.ENGLISH)
-
-    fun getBeautifiedDate(date: Date = Date()): String = EEEE_comma_MMMMM_d.format(date)
+    fun getBeautifiedDate(date: Date = Date()): String = SimpleDateFormat(EEEE_MMM_D, Locale.ENGLISH).format(date)
 }
