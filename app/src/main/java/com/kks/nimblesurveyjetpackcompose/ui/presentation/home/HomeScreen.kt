@@ -76,7 +76,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val userAvatar by viewModel.userAvatar.collectAsState()
 
-    val shimmerDescription = stringResource(id = R.string.home_shimmer)
     val surveyContentDescription = stringResource(id = R.string.home_survey_content)
 
     SwipeRefresh(
@@ -89,13 +88,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     ) {
         LazyColumn {
             if (isRefreshing && surveyList.isEmpty()) {
-                item {
-                    HomeScreenShimmerLoading(
-                        modifier = Modifier
-                            .fillParentMaxSize()
-                            .semantics { contentDescription = shimmerDescription }
-                    )
-                }
+                item { HomeScreenShimmerLoading(modifier = Modifier.fillParentMaxSize()) }
             }
             if (surveyList.isNotEmpty() && error == null) {
                 item {
