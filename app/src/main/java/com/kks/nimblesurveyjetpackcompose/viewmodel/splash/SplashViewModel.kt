@@ -6,6 +6,8 @@ import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
+import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
+import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,13 +22,14 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val loginRepo: LoginRepo,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val preferenceManager: PreferenceManager,
 ) : ViewModel() {
     private val _shouldShowLoading = MutableStateFlow(false)
     private val _shouldNavigateToLogin = MutableStateFlow(false)
     private val _isLoginSuccess = MutableStateFlow(false)
     private var _error = MutableStateFlow<ErrorModel?>(null)
 
-    val getError: StateFlow<ErrorModel?>
+    val error: StateFlow<ErrorModel?>
         get() = _error.asStateFlow()
 
     val shouldNavigateToLogin: StateFlow<Boolean>
@@ -41,7 +44,11 @@ class SplashViewModel @Inject constructor(
     fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
-            _shouldNavigateToLogin.value = true
+            if (preferenceManager.getBooleanData(PREF_LOGGED_IN)) {
+                _isLoginSuccess.value = true
+            } else {
+                _shouldNavigateToLogin.value = true
+            }
         }
     }
 

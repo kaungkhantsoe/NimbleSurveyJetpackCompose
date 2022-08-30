@@ -137,11 +137,12 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation("androidx.compose.ui:ui-tooling:$compose_version")
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime_version"
     implementation "androidx.activity:activity-compose:$activity_compose_version"
     implementation "androidx.constraintlayout:constraintlayout-compose:$constraint_compose_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+    implementation 'com.google.android.material:material:1.6.1'
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:30.3.1')
@@ -177,6 +178,9 @@ dependencies {
     // Chucker
     debugImplementation "com.github.chuckerteam.chucker:library:$chucker_version"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:$chucker_version"
+
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"

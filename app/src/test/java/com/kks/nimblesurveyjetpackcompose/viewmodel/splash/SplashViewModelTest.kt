@@ -4,7 +4,10 @@ import com.kks.nimblesurveyjetpackcompose.base.BaseViewModelTest
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
+import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
+import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,13 +20,17 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class SplashViewModelTest : BaseViewModelTest() {
-
     private lateinit var viewModel: SplashViewModel
     private val loginRepo: LoginRepo = mockk()
+    private val preferenceManager: PreferenceManager = mockk()
 
     override fun setup() {
         super.setup()
-        viewModel = SplashViewModel(loginRepo = loginRepo, ioDispatcher = testDispatcher)
+        viewModel = SplashViewModel(
+            loginRepo = loginRepo,
+            ioDispatcher = testDispatcher,
+            preferenceManager = preferenceManager
+        )
     }
 
     @Test
@@ -33,6 +40,7 @@ class SplashViewModelTest : BaseViewModelTest() {
 
     @Test
     fun `When splash screen is displayed, shouldNavigateToLogin value is true after 2 seconds`() {
+        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
         val twoSeconds = 2000L
         runTest {
             viewModel.startTimerToNavigateToLogin(twoSeconds)
@@ -57,7 +65,7 @@ class SplashViewModelTest : BaseViewModelTest() {
         viewModel.login("example@gmail.com", "invalid")
         advanceUntilIdle()
 
-        assertEquals(errorMessage, viewModel.getError.value?.errorMessage)
+        assertEquals(errorMessage, viewModel.error.value?.errorMessage)
     }
 
     @Test
