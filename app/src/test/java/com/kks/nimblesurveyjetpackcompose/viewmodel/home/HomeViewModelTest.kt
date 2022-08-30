@@ -2,7 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.viewmodel.home
 
 import com.kks.nimblesurveyjetpackcompose.base.BaseViewModelTest
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
+import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import io.mockk.every
 import io.mockk.mockk
@@ -62,7 +62,7 @@ class HomeViewModelTest : BaseViewModelTest() {
         } returns flowOf(ResourceState.Success(Unit))
 
         advanceUntilIdle()
-        assertEquals(viewModel.surveyList.value, emptyList<SurveyModel>())
+        assertEquals(viewModel.surveyList.value, emptyList<Survey>())
     }
 
     @Test

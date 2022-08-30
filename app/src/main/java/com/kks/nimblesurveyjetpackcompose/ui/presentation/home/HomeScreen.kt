@@ -37,7 +37,7 @@ import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
+import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
@@ -160,7 +160,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
 @Composable
 fun SurveyContent(
-    survey: SurveyModel,
+    survey: Survey,
     numberOfPage: Int,
     selectedSurveyNumber: Int,
     modifier: Modifier,
@@ -183,7 +183,7 @@ fun SurveyContent(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             SurveyText(
-                text = DateUtil.getBeautifiedCurrentDate(),
+                text = DateUtil.getBeautifiedDate(),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -247,10 +247,10 @@ fun UserIcon(userAvatar: String?, modifier: Modifier) {
 
 @Composable
 fun BottomView(
-    modifier: Modifier,
-    survey: SurveyModel,
+    survey: Survey,
     numberOfPage: Int,
-    currentPage: Int
+    currentPage: Int,
+    modifier: Modifier
 ) {
     Column(modifier = modifier) {
         DotsIndicator(

@@ -27,7 +27,7 @@ fun DotsIndicator(
     selectedColor: Color,
     unSelectedColor: Color,
     indicatorSize: Dp,
-    space: Dp,
+    space: Dp
 ) {
     val listState = rememberLazyListState()
     val homeDotsDescription = stringResource(id = R.string.home_dot)

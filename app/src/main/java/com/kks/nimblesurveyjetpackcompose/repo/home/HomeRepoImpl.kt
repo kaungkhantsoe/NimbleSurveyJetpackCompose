@@ -2,9 +2,9 @@ package com.kks.nimblesurveyjetpackcompose.repo.home
 
 import com.kks.nimblesurveyjetpackcompose.cache.SurveyDao
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.SurveyModel
-import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
-import com.kks.nimblesurveyjetpackcompose.model.entities.toSurveyModel
+import com.kks.nimblesurveyjetpackcompose.model.Survey
+import com.kks.nimblesurveyjetpackcompose.model.entities.SurveyEntity
+import com.kks.nimblesurveyjetpackcompose.model.entities.toSurvey
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurvey
 import com.kks.nimblesurveyjetpackcompose.network.Api
@@ -61,8 +61,8 @@ class HomeRepoImpl @Inject constructor(
             emit(ResourceState.Error(error.message.orEmpty()))
         }
 
-    override fun getSurveyListFromDb(): Flow<List<SurveyModel>> =
-        surveyDao.getSurveys().transform { value: List<Survey> -> emit(value.map { it.toSurveyModel() }) }
+    override fun getSurveyListFromDb(): Flow<List<Survey>> =
+        surveyDao.getSurveys().transform { value: List<SurveyEntity> -> emit(value.map { it.toSurvey() }) }
 
     override suspend fun clearSurveyList() = surveyDao.clearSurveys()
 }

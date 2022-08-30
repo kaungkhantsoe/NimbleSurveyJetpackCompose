@@ -1,6 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.model
 
-data class SurveyModel(
+data class Survey(
     val id: String,
     val coverImageUrl: String,
     val title: String,
