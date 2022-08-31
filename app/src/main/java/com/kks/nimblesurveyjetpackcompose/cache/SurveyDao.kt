@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SurveyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addSurveys(surveyEntityList: List<SurveyEntity>)
+    suspend fun addSurveys(surveyEntities: List<SurveyEntity>)
 
     @Query("SELECT * FROM survey")
     fun getSurveys(): Flow<List<SurveyEntity>>

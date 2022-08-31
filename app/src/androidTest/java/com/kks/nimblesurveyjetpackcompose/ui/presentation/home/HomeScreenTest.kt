@@ -12,7 +12,7 @@ import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.base.BaseAndroidComposeTest
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
-import com.kks.nimblesurveyjetpackcompose.surveyLists
+import com.kks.nimblesurveyjetpackcompose.surveys
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import dagger.hilt.android.testing.BindValue
@@ -57,10 +57,10 @@ class HomeScreenTest : BaseAndroidComposeTest() {
     fun when_get_survey_list_is_successful_show_first_survey() {
         with(composeTestRule) {
             every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Unit))
-            every { homeRepo.getSurveyListFromDb() } returns flowOf(surveyLists)
+            every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
             setupHomeComposeRule()
-            onNodeWithText(surveyLists.first().title).assertIsDisplayed()
-            onNodeWithText(surveyLists.first().description).assertIsDisplayed()
+            onNodeWithText(surveys.first().title).assertIsDisplayed()
+            onNodeWithText(surveys.first().description).assertIsDisplayed()
             onAllNodesWithContentDescription(getString(R.string.home_dot)).assertCountEquals(2)
         }
     }
@@ -69,14 +69,14 @@ class HomeScreenTest : BaseAndroidComposeTest() {
     fun when_swipe_show_next_survey() {
         with(composeTestRule) {
             every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Unit))
-            every { homeRepo.getSurveyListFromDb() } returns flowOf(surveyLists)
+            every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
             setupHomeComposeRule()
             onNodeWithContentDescription(getString(R.string.home_survey_content)).performTouchInput {
                 swipeLeft()
             }
             waitForIdle()
-            onNodeWithText(surveyLists[1].title).assertIsDisplayed()
-            onNodeWithText(surveyLists[1].description).assertIsDisplayed()
+            onNodeWithText(surveys[1].title).assertIsDisplayed()
+            onNodeWithText(surveys[1].description).assertIsDisplayed()
         }
     }
 
