@@ -3,14 +3,20 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 
 // Reference https://medium.com/@prashantappdeveloper/viewpager-in-jetpack-compose-with-dot-indicators-within-minutes-a2779970534e
@@ -23,11 +29,15 @@ fun DotsIndicator(
     indicatorSize: Dp,
     space: Dp
 ) {
+    val listState = rememberLazyListState()
+    val homeDotsDescription = stringResource(id = R.string.home_dot)
+
     LazyRow(
+        state = listState,
         modifier = Modifier
             .wrapContentWidth()
             .wrapContentHeight()
-            .padding(start = 20.dp, end = 20.dp)
+            .padding(horizontal = 20.dp)
     ) {
         items(totalDots) { index ->
             if (index == selectedIndex) {
@@ -36,6 +46,7 @@ fun DotsIndicator(
                         .size(indicatorSize)
                         .clip(CircleShape)
                         .background(selectedColor)
+                        .semantics { contentDescription = homeDotsDescription }
                 )
             } else {
                 Box(
@@ -43,12 +54,16 @@ fun DotsIndicator(
                         .size(indicatorSize)
                         .clip(CircleShape)
                         .background(unSelectedColor)
+                        .semantics { contentDescription = homeDotsDescription }
                 )
             }
             if (index != totalDots - 1) {
                 Spacer(modifier = Modifier.padding(horizontal = space))
             }
         }
+    }
+    LaunchedEffect(key1 = selectedIndex) {
+        listState.scrollToItem(selectedIndex)
     }
 }
 

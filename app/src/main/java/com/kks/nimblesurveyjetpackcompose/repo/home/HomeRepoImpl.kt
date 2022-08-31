@@ -2,7 +2,9 @@ package com.kks.nimblesurveyjetpackcompose.repo.home
 
 import com.kks.nimblesurveyjetpackcompose.cache.SurveyDao
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
+import com.kks.nimblesurveyjetpackcompose.model.Survey
+import com.kks.nimblesurveyjetpackcompose.model.entities.SurveyEntity
+import com.kks.nimblesurveyjetpackcompose.model.entities.toSurvey
 import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurvey
 import com.kks.nimblesurveyjetpackcompose.network.Api
@@ -12,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
 class HomeRepoImpl @Inject constructor(
@@ -24,6 +27,7 @@ class HomeRepoImpl @Inject constructor(
         pageSize: Int,
         getNumberOfPage: (totalPage: Int) -> Unit
     ): Flow<ResourceState<Unit>> = flow {
+        emit(ResourceState.Loading)
         val apiResult = safeApiCall(Dispatchers.IO) { apiInterface.getSurveyList(pageNumber, pageSize) }
         when (apiResult) {
             is ResourceState.Success -> {
@@ -42,6 +46,7 @@ class HomeRepoImpl @Inject constructor(
 
     override fun fetchUserDetail(): Flow<ResourceState<UserResponse>> =
         flow {
+            emit(ResourceState.Loading)
             val apiResult = safeApiCall(Dispatchers.IO) { apiInterface.getUserDetail() }
             when (apiResult) {
                 is ResourceState.Success -> {
@@ -56,7 +61,8 @@ class HomeRepoImpl @Inject constructor(
             emit(ResourceState.Error(error.message.orEmpty()))
         }
 
-    override fun getSurveyListFromDb(): Flow<List<Survey>> = surveyDao.getSurveys()
+    override fun getSurveyListFromDb(): Flow<List<Survey>> =
+        surveyDao.getSurveys().transform { value: List<SurveyEntity> -> emit(value.map { it.toSurvey() }) }
 
     override suspend fun clearSurveyList() = surveyDao.clearSurveys()
 }

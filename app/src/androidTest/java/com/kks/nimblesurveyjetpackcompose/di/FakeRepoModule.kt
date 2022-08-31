@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import io.mockk.mockk
 import javax.inject.Singleton
 
 @Module
@@ -18,4 +19,8 @@ class FakeRepoModule {
     @Singleton
     @Provides
     fun provideFakeLoginRepo(): LoginRepo = FakeLoginRepo()
+
+    @Singleton
+    @Provides
+    fun provideFakeHomeRepo(): HomeRepo =  mockk()
 }

@@ -13,9 +13,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.kks.nimblesurveyjetpackcompose.R
 
 private const val INITIAL_VALUE = 0f
 private const val TARGET_VALUE = 1000f
@@ -41,10 +45,13 @@ fun HomeScreenShimmerLoading(modifier: Modifier) {
 @Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
 fun ShimmerHomeScreen(brush: Brush, modifier: Modifier) {
+    val shimmerDescription = stringResource(id = R.string.home_shimmer)
+
     ConstraintLayout(
         modifier = modifier
-            .fillMaxSize()
             .background(Color.Black)
+            .semantics { contentDescription = shimmerDescription }
+
     ) {
         val (text1, text2, text3, text4, text5, text6, text7, circle) = createRefs()
 
@@ -148,5 +155,5 @@ fun CustomSpacerRectangle(brush: Brush, modifier: Modifier) =
 @Composable
 @Preview(showBackground = true)
 fun ShimmerHomeScreenPreview() {
-    ShimmerHomeScreen(brush = shimmerBrush(), modifier = Modifier)
+    ShimmerHomeScreen(brush = shimmerBrush(), modifier = Modifier.fillMaxSize())
 }

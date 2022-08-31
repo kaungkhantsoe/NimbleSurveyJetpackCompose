@@ -7,7 +7,6 @@ import com.kks.nimblesurveyjetpackcompose.R
 
 const val PREF_ACCESS_TOKEN = "access_token"
 const val PREF_REFRESH_TOKEN = "refresh_token"
-const val PREF_LOGGED_IN = "logged_in"
 
 class PreferenceManager(context: Context) {
     private val preferences: SharedPreferences =

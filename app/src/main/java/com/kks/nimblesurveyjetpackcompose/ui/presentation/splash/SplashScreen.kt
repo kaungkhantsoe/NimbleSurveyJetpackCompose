@@ -42,6 +42,7 @@ import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.HomeScree
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CornerRadius
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
+import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavHostParam
@@ -51,7 +52,6 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
 
 private const val SPLASH_TIME = 2000L
-private const val TWEEN_ANIM_TIME = 1000
 
 @RootNavGraph(start = true)
 @Destination
@@ -264,7 +264,7 @@ fun textFieldColor() =
 
 private fun Modifier.loginTextFieldModifier() = this
     .fillMaxWidth()
-    .padding(start = 24.dp, end = 24.dp)
+    .padding(horizontal = 24.dp)
     .height(56.dp)
 
 @Preview(showBackground = true)

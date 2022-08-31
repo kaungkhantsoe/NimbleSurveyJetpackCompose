@@ -5,7 +5,7 @@ import androidx.compose.ui.test.*
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.base.BaseAndroidComposeTest
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
-import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
+import com.kks.nimblesurveyjetpackcompose.util.PREF_REFRESH_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
@@ -144,7 +144,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     }
 
     private fun setupSplashComposeRule() {
-        every { preferenceManager.getBooleanData(PREF_LOGGED_IN) } returns false
+        every { preferenceManager.getStringData(PREF_REFRESH_TOKEN) } returns ""
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
                 SplashScreen(

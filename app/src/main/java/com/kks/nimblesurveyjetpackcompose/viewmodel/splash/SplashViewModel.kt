@@ -6,7 +6,7 @@ import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
-import com.kks.nimblesurveyjetpackcompose.util.PREF_LOGGED_IN
+import com.kks.nimblesurveyjetpackcompose.util.PREF_REFRESH_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,10 +44,10 @@ class SplashViewModel @Inject constructor(
     fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
-            if (preferenceManager.getBooleanData(PREF_LOGGED_IN)) {
-                _isLoginSuccess.value = true
-            } else {
+            if (preferenceManager.getStringData(PREF_REFRESH_TOKEN).isNullOrEmpty()) {
                 _shouldNavigateToLogin.value = true
+            } else {
+                _isLoginSuccess.value = true
             }
         }
     }

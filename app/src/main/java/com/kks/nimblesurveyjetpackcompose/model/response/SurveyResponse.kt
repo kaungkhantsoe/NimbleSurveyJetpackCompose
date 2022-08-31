@@ -1,6 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.model.response
 
-import com.kks.nimblesurveyjetpackcompose.model.entities.Survey
+import com.kks.nimblesurveyjetpackcompose.model.entities.SurveyEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -16,8 +16,8 @@ data class SurveyResponse(
     val relationships: SurveyRelationshipsResponse?
 )
 
-fun SurveyResponse.toSurvey(): Survey =
-    Survey(
+fun SurveyResponse.toSurvey(): SurveyEntity =
+    SurveyEntity(
         id = id.orEmpty(),
         coverImageUrl = attributes?.coverImageUrl.orEmpty(),
         title = attributes?.title.orEmpty(),
