@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Store cache
         uses: actions/checkout@v2
@@ -26,13 +28,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Run detekt
-        run: ./gradlew detekt
-
       - name: Decode google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo $GOOGLE_SERVICES_JSON | base64 --decode > ./app/google-services.json
+
+      - name: Decode local properties
+        run: echo ${{ secrets.LOCAL_PROPERTIES }} | base64 --decode > ./local.properties
+
+      - name: Run detekt
+        run: ./gradlew detekt
 
       - name: Run lint
         run: ./gradlew lint

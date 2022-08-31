@@ -4,4 +4,27 @@
     <!--Splash-->
     <string name="splash_background_content_description">Splash Background</string>
     <string name="splash_logo_content_description">Nimble Logo</string>
+    <string name="timber_log">Class:%s: Line: %s, Method: %s</string>
+
+    <!--Login-->
+    <string name="login_email">Email</string>
+    <string name="login_email_text_field">Login Email TextField</string>
+    <string name="login_password">Password</string>
+    <string name="login_password_text_field">Login Password TextField</string>
+    <string name="login_forget">Forgot?</string>
+    <string name="login_log_in">Log in</string>
+    <string name="login_log_in_button">Log in</string>
+
+    <string name="network_error">Cannot connect to internet</string>
+    <string name="protocol_error">Something went wrong!!</string>
+    <string name="oops">Oops!!</string>
+
+    <!--Home-->
+    <string name="home_user_image">User Image</string>
+    <string name="home_survey_detail_button">Home survey detail button</string>
+    <string name="home_survey_background_image">Home survey background image</string>
+    <string name="home_today">Today</string>
+    <string name="home_shimmer">Home shimmer</string>
+    <string name="home_dot">Home dots</string>
+    <string name="home_survey_content">Home survey content</string>
 </resources>
