@@ -76,8 +76,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val userAvatar by viewModel.userAvatar.collectAsState()
 
-    val surveyContentDescription = stringResource(id = R.string.home_survey_content)
-
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = {
@@ -124,8 +122,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                                 anchors = anchors,
                                 thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
                                 orientation = Orientation.Horizontal
-                            )
-                            .semantics { contentDescription = surveyContentDescription },
+                            ),
                         numberOfPage = surveyList.size,
                         selectedSurveyNumber = selectedSurveyNumber,
                         survey = surveyList[selectedSurveyNumber],
@@ -163,7 +160,9 @@ fun SurveyContent(
     modifier: Modifier,
     userAvatar: String?
 ) {
-    ConstraintLayout(modifier = modifier) {
+    val surveyContentDescription = stringResource(id = R.string.home_survey_content)
+
+    ConstraintLayout(modifier = modifier.semantics { contentDescription = surveyContentDescription }) {
         val (date, userImage, bottomView) = createRefs()
         SurveyImage(imageUrl = survey.coverImageUrl)
         Image(
