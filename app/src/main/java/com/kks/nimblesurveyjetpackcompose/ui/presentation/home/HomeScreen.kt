@@ -33,6 +33,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -167,7 +168,7 @@ fun SurveyContent(
 
     ConstraintLayout(modifier = modifier.semantics { contentDescription = surveyContentDescription }) {
         val (date, userImage, bottomView) = createRefs()
-        SurveyImage(imageUrl = survey.coverImagePlaceholderUrl)
+        SurveyImage(imageUrl = survey.coverImageFullUrl, placeholderUrl = survey.coverImagePlaceholderUrl)
         Image(
             painter = painterResource(id = R.drawable.survey_overlay),
             contentDescription = null,
@@ -215,7 +216,9 @@ fun SurveyContent(
 }
 
 @Composable
-fun SurveyImage(imageUrl: String) {
+fun SurveyImage(imageUrl: String, placeholderUrl: String) {
+    val placeholderPainter = rememberAsyncImagePainter(model = placeholderUrl)
+
     Crossfade(
         targetState = imageUrl,
         animationSpec = tween(TWEEN_ANIM_TIME)
@@ -225,7 +228,7 @@ fun SurveyImage(imageUrl: String) {
                 .data(it)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.ic_launcher_foreground),
+            placeholder = placeholderPainter,
             contentDescription = stringResource(id = R.string.home_survey_background_image),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
