@@ -43,9 +43,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 @OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
-fun SurveyHomeDetailScreen(
-    survey: Survey
-) {
+fun SurveyHomeDetailScreen(survey: Survey) {
     var currentPage by remember { mutableStateOf(0) }
 
     Box(modifier = Modifier.fillMaxSize()) {
