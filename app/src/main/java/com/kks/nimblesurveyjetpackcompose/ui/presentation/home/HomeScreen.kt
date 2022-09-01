@@ -55,7 +55,6 @@ private const val FRACTION = 0.3f
 private const val IDLE = 0
 private const val LEFT_SWIPE = 1
 private const val RIGHT_SWIPE = -1
-private const val START_SURVEY_NUMBER = 0
 private const val START_ANCHOR = 0f
 private const val LEFT_STATE = "L"
 private const val RIGHT_STATE = "R"
@@ -70,7 +69,7 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
 
     val surveyList by viewModel.surveyList.collectAsState()
     val error by viewModel.error.collectAsState()
-    var selectedSurveyNumber by remember { mutableStateOf(START_SURVEY_NUMBER) }
+    val selectedSurveyNumber by viewModel.selectedSurveyNumber.collectAsState()
     val swipeableState = rememberSwipeableState(initialValue = MID_STATE)
     val endAnchor = LocalDensity.current.run { LocalConfiguration.current.screenWidthDp.toDp().toPx() }
     // Maps anchor points (in px) to states
@@ -83,7 +82,6 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = {
             viewModel.clearCacheAndFetch()
-            selectedSurveyNumber = START_SURVEY_NUMBER
         },
         modifier = Modifier.fillMaxSize()
     ) {
@@ -109,7 +107,7 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
                                     (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
                                     (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
                                 ) {
-                                    selectedSurveyNumber += threshold
+                                    viewModel.setSelectedSurveyNumber(selectedSurveyNumber + threshold)
                                     if (selectedSurveyNumber == (surveyList.size) - 2) viewModel.getNextPage()
                                 }
                                 threshold = IDLE
