@@ -2,6 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.splash
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
+import com.adevinta.android.barista.rule.flaky.AllowFlaky
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.base.BaseAndroidComposeTest
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
@@ -83,6 +84,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     }
 
     @Test
+    @AllowFlaky(attempts = 5)
     fun when_type_password_into_password_text_field_has_text_with_mask() {
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_password_text_field))

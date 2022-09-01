@@ -130,6 +130,10 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
+
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -207,6 +211,10 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    androidTestImplementation('com.adevinta.android:barista:4.2.0') {
+        exclude group: 'org.jetbrains.kotlin' // Only if you already use Kotlin in your project
+    }
 
     // For instrumented tests.
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
