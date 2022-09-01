@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,11 +26,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -40,12 +44,15 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 @OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
-fun SurveyDetailScreen(survey: Survey) {
+fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey) {
     var currentPage by remember { mutableStateOf(0) }
+    val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -73,6 +80,7 @@ fun SurveyDetailScreen(survey: Survey) {
             }
         }
         SurveyToolbar(
+            navigator = navigator,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
@@ -85,6 +93,7 @@ fun SurveyDetailScreen(survey: Survey) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 54.dp, end = 20.dp)
+                .semantics { contentDescription = startSurveyDescription }
         )
     }
 }
@@ -143,21 +152,31 @@ fun SurveyDetailStartScreen(survey: Survey, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SurveyToolbar(modifier: Modifier, showBack: Boolean, showClose: Boolean) {
+fun SurveyToolbar(navigator: DestinationsNavigator, modifier: Modifier, showBack: Boolean, showClose: Boolean) {
     Box(modifier = modifier) {
         if (showBack) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_back_accent),
-                contentDescription = stringResource(id = R.string.survey_detail_back_icon),
+            IconButton(
+                onClick = { navigator.popBackStack() },
                 modifier = Modifier.align(Alignment.CenterStart)
-            )
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_back_accent),
+                    contentDescription = stringResource(id = R.string.survey_detail_back_icon)
+                )
+            }
         }
         if (showClose) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_close_button_white),
-                contentDescription = stringResource(id = R.string.survey_detail_close_icon),
+            IconButton(
+                onClick = {
+                    // TODO: Implement dialog to confirm close
+                },
                 modifier = Modifier.align(Alignment.CenterEnd)
-            )
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_close_button_white),
+                    contentDescription = stringResource(id = R.string.survey_detail_close_icon),
+                )
+            }
         }
     }
 }
@@ -166,7 +185,8 @@ fun SurveyToolbar(modifier: Modifier, showBack: Boolean, showClose: Boolean) {
 @Composable
 fun SurveyHomeDetailScreenPreview() {
     SurveyDetailScreen(
-        Survey(
+        navigator = EmptyDestinationsNavigator,
+        survey = Survey(
             id = "",
             coverImagePlaceholderUrl = "https://dhdbhh0jsld0o.cloudfront.net/m/c96c480fc8b69d50e75a_",
             title = "Tree Tops Australia",

@@ -15,6 +15,7 @@ import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.surveys
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -84,7 +85,12 @@ class HomeScreenTest : BaseAndroidComposeTest() {
         every { homeRepo.fetchUserDetail() } returns flowOf(ResourceState.Loading)
         homeViewModel = HomeViewModel(homeRepo = homeRepo, ioDispatcher = Dispatchers.IO)
         composeTestRule.activity.setContent {
-            NimbleSurveyJetpackComposeTheme { HomeScreen(viewModel = homeViewModel) }
+            NimbleSurveyJetpackComposeTheme {
+                HomeScreen(
+                    viewModel = homeViewModel,
+                    navigator = EmptyDestinationsNavigator
+                )
+            }
         }
     }
 }
