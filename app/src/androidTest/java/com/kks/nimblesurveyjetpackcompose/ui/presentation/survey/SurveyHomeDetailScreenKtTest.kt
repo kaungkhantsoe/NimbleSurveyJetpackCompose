@@ -11,7 +11,6 @@ import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.surveys
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import com.kks.nimblesurveyjetpackcompose.R
@@ -53,7 +52,7 @@ class SurveyHomeDetailScreenKtTest : BaseAndroidComposeTest() {
     private fun setupSurveyHomeDetailScreen(survey: Survey) {
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
-                SurveyHomeDetailScreen(navigator = EmptyDestinationsNavigator, survey = survey)
+                SurveyDetailScreen(navigator = EmptyDestinationsNavigator, survey = survey)
             }
         }
     }
