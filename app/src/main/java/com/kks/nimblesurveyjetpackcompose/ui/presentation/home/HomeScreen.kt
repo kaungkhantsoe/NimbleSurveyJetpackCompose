@@ -40,7 +40,7 @@ import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.SurveyHomeDetailScreenDestination
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.SurveyDetailScreenDestination
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
@@ -288,7 +288,7 @@ fun BottomView(
                     }
             )
             Button(
-                onClick = { navigator.navigate(SurveyHomeDetailScreenDestination(survey = survey)) },
+                onClick = { navigator.navigate(SurveyDetailScreenDestination(survey = survey)) },
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(56.dp)

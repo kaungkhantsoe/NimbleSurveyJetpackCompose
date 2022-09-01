@@ -1,7 +1,9 @@
 package com.kks.nimblesurveyjetpackcompose.model
 
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Survey(
     val id: String,
     val coverImagePlaceholderUrl: String,
