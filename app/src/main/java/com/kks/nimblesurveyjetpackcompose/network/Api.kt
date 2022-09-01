@@ -8,6 +8,7 @@ import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Api {
@@ -22,4 +23,7 @@ interface Api {
         @Query("page[number]") pageNumber: Int,
         @Query("page[size]") pageSize: Int,
     ): BaseResponse<List<SurveyResponse>>
+
+    @GET("api/v1/surveys/{surveyId}")
+    suspend fun getSurveyDetail(@Path("surveyId") surveyId: String): BaseResponse<SurveyResponse>
 }

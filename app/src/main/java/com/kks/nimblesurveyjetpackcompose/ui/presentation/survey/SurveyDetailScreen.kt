@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -42,6 +43,7 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.BlackRussian
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
+import com.kks.nimblesurveyjetpackcompose.viewmodel.survey.SurveyViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
@@ -49,10 +51,11 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 @OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
-fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey) {
+fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey, surveyViewModel: SurveyViewModel = hiltViewModel()) {
     var currentPage by remember { mutableStateOf(0) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
+    surveyViewModel.getSurveyDetail()
 
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
