@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.kks.nimblesurveyjetpackcompose.R
@@ -43,15 +44,16 @@ import com.ramcosta.composedestinations.annotation.Destination
 @OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
-fun SurveyHomeDetailScreen(survey: Survey) {
+fun SurveyDetailScreen(survey: Survey) {
     var currentPage by remember { mutableStateOf(0) }
+    val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
 
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
-            model = survey.coverImageUrl,
+            model = survey.coverImageFullUrl,
             contentDescription = stringResource(id = R.string.survey_detail_background_image),
             modifier = Modifier.fillMaxSize(),
-            placeholder = painterResource(id = R.drawable.ic_launcher_background),
+            placeholder = placeholderPainter,
             contentScale = ContentScale.Crop
         )
         Image(
@@ -163,10 +165,10 @@ fun SurveyToolbar(modifier: Modifier, showBack: Boolean, showClose: Boolean) {
 @Preview(showBackground = true)
 @Composable
 fun SurveyHomeDetailScreenPreview() {
-    SurveyHomeDetailScreen(
+    SurveyDetailScreen(
         Survey(
             id = "",
-            coverImageUrl = "https://dhdbhh0jsld0o.cloudfront.net/m/c96c480fc8b69d50e75a_",
+            coverImagePlaceholderUrl = "https://dhdbhh0jsld0o.cloudfront.net/m/c96c480fc8b69d50e75a_",
             title = "Tree Tops Australia",
             description = "We'd love to hear from you!"
         )

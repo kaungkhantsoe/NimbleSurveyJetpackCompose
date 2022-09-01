@@ -164,7 +164,7 @@ fun SurveyContent(
 
     ConstraintLayout(modifier = modifier.semantics { contentDescription = surveyContentDescription }) {
         val (date, userImage, bottomView) = createRefs()
-        SurveyImage(imageUrl = survey.coverImageUrl)
+        SurveyImage(imageUrl = survey.coverImagePlaceholderUrl)
         Image(
             painter = painterResource(id = R.drawable.survey_overlay),
             contentDescription = null,
