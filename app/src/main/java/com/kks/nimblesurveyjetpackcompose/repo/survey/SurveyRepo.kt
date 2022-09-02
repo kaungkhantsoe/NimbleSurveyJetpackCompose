@@ -5,5 +5,5 @@ import com.kks.nimblesurveyjetpackcompose.model.response.IncludedResponse
 import kotlinx.coroutines.flow.Flow
 
 interface SurveyRepo {
-    fun getSurveyDetail(surveyId: String): Flow<ResourceState<List<IncludedResponse>>>
+    fun getSurveyDetails(surveyId: String): Flow<ResourceState<List<IncludedResponse>>>
 }

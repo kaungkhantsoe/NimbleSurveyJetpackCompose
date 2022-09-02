@@ -12,15 +12,13 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class SurveyRepoImpl @Inject constructor(@ServiceQualifier private val api: Api) : SurveyRepo {
-    override fun getSurveyDetail(surveyId: String): Flow<ResourceState<List<IncludedResponse>>> =
+    override fun getSurveyDetails(surveyId: String): Flow<ResourceState<List<IncludedResponse>>> =
         flow {
             emit(ResourceState.Loading)
             val apiResult = safeApiCall(Dispatchers.IO) { api.getSurveyDetail(surveyId = surveyId) }
             when (apiResult) {
                 is ResourceState.Success -> {
-                    apiResult.data.included?.let {
-                        emit(ResourceState.Success(it))
-                    } ?: emit(ResourceState.Success(emptyList()))
+                    emit(ResourceState.Success(apiResult.data.included.orEmpty()))
                 }
                 is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
                 else -> emit(ResourceState.NetworkError)
