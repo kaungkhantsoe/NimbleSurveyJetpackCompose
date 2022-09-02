@@ -74,9 +74,6 @@ interface NetworkModule {
         @Provides
         fun providesMoshi(): Moshi {
             return Moshi.Builder()
-                /*.add(PolymorphicJsonAdapterFactory.of(BaseIncludedResponse::class.java, "type")
-                    .withSubtype(IncludedAnswerResponse::class.java, "answer")
-                    .withSubtype(IncludedQuestionResponse::class.java, "question"))*/
                 .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
                 .addLast(KotlinJsonAdapterFactory())
                 .build()
