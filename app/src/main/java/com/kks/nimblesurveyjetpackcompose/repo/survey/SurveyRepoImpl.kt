@@ -2,7 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.repo.survey
 
 import com.kks.nimblesurveyjetpackcompose.di.ServiceQualifier
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.response.BaseIncludedResponse
+import com.kks.nimblesurveyjetpackcompose.model.response.IncludedResponse
 import com.kks.nimblesurveyjetpackcompose.network.Api
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class SurveyRepoImpl @Inject constructor(@ServiceQualifier private val api: Api) : SurveyRepo {
-    override fun getSurveyDetail(surveyId: String): Flow<ResourceState<List<BaseIncludedResponse>>> =
+    override fun getSurveyDetail(surveyId: String): Flow<ResourceState<List<IncludedResponse>>> =
         flow {
             emit(ResourceState.Loading)
             val apiResult = safeApiCall(Dispatchers.IO) { api.getSurveyDetail(surveyId = surveyId) }

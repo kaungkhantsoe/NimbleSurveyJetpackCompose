@@ -3,9 +3,6 @@ package com.kks.nimblesurveyjetpackcompose.di
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.kks.nimblesurveyjetpackcompose.BuildConfig
-import com.kks.nimblesurveyjetpackcompose.model.response.BaseIncludedResponse
-import com.kks.nimblesurveyjetpackcompose.model.response.IncludedAnswerResponse
-import com.kks.nimblesurveyjetpackcompose.model.response.IncludedQuestionResponse
 import com.kks.nimblesurveyjetpackcompose.network.Api
 import com.kks.nimblesurveyjetpackcompose.network.AuthApi
 import com.kks.nimblesurveyjetpackcompose.repo.token.TokenRepo
@@ -16,7 +13,6 @@ import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.util.interceptors.AccessTokenInterceptor
 import com.kks.nimblesurveyjetpackcompose.util.interceptors.TokenAuthenticator
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Binds

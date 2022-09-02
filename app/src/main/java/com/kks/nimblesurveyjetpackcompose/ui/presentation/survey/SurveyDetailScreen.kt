@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -43,7 +42,6 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.BlackRussian
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
-import com.kks.nimblesurveyjetpackcompose.viewmodel.survey.SurveyViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
@@ -51,11 +49,10 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 @OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
-fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey, surveyViewModel: SurveyViewModel = hiltViewModel()) {
+fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey) {
     var currentPage by remember { mutableStateOf(0) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
-    surveyViewModel.getSurveyDetail()
 
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
@@ -86,7 +83,7 @@ fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey, surveyV
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                .padding(top = 57.dp, start = 15.dp, end = 15.dp),
+                .padding(top = 57.dp, start = 8.dp, end = 15.dp),
             showBack = currentPage == 0,
             showClose = currentPage > 0
         )
