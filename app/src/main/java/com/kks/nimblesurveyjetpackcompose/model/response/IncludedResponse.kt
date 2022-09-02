@@ -39,7 +39,7 @@ data class IncludedQuestionResponse(
 @JsonClass(generateAdapter = true)
 data class IncludedAnswerResponse(
     @Json(name = "attributes") val attributes: AttributeAnswerResponse? = null,
-): IncludedResponse() {
+) : IncludedResponse() {
     @JsonClass(generateAdapter = true)
     data class AttributeAnswerResponse(
         @Json(name = "text") var text: String? = null,

@@ -16,7 +16,7 @@ class SurveyRepoImpl @Inject constructor(@ServiceQualifier private val api: Api)
         flow {
             emit(ResourceState.Loading)
             val apiResult = safeApiCall(Dispatchers.IO) { api.getSurveyDetail(surveyId = surveyId) }
-            when(apiResult) {
+            when (apiResult) {
                 is ResourceState.Success -> {
                     apiResult.data.included?.let {
                         emit(ResourceState.Success(it))
