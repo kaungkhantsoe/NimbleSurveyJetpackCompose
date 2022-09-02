@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -111,7 +112,7 @@ fun SurveyDetailScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopStart)
-                .padding(top = 57.dp, start = 8.dp, end = 15.dp),
+                .padding(top = 57.dp, start = 4.dp, end = 15.dp),
             showBack = currentPage == 0,
             showClose = currentPage > 0,
             onClickClose = { showConfirmDialog = true }
