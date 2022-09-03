@@ -103,7 +103,11 @@ fun SurveyDetailScreen(
             if (page == 0) {
                 SurveyDetailStartScreen(survey, modifier = Modifier.fillMaxSize())
             } else {
-                SurveyQuestionScreen(surveyQuestion = surveyQuestionList[page - 1])
+                SurveyQuestionScreen(
+                    surveyQuestion = surveyQuestionList[page - 1],
+                    pageNumber = page,
+                    totalNumberOfPage = surveyQuestionList.size
+                )
             }
         }
         SurveyToolbar(

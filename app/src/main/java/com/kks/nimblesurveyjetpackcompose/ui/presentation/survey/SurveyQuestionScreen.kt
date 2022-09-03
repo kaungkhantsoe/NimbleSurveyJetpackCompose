@@ -15,13 +15,13 @@ import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 @Composable
-fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion) {
+fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion, pageNumber: Int, totalNumberOfPage: Int) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(
                 id = R.string.survey_question_number,
-                surveyQuestion.pageNumber,
-                surveyQuestion.totalNumberOfPage
+                pageNumber,
+                totalNumberOfPage
             ),
             fontSize = 15.sp,
             color = White50,
@@ -34,5 +34,5 @@ fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion) {
 @Preview
 @Composable
 fun SurveyQuestionScreenPreview() {
-    SurveyQuestionScreen(SurveyQuestion(pageNumber = 1, totalNumberOfPage = 5, title = "Title"))
+    SurveyQuestionScreen(surveyQuestion = SurveyQuestion(title = "Title"), pageNumber = 1, totalNumberOfPage = 5)
 }
