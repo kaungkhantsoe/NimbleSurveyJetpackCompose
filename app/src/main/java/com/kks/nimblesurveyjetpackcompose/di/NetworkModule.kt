@@ -81,9 +81,9 @@ interface NetworkModule {
             return Moshi.Builder()
                 .add(
                     PolymorphicJsonAdapterFactory
-                        .of(IncludedResponse::class.java,"type")
-                        .withSubtype(IncludedQuestionResponse::class.java,SurveyType.QUESTION.typeValue)
-                        .withSubtype(IncludedAnswerResponse::class.java,SurveyType.ANSWER.typeValue)
+                        .of(IncludedResponse::class.java, "type")
+                        .withSubtype(IncludedQuestionResponse::class.java, SurveyType.QUESTION.typeValue)
+                        .withSubtype(IncludedAnswerResponse::class.java, SurveyType.ANSWER.typeValue)
                 )
                 .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
                 .addLast(KotlinJsonAdapterFactory())
