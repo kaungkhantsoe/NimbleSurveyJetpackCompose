@@ -5,5 +5,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class SurveyIncludedRelationshipsResponse(
-    @Json(name = "answers") val answers: ArrayList<SurveyDataResponse>? = null
+    @Json(name = "answers") val answers: SurveyQuestionsResponse? = null
 )

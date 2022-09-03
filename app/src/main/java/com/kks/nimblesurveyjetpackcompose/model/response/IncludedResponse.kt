@@ -12,6 +12,7 @@ open class IncludedResponse {
 @JsonClass(generateAdapter = true)
 data class IncludedQuestionResponse(
     @Json(name = "attributes") val attributes: AttributeQuestionResponse? = null,
+    @Json(name = "relationships") val relationships: SurveyIncludedRelationshipsResponse? = null
 ) : IncludedResponse() {
     @JsonClass(generateAdapter = true)
     data class AttributeQuestionResponse(
