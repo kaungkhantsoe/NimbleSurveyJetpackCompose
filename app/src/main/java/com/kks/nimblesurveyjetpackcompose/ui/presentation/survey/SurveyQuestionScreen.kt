@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
@@ -34,5 +35,17 @@ fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion, pageNumber: Int, totalN
 @Preview
 @Composable
 fun SurveyQuestionScreenPreview() {
-    SurveyQuestionScreen(surveyQuestion = SurveyQuestion(title = "Title"), pageNumber = 1, totalNumberOfPage = 5)
+    SurveyQuestionScreen(
+        surveyQuestion = SurveyQuestion(
+            id = "",
+            title = "",
+            displayOrder = 0,
+            shortText = "",
+            pick = "",
+            questionDisplayType = QuestionDisplayType.NONE,
+            answers = emptyList()
+        ),
+        pageNumber = 1,
+        totalNumberOfPage = 5
+    )
 }

@@ -1,5 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -49,6 +50,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ConfirmAlertDialog
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.theme.BlackRussian
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
@@ -68,20 +70,30 @@ fun SurveyDetailScreen(
     viewModel: SurveyDetailViewModel = hiltViewModel()
 ) {
     val currentPage by viewModel.currentPage.collectAsState()
-    val surveyQuestions by viewModel.surveyQuestions.collectAsState()
+    val surveyQuestions by viewModel.surveyQuestionList.collectAsState()
+    val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(pagerState) {
+    BackHandler {
+        if (currentPage > 0) showConfirmDialog = true
+        else navigator.popBackStack()
+    }
+
+    LaunchedEffect(key1 = pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.setCurrentPage(page)
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getSurveyQuestions(surveyId = survey.id)
+    }
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         AsyncImage(
             model = survey.coverImageFullUrl,
             contentDescription = stringResource(id = R.string.survey_detail_background_image),
@@ -156,6 +168,7 @@ fun SurveyDetailScreen(
                 onClickNegativeButton = { showConfirmDialog = false }
             )
         }
+        if (shouldShowLoading) Loading()
     }
 }
 
