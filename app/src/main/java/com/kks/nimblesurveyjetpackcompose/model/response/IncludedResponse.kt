@@ -3,17 +3,18 @@ package com.kks.nimblesurveyjetpackcompose.model.response
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
-open class IncludedResponse {
-    @Json(name = "id") val id: String? = null
-    @Json(name = "type") val type: String? = null
+enum class SurveyType(val typeValue: String) {
+    QUESTION("question"), ANSWER("answer")
 }
+
+sealed class IncludedResponse(@Json(name = "type") val type: String)
 
 @JsonClass(generateAdapter = true)
 data class IncludedQuestionResponse(
+    @Json(name = "id") val id: String? = null,
     @Json(name = "attributes") val attributes: AttributeQuestionResponse? = null,
-    @Json(name = "relationships") val relationships: SurveyIncludedRelationshipsResponse? = null
-) : IncludedResponse() {
+    @Json(name = "relationships") val relationships: SurveyIncludedRelationshipsResponse? = null,
+) : IncludedResponse(SurveyType.QUESTION.typeValue) {
     @JsonClass(generateAdapter = true)
     data class AttributeQuestionResponse(
         @Json(name = "text") val text: String? = null,
@@ -39,8 +40,9 @@ data class IncludedQuestionResponse(
 
 @JsonClass(generateAdapter = true)
 data class IncludedAnswerResponse(
+    @Json(name = "id") val id: String? = null,
     @Json(name = "attributes") val attributes: AttributeAnswerResponse? = null,
-) : IncludedResponse() {
+) : IncludedResponse(SurveyType.ANSWER.typeValue) {
     @JsonClass(generateAdapter = true)
     data class AttributeAnswerResponse(
         @Json(name = "text") var text: String? = null,
@@ -62,6 +64,6 @@ data class IncludedAnswerResponse(
         @Json(name = "response_class") var responseClass: String? = null,
         @Json(name = "reference_identifier") var referenceIdentifier: String? = null,
         @Json(name = "score") var score: Int? = null,
-        @Json(name = "alerts") var alerts: ArrayList<String> = arrayListOf()
+        @Json(name = "alerts") var alerts: List<String> = emptyList()
     )
 }
