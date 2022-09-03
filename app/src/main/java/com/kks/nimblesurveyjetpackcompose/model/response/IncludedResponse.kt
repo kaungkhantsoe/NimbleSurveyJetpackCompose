@@ -1,5 +1,8 @@
 package com.kks.nimblesurveyjetpackcompose.model.response
 
+import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
+import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.getQuestionDisplayType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -39,6 +42,17 @@ data class IncludedQuestionResponse(
     )
 }
 
+fun IncludedQuestionResponse.toSurveyQuestion() =
+    SurveyQuestion(
+        id = id.orEmpty(),
+        title = attributes?.text.orEmpty().trim(),
+        displayOrder = attributes?.displayOrder ?: 0,
+        shortText = attributes?.shortText.orEmpty(),
+        pick = attributes?.pick.orEmpty(),
+        questionDisplayType = attributes?.displayType.orEmpty().getQuestionDisplayType(),
+        answers = emptyList()
+    )
+
 @JsonClass(generateAdapter = true)
 data class IncludedAnswerResponse(
     @Json(name = "id") val id: String? = null,
@@ -68,3 +82,10 @@ data class IncludedAnswerResponse(
         @Json(name = "alerts") var alerts: List<String> = emptyList()
     )
 }
+
+fun IncludedAnswerResponse.toSurveyAnswer() =
+    SurveyAnswer(
+        id = id.orEmpty(),
+        text = attributes?.text.orEmpty().trim(),
+        displayOrder = attributes?.displayOrder ?: 0
+    )
