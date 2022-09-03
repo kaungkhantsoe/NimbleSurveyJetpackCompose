@@ -13,4 +13,4 @@ import org.junit.runners.Suite
     SplashScreenTest::class,
     SurveyHomeDetailScreenKtTest::class
 )
-class AppUnitTestSuite
+class AppAndroidTestSuite
