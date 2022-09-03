@@ -12,25 +12,7 @@ import javax.inject.Inject
 class SurveyDetailViewModel @Inject constructor() : ViewModel() {
 
     private val _currentPage = MutableStateFlow(0)
-    private val _surveyQuestionList = MutableStateFlow(
-        listOf(
-            SurveyQuestion(
-                title = "How fulfilled id you feel during this WFH period"
-            ),
-            SurveyQuestion(
-                title = "How fulfilled id you feel during this WFH period"
-            ),
-            SurveyQuestion(
-                title = "How fulfilled id you feel during this WFH period"
-            ),
-            SurveyQuestion(
-                title = "How fulfilled id you feel during this WFH period"
-            ),
-            SurveyQuestion(
-                title = "How fulfilled id you feel during this WFH period"
-            )
-        )
-    )
+    private val _surveyQuestionList = MutableStateFlow(emptyList<SurveyQuestion>())
 
     val currentPage: StateFlow<Int>
         get() = _currentPage.asStateFlow()
