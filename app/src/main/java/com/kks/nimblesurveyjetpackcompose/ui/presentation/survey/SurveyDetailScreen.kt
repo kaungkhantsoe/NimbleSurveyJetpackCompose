@@ -50,6 +50,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ConfirmAlertDialog
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.theme.BlackRussian
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
@@ -72,6 +73,7 @@ fun SurveyDetailScreen(
     val currentPage by viewModel.currentPage.collectAsState()
     val surveyQuestions by viewModel.surveyQuestionList.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
@@ -169,6 +171,14 @@ fun SurveyDetailScreen(
             )
         }
         if (shouldShowLoading) Loading()
+        error?.let { error ->
+            ErrorAlertDialog(
+                errorModel = error,
+                title = stringResource(id = R.string.oops),
+                buttonText = stringResource(id = android.R.string.ok),
+                onClickButton = { viewModel.resetError() }
+            )
+        }
     }
 }
 
@@ -210,6 +220,7 @@ fun NextQuestionButton(
     onNextSlide: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val nextQuestionDescription = stringResource(id = R.string.survey_question_next_question)
     Crossfade(
         targetState = showButton,
         animationSpec = tween(TWEEN_ANIM_TIME),
@@ -220,12 +231,13 @@ fun NextQuestionButton(
                 onClick = { onNextSlide() },
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(56.dp),
+                    .size(56.dp)
+                    .semantics { contentDescription = nextQuestionDescription },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
-                    contentDescription = stringResource(id = R.string.home_survey_detail_button)
+                    contentDescription = null
                 )
             }
         }
