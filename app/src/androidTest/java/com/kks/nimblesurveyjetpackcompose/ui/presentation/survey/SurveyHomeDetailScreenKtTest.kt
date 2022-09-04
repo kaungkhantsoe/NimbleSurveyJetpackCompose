@@ -14,13 +14,25 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.junit.Before
 import org.junit.Test
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.ResourceState
+import com.kks.nimblesurveyjetpackcompose.repo.survey.SurveyRepo
+import com.kks.nimblesurveyjetpackcompose.surveyQuestions
+import com.kks.nimblesurveyjetpackcompose.viewmodel.survey.SurveyDetailViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Ignore
+import io.mockk.every
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Rule
+import javax.inject.Inject
 
 @HiltAndroidTest
 class SurveyHomeDetailScreenKtTest : BaseAndroidComposeTest() {
+
+    lateinit var surveyDetailViewModel: SurveyDetailViewModel
+
+    @Inject
+    lateinit var surveyRepo: SurveyRepo
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
@@ -28,11 +40,11 @@ class SurveyHomeDetailScreenKtTest : BaseAndroidComposeTest() {
     @Before
     fun setup() {
         hiltRule.inject()
+        every { surveyRepo.getSurveyDetails(any()) } returns flowOf(ResourceState.Success(surveyQuestions))
+        surveyDetailViewModel = SurveyDetailViewModel(surveyRepo = surveyRepo, ioDispatcher = Dispatchers.IO)
         setupSurveyHomeDetailScreen(surveys.first())
     }
 
-    // TODO: Refactor in integrate ticket
-    @Ignore("Ignore temporally")
     @Test
     fun when_navigate_to_survey_home_detail_screen_show_survey_detail() {
         with(composeTestRule) {
@@ -43,7 +55,6 @@ class SurveyHomeDetailScreenKtTest : BaseAndroidComposeTest() {
         }
     }
 
-    @Ignore("Ignore temporally")
     @Test
     fun when_click_on_start_survey_button_the_button_disappeared() {
         with(composeTestRule) {
@@ -53,10 +64,26 @@ class SurveyHomeDetailScreenKtTest : BaseAndroidComposeTest() {
         }
     }
 
+    @Test
+    fun when_click_on_next_question_button_the_button_disappeared_and_next_question_slide_in() {
+        with(composeTestRule) {
+            onNodeWithContentDescription(getString(R.string.survey_detail_start_survey)).performClick()
+            waitForIdle()
+            onNodeWithContentDescription(getString(R.string.survey_detail_start_survey)).assertIsNotDisplayed()
+            waitForIdle()
+            onNodeWithContentDescription(getString(R.string.survey_question_next_question)).assertIsDisplayed()
+            onNodeWithText(surveyQuestions.first().title).assertIsDisplayed()
+        }
+    }
+
     private fun setupSurveyHomeDetailScreen(survey: Survey) {
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
-                SurveyDetailScreen(navigator = EmptyDestinationsNavigator, survey = survey)
+                SurveyDetailScreen(
+                    navigator = EmptyDestinationsNavigator,
+                    survey = survey,
+                    viewModel = surveyDetailViewModel
+                )
             }
         }
     }
