@@ -145,10 +145,10 @@ fun SurveyDetailScreen(
         )
         if (showConfirmDialog) {
             ConfirmAlertDialog(
-                title = "Warning!",
-                message = "Are you sure you want to quit the survey?",
-                positiveBtnText = "Yes",
-                negativeBtnText = "Cancel",
+                title = stringResource(id = R.string.survey_question_warning_dialog_title),
+                message = stringResource(id = R.string.survey_question_warning_dialog_message),
+                positiveBtnText = stringResource(id = R.string.survey_question_warning_dialog_yes),
+                negativeBtnText = stringResource(id = R.string.survey_question_warning_dialog_cancel),
                 onClickPositiveBtn = {
                     showConfirmDialog = false
                     navigator.popBackStack()
