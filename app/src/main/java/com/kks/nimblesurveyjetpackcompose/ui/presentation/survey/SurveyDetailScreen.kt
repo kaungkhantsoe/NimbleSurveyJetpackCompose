@@ -51,7 +51,6 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 @Composable
 fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey) {
     var currentPage by remember { mutableStateOf(0) }
-    val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -92,7 +91,6 @@ fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 54.dp, end = 20.dp)
-                .semantics { contentDescription = startSurveyDescription }
         )
     }
 }
@@ -100,11 +98,12 @@ fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey) {
 @Composable
 fun StartSurveyBtn(onStartSurvey: () -> Unit, modifier: Modifier = Modifier) {
     var showStartSurveyBtn by remember { mutableStateOf(true) }
+    val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
 
     Crossfade(
         targetState = showStartSurveyBtn,
         animationSpec = tween(TWEEN_ANIM_TIME),
-        modifier = modifier
+        modifier = modifier.semantics { contentDescription = startSurveyDescription }
     ) {
         if (it) {
             Button(
