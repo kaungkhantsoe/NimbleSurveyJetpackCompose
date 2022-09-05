@@ -4,10 +4,12 @@ import com.kks.nimblesurveyjetpackcompose.di.ServiceQualifier
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.request.SubmitSurveyRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.IncludedAnswerResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.IncludedQuestionResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.toSurveyQuestionRequest
 import com.kks.nimblesurveyjetpackcompose.network.Api
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
@@ -48,4 +50,24 @@ class SurveyRepoImpl @Inject constructor(@ServiceQualifier private val api: Api)
         }.catch { error ->
             emit(ResourceState.Error(error.message.orEmpty()))
         }
+
+    override fun submitSurvey(surveyId: String, surveyQuestions: List<SurveyQuestion>): Flow<ResourceState<Unit>> =
+        flow {
+            emit(ResourceState.Loading)
+            val apiResult = safeApiCall(Dispatchers.IO) {
+                api.submitSurvey(
+                    submitSurveyRequest = surveyQuestions.toSubmitSurveyRequest(surveyId)
+                )
+            }
+            when (apiResult) {
+                is ResourceState.Success -> emit(ResourceState.Success(Unit))
+                is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
+                else -> emit(ResourceState.NetworkError)
+            }
+        }.catch { error ->
+            emit(ResourceState.Error(error.message.orEmpty()))
+        }
 }
+
+private fun List<SurveyQuestion>.toSubmitSurveyRequest(surveyId: String): SubmitSurveyRequest =
+    SubmitSurveyRequest(surveyId = surveyId, questions = this.map { it.toSurveyQuestionRequest() })
