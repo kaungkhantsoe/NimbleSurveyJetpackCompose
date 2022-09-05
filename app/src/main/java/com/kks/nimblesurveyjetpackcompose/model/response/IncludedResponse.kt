@@ -15,6 +15,7 @@ data class IncludedQuestionResponse(
     @Json(name = "attributes") val attributes: AttributeQuestionResponse? = null,
     @Json(name = "relationships") val relationships: SurveyIncludedRelationshipsResponse? = null,
 ) : IncludedResponse(SurveyType.QUESTION.typeValue) {
+
     @JsonClass(generateAdapter = true)
     data class AttributeQuestionResponse(
         @Json(name = "text") val text: String? = null,
