@@ -82,7 +82,7 @@ fun SurveyDetailScreen(navigator: DestinationsNavigator, survey: Survey) {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                .padding(top = 57.dp, start = 15.dp, end = 15.dp),
+                .padding(top = 57.dp, start = 8.dp, end = 15.dp),
             showBack = currentPage == 0,
             showClose = currentPage > 0
         )
