@@ -40,6 +40,7 @@ import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.SurveyDetailScreenDestination
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
@@ -47,6 +48,8 @@ import com.kks.nimblesurveyjetpackcompose.util.DateUtil
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 private const val FRACTION = 0.3f
 private const val IDLE = 0
@@ -62,7 +65,7 @@ private const val MID_STATE = "M"
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
     val activity = LocalContext.current as? Activity
 
     val surveyList by viewModel.surveyList.collectAsState()
@@ -126,7 +129,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                         numberOfPage = surveyList.size,
                         selectedSurveyNumber = selectedSurveyNumber,
                         survey = surveyList[selectedSurveyNumber],
-                        userAvatar = userAvatar
+                        userAvatar = userAvatar,
+                        navigator = navigator
                     )
                 }
             }
@@ -157,6 +161,7 @@ fun SurveyContent(
     survey: Survey,
     numberOfPage: Int,
     selectedSurveyNumber: Int,
+    navigator: DestinationsNavigator,
     modifier: Modifier,
     userAvatar: String?
 ) {
@@ -205,7 +210,8 @@ fun SurveyContent(
                 .constrainAs(bottomView) { bottom.linkTo(parent.bottom, 54.dp) },
             numberOfPage = numberOfPage,
             currentPage = selectedSurveyNumber,
-            survey = survey
+            survey = survey,
+            navigator = navigator
         )
     }
 }
@@ -246,6 +252,7 @@ fun BottomView(
     survey: Survey,
     numberOfPage: Int,
     currentPage: Int,
+    navigator: DestinationsNavigator,
     modifier: Modifier
 ) {
     Column(modifier = modifier) {
@@ -281,7 +288,7 @@ fun BottomView(
                     }
             )
             Button(
-                onClick = { },
+                onClick = { navigator.navigate(SurveyDetailScreenDestination(survey = survey)) },
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(56.dp)
@@ -330,5 +337,5 @@ fun SurveyText(
 @Preview(showBackground = true)
 @Composable
 fun HomeContentPreview() {
-    HomeScreen()
+    HomeScreen(EmptyDestinationsNavigator)
 }
