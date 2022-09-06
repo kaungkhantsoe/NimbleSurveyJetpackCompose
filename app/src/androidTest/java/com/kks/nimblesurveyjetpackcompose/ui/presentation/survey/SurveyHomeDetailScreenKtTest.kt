@@ -76,6 +76,17 @@ class SurveyHomeDetailScreenKtTest : BaseAndroidComposeTest() {
         }
     }
 
+    @Test
+    fun when_click_on_next_question_button_and_reach_the_end_of_survey_list_show_submit_button() {
+        with(composeTestRule) {
+            onNodeWithContentDescription(getString(R.string.survey_detail_start_survey)).performClick()
+            waitForIdle()
+            onNodeWithContentDescription(getString(R.string.survey_question_next_question)).performClick()
+            waitForIdle()
+            onNodeWithText(getString(R.string.survey_question_submit_survey)).assertIsDisplayed()
+        }
+    }
+
     private fun setupSurveyHomeDetailScreen(survey: Survey) {
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
