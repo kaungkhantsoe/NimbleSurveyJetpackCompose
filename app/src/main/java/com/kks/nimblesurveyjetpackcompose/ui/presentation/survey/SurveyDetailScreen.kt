@@ -84,7 +84,7 @@ fun SurveyDetailScreen(
     val currentPage by viewModel.currentPage.collectAsState()
     val surveyQuestions by viewModel.surveyQuestions.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
-    val isSurveySubmitSuccess by viewModel.shouldShowLottie.collectAsState()
+    val shouldShowLottie by viewModel.shouldShowLottie.collectAsState()
     val error by viewModel.error.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
@@ -99,7 +99,7 @@ fun SurveyDetailScreen(
         else navigator.popBackStack()
     }
 
-    LaunchedEffect(key1 = pagerState, key2 = isSurveySubmitSuccess) {
+    LaunchedEffect(key1 = pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.setCurrentPage(page)
         }
@@ -165,7 +165,7 @@ fun SurveyDetailScreen(
                 .padding(bottom = 54.dp, end = 20.dp)
                 .semantics { contentDescription = startSurveyDescription }
         )
-        if (isSurveySubmitSuccess) LottieView(navigator = navigator)
+        if (shouldShowLottie) LottieView(navigator = navigator)
         NextQuestionButton(
             showButton = !isStartPage && !isLastPage,
             onNextSlide = {
