@@ -33,6 +33,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -55,7 +56,6 @@ private const val FRACTION = 0.3f
 private const val IDLE = 0
 private const val LEFT_SWIPE = 1
 private const val RIGHT_SWIPE = -1
-private const val START_SURVEY_NUMBER = 0
 private const val START_ANCHOR = 0f
 private const val LEFT_STATE = "L"
 private const val RIGHT_STATE = "R"
@@ -70,7 +70,7 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
 
     val surveyList by viewModel.surveyList.collectAsState()
     val error by viewModel.error.collectAsState()
-    var selectedSurveyNumber by remember { mutableStateOf(START_SURVEY_NUMBER) }
+    val selectedSurveyNumber by viewModel.selectedSurveyNumber.collectAsState()
     val swipeableState = rememberSwipeableState(initialValue = MID_STATE)
     val endAnchor = LocalDensity.current.run { LocalConfiguration.current.screenWidthDp.toDp().toPx() }
     // Maps anchor points (in px) to states
@@ -83,7 +83,6 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = {
             viewModel.clearCacheAndFetch()
-            selectedSurveyNumber = START_SURVEY_NUMBER
         },
         modifier = Modifier.fillMaxSize()
     ) {
@@ -109,7 +108,7 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
                                     (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
                                     (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
                                 ) {
-                                    selectedSurveyNumber += threshold
+                                    viewModel.setSelectedSurveyNumber(selectedSurveyNumber + threshold)
                                     if (selectedSurveyNumber == (surveyList.size) - 2) viewModel.getNextPage()
                                 }
                                 threshold = IDLE
@@ -169,7 +168,7 @@ fun SurveyContent(
 
     ConstraintLayout(modifier = modifier.semantics { contentDescription = surveyContentDescription }) {
         val (date, userImage, bottomView) = createRefs()
-        SurveyImage(imageUrl = survey.coverImagePlaceholderUrl)
+        SurveyImage(imageUrl = survey.coverImageFullUrl, placeholderUrl = survey.coverImagePlaceholderUrl)
         Image(
             painter = painterResource(id = R.drawable.survey_overlay),
             contentDescription = null,
@@ -217,7 +216,9 @@ fun SurveyContent(
 }
 
 @Composable
-fun SurveyImage(imageUrl: String) {
+fun SurveyImage(imageUrl: String, placeholderUrl: String) {
+    val placeholderPainter = rememberAsyncImagePainter(model = placeholderUrl)
+
     Crossfade(
         targetState = imageUrl,
         animationSpec = tween(TWEEN_ANIM_TIME)
@@ -227,7 +228,7 @@ fun SurveyImage(imageUrl: String) {
                 .data(it)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.ic_launcher_foreground),
+            placeholder = placeholderPainter,
             contentDescription = stringResource(id = R.string.home_survey_background_image),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
