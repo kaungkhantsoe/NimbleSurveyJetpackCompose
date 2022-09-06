@@ -70,22 +70,24 @@ class SurveyDetailViewModel @Inject constructor(
     }
 
     fun submitSurvey(surveyId: String) {
-        viewModelScope.launch(ioDispatcher) {
-            surveyRepo.submitSurvey(surveyId = surveyId, surveyQuestions = _surveyQuestionList.value).collect {
-                when (it) {
-                    is ResourceState.Loading -> {
-                        _shouldShowLoading.value = true
-                        resetError()
-                    }
-                    is ResourceState.Success -> {
-                        _shouldShowLoading.value = false
-                        _shouldShowLottie.value = true
-                        resetError()
-                    }
-                    else -> {
-                        _shouldShowLoading.value = false
-                        it.mapError()?.let { errorModel ->
-                            _error.value = errorModel
+        if (_currentPage.value == _surveyQuestionList.value.size) {
+            viewModelScope.launch(ioDispatcher) {
+                surveyRepo.submitSurvey(surveyId = surveyId, surveyQuestions = _surveyQuestionList.value).collect {
+                    when (it) {
+                        is ResourceState.Loading -> {
+                            _shouldShowLoading.value = true
+                            resetError()
+                        }
+                        is ResourceState.Success -> {
+                            _shouldShowLoading.value = false
+                            _shouldShowLottie.value = true
+                            resetError()
+                        }
+                        else -> {
+                            _shouldShowLoading.value = false
+                            it.mapError()?.let { errorModel ->
+                                _error.value = errorModel
+                            }
                         }
                     }
                 }
