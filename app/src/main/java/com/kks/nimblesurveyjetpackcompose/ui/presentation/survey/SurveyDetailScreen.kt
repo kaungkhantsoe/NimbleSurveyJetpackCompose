@@ -71,7 +71,7 @@ fun SurveyDetailScreen(
     viewModel: SurveyDetailViewModel = hiltViewModel()
 ) {
     val currentPage by viewModel.currentPage.collectAsState()
-    val surveyQuestions by viewModel.surveyQuestionList.collectAsState()
+    val surveyQuestions by viewModel.surveyQuestions.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
     val error by viewModel.error.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
