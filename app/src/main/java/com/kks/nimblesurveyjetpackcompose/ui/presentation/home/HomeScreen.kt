@@ -240,7 +240,7 @@ fun SurveyImage(imageUrl: String, placeholderUrl: String) {
 fun UserIcon(userAvatar: String?, modifier: Modifier) {
     AsyncImage(
         model = userAvatar,
-        placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+        placeholder = painterResource(id = R.drawable.ic_baseline_android_24),
         contentDescription = stringResource(
             id = R.string.home_user_image
         ),
