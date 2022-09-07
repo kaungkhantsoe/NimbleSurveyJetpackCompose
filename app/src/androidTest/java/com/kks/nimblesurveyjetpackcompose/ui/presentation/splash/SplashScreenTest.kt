@@ -14,6 +14,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
 import io.mockk.mockk
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import org.junit.Before
 import org.junit.Rule
@@ -117,19 +118,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     }
 
     @Test
-    fun when_with_incorrect_email_and_password_error_dialog_is_shown() {
-        with(composeTestRule) {
-            onNodeWithContentDescription(getString(R.string.login_email_text_field))
-                .performTextInput(EMAIL)
-            onNodeWithContentDescription(getString(R.string.login_password_text_field))
-                .performTextInput(INVALID_PASSWORD)
-            onNodeWithContentDescription(getString(R.string.login_log_in_button))
-                .performClick()
-            onNodeWithText(ERROR_MESSAGE).assertIsDisplayed()
-        }
-    }
-
-    @Test
     fun when_with_correct_email_and_password_goes_to_home() {
         with(composeTestRule) {
             onNodeWithContentDescription(getString(R.string.login_email_text_field))
@@ -139,7 +127,20 @@ class SplashScreenTest : BaseAndroidComposeTest() {
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
             waitForIdle()
-            assert(splashViewModel.isLoginSuccess.value)
+            assertTrue(splashViewModel.isLoginSuccess.value)
+        }
+    }
+
+    @Test
+    fun when_with_incorrect_email_and_password_error_dialog_is_shown() {
+        with(composeTestRule) {
+            onNodeWithContentDescription(getString(R.string.login_email_text_field))
+                .performTextInput(EMAIL)
+            onNodeWithContentDescription(getString(R.string.login_password_text_field))
+                .performTextInput(INVALID_PASSWORD)
+            onNodeWithContentDescription(getString(R.string.login_log_in_button))
+                .performClick()
+            onNodeWithText(ERROR_MESSAGE).assertIsDisplayed()
         }
     }
 
