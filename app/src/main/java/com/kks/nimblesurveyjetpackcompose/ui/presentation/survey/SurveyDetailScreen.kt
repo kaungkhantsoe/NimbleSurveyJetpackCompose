@@ -80,7 +80,7 @@ fun SurveyDetailScreen(
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val isStartPage = currentPage == 0
-    val isLastPage = currentPage == surveyQuestionList.size
+    val isLastPage = currentPage == surveyQuestions.size
 
     BackHandler {
         if (currentPage > 0) showConfirmDialog = true
@@ -136,7 +136,7 @@ fun SurveyDetailScreen(
             showClose = currentPage > 0,
             onClickClose = { showConfirmDialog = true }
         )
-        StartOrSurveyButton(
+        StartOrSubmitButton(
             showButton = isStartPage || isLastPage,
             textRes = if (isStartPage) R.string.survey_detail_start_survey else R.string.survey_question_submit_survey,
             onClick = {
@@ -190,7 +190,7 @@ fun SurveyDetailScreen(
 }
 
 @Composable
-fun StartSurveyButton(
+fun StartOrSubmitButton(
     showButton: Boolean,
     textRes: Int,
     onClick: () -> Unit,
