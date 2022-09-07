@@ -45,11 +45,11 @@ fun ConfirmAlertDialog(
     message: String,
     positiveBtnText: String,
     negativeBtnText: String,
-    onClickPositiveBtn: () -> Unit,
-    onClickNegativeBtn: () -> Unit
+    onClickPositiveButton: () -> Unit,
+    onClickNegativeButton: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = { onClickPositiveBtn() },
+        onDismissRequest = { onClickPositiveButton() },
         title = { Text(text = title) },
         text = { Text(text = message) },
         backgroundColor = Color.White,
@@ -60,10 +60,10 @@ fun ConfirmAlertDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = { onClickNegativeBtn() }) {
+                TextButton(onClick = { onClickNegativeButton() }) {
                     Text(text = negativeBtnText, color = CuriousBlue)
                 }
-                TextButton(onClick = { onClickPositiveBtn() }) {
+                TextButton(onClick = { onClickPositiveButton() }) {
                     Text(text = positiveBtnText, color = CuriousBlue)
                 }
             }
@@ -90,7 +90,7 @@ fun ConfirmAlertDialogPreview() {
         title = "Title",
         positiveBtnText = "OK",
         negativeBtnText = "Cancel",
-        onClickPositiveBtn = {},
-        onClickNegativeBtn = {},
+        onClickPositiveButton = {},
+        onClickNegativeButton = {},
     )
 }

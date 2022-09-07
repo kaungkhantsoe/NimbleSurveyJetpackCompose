@@ -68,7 +68,7 @@ fun SurveyDetailScreen(
     viewModel: SurveyDetailViewModel = hiltViewModel()
 ) {
     val currentPage by viewModel.currentPage.collectAsState()
-    val surveyQuestionList by viewModel.surveyQuestionList.collectAsState()
+    val surveyQuestions by viewModel.surveyQuestions.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
@@ -96,7 +96,7 @@ fun SurveyDetailScreen(
             contentScale = ContentScale.Crop
         )
         HorizontalPager(
-            count = surveyQuestionList.size + 1,
+            count = surveyQuestions.size + 1,
             modifier = Modifier.padding(top = 108.dp),
             state = pagerState
         ) { page ->
@@ -104,9 +104,9 @@ fun SurveyDetailScreen(
                 SurveyDetailStartScreen(survey, modifier = Modifier.fillMaxSize())
             } else {
                 SurveyQuestionScreen(
-                    surveyQuestion = surveyQuestionList[page - 1],
+                    surveyQuestion = surveyQuestions[page - 1],
                     pageNumber = page,
-                    totalNumberOfPage = surveyQuestionList.size
+                    totalNumberOfPage = surveyQuestions.size
                 )
             }
         }
@@ -120,7 +120,7 @@ fun SurveyDetailScreen(
             showClose = currentPage > 0,
             onClickClose = { showConfirmDialog = true }
         )
-        StartSurveyBtn(
+        StartSurveyButton(
             showButton = currentPage == 0,
             onNextSlide = {
                 scope.launch {
@@ -132,7 +132,7 @@ fun SurveyDetailScreen(
                 .padding(bottom = 54.dp, end = 20.dp)
                 .semantics { contentDescription = startSurveyDescription }
         )
-        NextQuestionBtn(
+        NextQuestionButton(
             showButton = currentPage > 0,
             onNextSlide = {
                 scope.launch {
@@ -149,18 +149,18 @@ fun SurveyDetailScreen(
                 message = stringResource(id = R.string.survey_question_warning_dialog_message),
                 positiveBtnText = stringResource(id = R.string.survey_question_warning_dialog_yes),
                 negativeBtnText = stringResource(id = R.string.survey_question_warning_dialog_cancel),
-                onClickPositiveBtn = {
+                onClickPositiveButton = {
                     showConfirmDialog = false
                     navigator.popBackStack()
                 },
-                onClickNegativeBtn = { showConfirmDialog = false }
+                onClickNegativeButton = { showConfirmDialog = false }
             )
         }
     }
 }
 
 @Composable
-fun StartSurveyBtn(
+fun StartSurveyButton(
     showButton: Boolean,
     onNextSlide: () -> Unit,
     modifier: Modifier = Modifier
@@ -192,7 +192,7 @@ fun StartSurveyBtn(
 }
 
 @Composable
-fun NextQuestionBtn(
+fun NextQuestionButton(
     showButton: Boolean,
     onNextSlide: () -> Unit,
     modifier: Modifier = Modifier

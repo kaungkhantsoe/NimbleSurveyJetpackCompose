@@ -12,13 +12,13 @@ import javax.inject.Inject
 class SurveyDetailViewModel @Inject constructor() : ViewModel() {
 
     private val _currentPage = MutableStateFlow(0)
-    private val _surveyQuestionList = MutableStateFlow(emptyList<SurveyQuestion>())
+    private val _surveyQuestions = MutableStateFlow(emptyList<SurveyQuestion>())
 
     val currentPage: StateFlow<Int>
         get() = _currentPage.asStateFlow()
 
-    val surveyQuestionList: StateFlow<List<SurveyQuestion>>
-        get() = _surveyQuestionList.asStateFlow()
+    val surveyQuestions: StateFlow<List<SurveyQuestion>>
+        get() = _surveyQuestions.asStateFlow()
 
     fun setCurrentPage(pageNumber: Int) {
         _currentPage.value = pageNumber
