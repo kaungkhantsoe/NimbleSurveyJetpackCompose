@@ -8,17 +8,6 @@ import com.kks.nimblesurveyjetpackcompose.R
 const val PREF_ACCESS_TOKEN = "access_token"
 const val PREF_REFRESH_TOKEN = "refresh_token"
 
-interface PreferenceManager {
-    fun setStringData(key: String, value: String?)
-    fun setIntegerData(key: String, value: Int)
-    fun setLongData(key: String, value: Long)
-    fun setBooleanData(key: String, value: Boolean)
-    fun getStringData(key: String): String?
-    fun getIntegerData(key: String): Int
-    fun getLongData(key: String): Long
-    fun getBooleanData(key: String): Boolean
-    fun deleteAllData()
-}
 class PreferenceManagerImpl(context: Context) : PreferenceManager {
     private val preferences: SharedPreferences? =
         context.getSharedPreferences(
