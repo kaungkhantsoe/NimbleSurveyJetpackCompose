@@ -19,7 +19,7 @@ interface PreferenceManager {
     fun getBooleanData(key: String): Boolean
     fun deleteAllData()
 }
-class PreferenceManagerImpl(context: Context): PreferenceManager {
+class PreferenceManagerImpl(context: Context) : PreferenceManager {
     private val preferences: SharedPreferences? =
         context.getSharedPreferences(
             "pref_${context.getString(R.string.app_name)}",
