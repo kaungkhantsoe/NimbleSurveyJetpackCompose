@@ -53,7 +53,7 @@ class SurveyDetailViewModel @Inject constructor(
                     }
                     is ResourceState.Success -> {
                         _shouldShowLoading.value = false
-                        _surveyQuestionList.value = it.data
+                        _surveyQuestions.value = it.data
                         resetError()
                     }
                     else -> {
