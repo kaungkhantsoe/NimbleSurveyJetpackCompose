@@ -44,7 +44,7 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
         viewModel.getSurveyQuestions(surveyId = "1")
         advanceUntilIdle()
 
-        assertEquals(surveyQuestions, viewModel.surveyQuestionList.value)
+        assertEquals(surveyQuestions, viewModel.surveyQuestions.value)
     }
 
     @Test

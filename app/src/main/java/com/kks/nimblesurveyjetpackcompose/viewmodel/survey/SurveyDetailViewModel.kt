@@ -70,9 +70,9 @@ class SurveyDetailViewModel @Inject constructor(
     }
 
     fun submitSurvey(surveyId: String) {
-        if (_currentPage.value == _surveyQuestionList.value.size) {
+        if (_currentPage.value == _surveyQuestions.value.size) {
             viewModelScope.launch(ioDispatcher) {
-                surveyRepo.submitSurvey(surveyId = surveyId, surveyQuestions = _surveyQuestionList.value).collect {
+                surveyRepo.submitSurvey(surveyId = surveyId, surveyQuestions = _surveyQuestions.value).collect {
                     when (it) {
                         is ResourceState.Loading -> {
                             _shouldShowLoading.value = true
