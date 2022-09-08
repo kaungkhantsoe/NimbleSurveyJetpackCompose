@@ -29,5 +29,5 @@ interface Api {
     suspend fun getSurveyDetail(@Path("surveyId") surveyId: String): BaseResponse<SurveyResponse>
 
     @POST("api/v1/responses")
-    suspend fun submitSurvey(@Body submitSurveyRequest: SubmitSurveyRequest): BaseResponse<SubmitSurveyRequest>
+    suspend fun submitSurvey(@Body submitSurveyRequest: SubmitSurveyRequest): BaseResponse<Any>
 }
