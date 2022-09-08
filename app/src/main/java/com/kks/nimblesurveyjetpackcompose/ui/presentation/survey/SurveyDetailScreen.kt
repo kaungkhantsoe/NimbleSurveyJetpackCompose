@@ -154,7 +154,7 @@ fun SurveyDetailScreen(
                 .semantics { contentDescription = startSurveyDescription }
         )
         NextQuestionButton(
-            showButton = currentPage > 0 && !isLastPage,
+            showButton = !isStartPage && !isLastPage,
             onNextSlide = {
                 scope.launch {
                     pagerState.animateScrollToPage(currentPage + 1)
