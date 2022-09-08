@@ -43,8 +43,8 @@ fun ErrorAlertDialog(
 fun ConfirmAlertDialog(
     title: String,
     message: String,
-    positiveBtnText: String,
-    negativeBtnText: String,
+    positiveButtonText: String,
+    negativeButtonText: String,
     onClickPositiveButton: () -> Unit,
     onClickNegativeButton: () -> Unit
 ) {
@@ -61,10 +61,10 @@ fun ConfirmAlertDialog(
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = { onClickNegativeButton() }) {
-                    Text(text = negativeBtnText, color = CuriousBlue)
+                    Text(text = negativeButtonText, color = CuriousBlue)
                 }
                 TextButton(onClick = { onClickPositiveButton() }) {
-                    Text(text = positiveBtnText, color = CuriousBlue)
+                    Text(text = positiveButtonText, color = CuriousBlue)
                 }
             }
         }
@@ -88,8 +88,8 @@ fun ConfirmAlertDialogPreview() {
     ConfirmAlertDialog(
         message = "Confirm",
         title = "Title",
-        positiveBtnText = "OK",
-        negativeBtnText = "Cancel",
+        positiveButtonText = "OK",
+        negativeButtonText = "Cancel",
         onClickPositiveButton = {},
         onClickNegativeButton = {},
     )

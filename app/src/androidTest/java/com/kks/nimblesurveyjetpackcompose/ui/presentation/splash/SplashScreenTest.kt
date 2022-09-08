@@ -4,6 +4,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.base.BaseAndroidComposeTest
+import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
@@ -33,6 +34,9 @@ class SplashScreenTest : BaseAndroidComposeTest() {
 
     @Inject
     lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var loginRepo: LoginRepo
 
     @BindValue
     lateinit var splashViewModel: SplashViewModel
@@ -150,7 +154,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
     private fun setupSplashComposeRule() {
         every { preferenceManager.getStringData(any()) } returns ""
         splashViewModel = SplashViewModel(
-            loginRepo = FakeLoginRepo(),
+            loginRepo = loginRepo,
             ioDispatcher = Dispatchers.IO,
             preferenceManager = preferenceManager
         )

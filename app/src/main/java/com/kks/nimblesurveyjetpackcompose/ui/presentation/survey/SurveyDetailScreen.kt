@@ -147,8 +147,8 @@ fun SurveyDetailScreen(
             ConfirmAlertDialog(
                 title = stringResource(id = R.string.survey_question_warning_dialog_title),
                 message = stringResource(id = R.string.survey_question_warning_dialog_message),
-                positiveBtnText = stringResource(id = R.string.survey_question_warning_dialog_yes),
-                negativeBtnText = stringResource(id = R.string.survey_question_warning_dialog_cancel),
+                positiveButtonText = stringResource(id = R.string.survey_question_warning_dialog_yes),
+                negativeButtonText = stringResource(id = R.string.survey_question_warning_dialog_cancel),
                 onClickPositiveButton = {
                     showConfirmDialog = false
                     navigator.popBackStack()
