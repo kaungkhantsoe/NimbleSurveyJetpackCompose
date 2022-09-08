@@ -84,7 +84,7 @@ fun SurveyDetailScreen(
     val currentPage by viewModel.currentPage.collectAsState()
     val surveyQuestions by viewModel.surveyQuestions.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
-    val shouldShowLottie by viewModel.shouldShowLottie.collectAsState()
+    val shouldShowThanks by viewModel.shouldShowLottie.collectAsState()
     val error by viewModel.error.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
@@ -165,7 +165,7 @@ fun SurveyDetailScreen(
                 .padding(bottom = 54.dp, end = 20.dp)
                 .semantics { contentDescription = startSurveyDescription }
         )
-        if (shouldShowLottie) LottieView(navigator = navigator)
+        if (shouldShowThanks) LottieView(navigator = navigator)
         NextQuestionButton(
             showButton = !isStartPage && !isLastPage,
             onNextSlide = {

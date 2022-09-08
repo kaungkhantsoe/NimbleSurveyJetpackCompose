@@ -25,7 +25,7 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
     }
 
     @Test
-    fun `When get survey questions and return error, show error`()= runTest {
+    fun `When get survey questions and return error, show error`() = runTest {
         val errorMessage = "error"
         val errorState: ResourceState<List<SurveyQuestion>> = ResourceState.Error(errorMessage)
         coEvery { surveyRepo.getSurveyDetails(any()) } returns flowOf(errorState)
@@ -37,7 +37,7 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
     }
 
     @Test
-    fun `When get survey questions and return success, show survey list`()= runTest {
+    fun `When get survey questions and return success, show survey list`() = runTest {
         val successState: ResourceState<List<SurveyQuestion>> = ResourceState.Success(surveyQuestions)
         coEvery { surveyRepo.getSurveyDetails(any()) } returns flowOf(successState)
 
@@ -48,7 +48,7 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
     }
 
     @Test
-    fun `When submit survey and return error, show error`()= runTest {
+    fun `When submit survey and return error, show error`() = runTest {
         val errorMessage = "error"
         val errorState: ResourceState<Unit> = ResourceState.Error(errorMessage)
         coEvery { surveyRepo.submitSurvey(any(), any()) } returns flowOf(errorState)
@@ -60,7 +60,7 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
     }
 
     @Test
-    fun `When submit survey and return success, show lottie`()= runTest {
+    fun `When submit survey and return success, show lottie`() = runTest {
         val successState: ResourceState<Unit> = ResourceState.Success(Unit)
         coEvery { surveyRepo.submitSurvey(any(), any()) } returns flowOf(successState)
 
