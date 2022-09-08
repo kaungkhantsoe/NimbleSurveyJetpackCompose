@@ -3,9 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.viewmodel.survey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
-import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
-import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.*
 import com.kks.nimblesurveyjetpackcompose.repo.survey.SurveyRepo
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel

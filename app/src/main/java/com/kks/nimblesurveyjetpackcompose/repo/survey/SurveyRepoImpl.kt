@@ -2,7 +2,6 @@ package com.kks.nimblesurveyjetpackcompose.repo.survey
 
 import com.kks.nimblesurveyjetpackcompose.di.ServiceQualifier
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.model.response.IncludedAnswerResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.IncludedQuestionResponse
@@ -30,13 +29,12 @@ class SurveyRepoImpl @Inject constructor(@ServiceQualifier private val api: Api)
                         val questions = includedList.filterIsInstance<IncludedQuestionResponse>()
                             .map { questionResponse ->
                                 questionResponse.toSurveyQuestion().also { surveyQuestion ->
-                                    val tempAnsList = arrayListOf<SurveyAnswer>()
-                                    questionResponse.relationships?.answers?.data?.forEach { surveyDataResponse ->
-                                        answers[surveyDataResponse.id]?.first { surveyAnswer ->
-                                            tempAnsList.add(surveyAnswer)
-                                        }
-                                    }
-                                    surveyQuestion.answers = tempAnsList
+                                    val answerList = questionResponse.relationships
+                                        ?.answers
+                                        ?.data
+                                        ?.mapNotNull { answers[it.id]?.firstOrNull() }
+                                        .orEmpty()
+                                    surveyQuestion.answers = answerList
                                 }
                             }
                         emit(ResourceState.Success(questions))

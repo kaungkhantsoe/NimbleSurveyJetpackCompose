@@ -11,12 +11,12 @@ data class SurveyQuestion(
 )
 
 enum class QuestionDisplayType(val typeValue: String) {
-    NONE("none"), INTRO("intro"), DROP_DROWN("dropdown")
+    NONE("none"), INTRO("intro"), DROPDOWN("dropdown")
 }
 
 fun String.getQuestionDisplayType() =
     when (this) {
         QuestionDisplayType.INTRO.typeValue -> QuestionDisplayType.INTRO
-        QuestionDisplayType.DROP_DROWN.typeValue -> QuestionDisplayType.DROP_DROWN
+        QuestionDisplayType.DROPDOWN.typeValue -> QuestionDisplayType.DROPDOWN
         else -> QuestionDisplayType.NONE
     }
