@@ -60,7 +60,7 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
     }
 
     @Test
-    fun `When submit survey and return success, show lottie`() = runTest {
+    fun `When submit survey and return success, show thanks`() = runTest {
         val successState: ResourceState<Unit> = ResourceState.Success(Unit)
         coEvery { surveyRepo.submitSurvey(any(), any()) } returns flowOf(successState)
 

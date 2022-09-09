@@ -156,7 +156,7 @@ fun SurveyDetailScreen(
                     scope.launch {
                         pagerState.animateScrollToPage(currentPage + 1)
                     }
-                } else {
+                } else if (isLastPage) {
                     viewModel.submitSurvey(surveyId = survey.id)
                 }
             },
