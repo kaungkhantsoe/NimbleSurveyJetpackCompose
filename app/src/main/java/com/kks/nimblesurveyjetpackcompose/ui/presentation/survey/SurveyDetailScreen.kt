@@ -84,7 +84,7 @@ fun SurveyDetailScreen(
     val currentPage by viewModel.currentPage.collectAsState()
     val surveyQuestions by viewModel.surveyQuestions.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
-    val shouldShowThanks by viewModel.shouldShowLottie.collectAsState()
+    val shouldShowThanks by viewModel.shouldShowThanks.collectAsState()
     val error by viewModel.error.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)

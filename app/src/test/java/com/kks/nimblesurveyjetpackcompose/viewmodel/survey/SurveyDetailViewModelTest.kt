@@ -67,6 +67,6 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
         viewModel.submitSurvey(surveyId = "1")
         advanceUntilIdle()
 
-        assertEquals(true, viewModel.shouldShowLottie.value)
+        assertEquals(true, viewModel.shouldShowThanks.value)
     }
 }

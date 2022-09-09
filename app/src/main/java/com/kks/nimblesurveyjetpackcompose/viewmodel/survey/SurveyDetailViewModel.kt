@@ -24,7 +24,7 @@ class SurveyDetailViewModel @Inject constructor(
     private val _surveyQuestions = MutableStateFlow(emptyList<SurveyQuestion>())
     private val _shouldShowLoading = MutableStateFlow(false)
     private val _error = MutableStateFlow<ErrorModel?>(null)
-    private val _shouldShowLottie = MutableStateFlow(false)
+    private val _shouldShowThanks = MutableStateFlow(false)
 
     val error: StateFlow<ErrorModel?>
         get() = _error.asStateFlow()
@@ -42,8 +42,8 @@ class SurveyDetailViewModel @Inject constructor(
         _currentPage.value = pageNumber
     }
 
-    val shouldShowLottie: StateFlow<Boolean>
-        get() = _shouldShowLottie.asStateFlow()
+    val shouldShowThanks: StateFlow<Boolean>
+        get() = _shouldShowThanks.asStateFlow()
 
     fun getSurveyQuestions(surveyId: String) {
         viewModelScope.launch(ioDispatcher) {
@@ -80,7 +80,7 @@ class SurveyDetailViewModel @Inject constructor(
                         }
                         is ResourceState.Success -> {
                             _shouldShowLoading.value = false
-                            _shouldShowLottie.value = true
+                            _shouldShowThanks.value = true
                             resetError()
                         }
                         else -> {
