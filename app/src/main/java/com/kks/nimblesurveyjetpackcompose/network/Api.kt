@@ -1,6 +1,7 @@
 package com.kks.nimblesurveyjetpackcompose.network
 
 import com.kks.nimblesurveyjetpackcompose.model.request.LoginRequest
+import com.kks.nimblesurveyjetpackcompose.model.request.SubmitSurveyRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.BaseResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.SurveyResponse
@@ -26,4 +27,7 @@ interface Api {
 
     @GET("api/v1/surveys/{surveyId}")
     suspend fun getSurveyDetail(@Path("surveyId") surveyId: String): BaseResponse<SurveyResponse>
+
+    @POST("api/v1/responses")
+    suspend fun submitSurvey(@Body submitSurveyRequest: SubmitSurveyRequest): BaseResponse<Any>
 }
