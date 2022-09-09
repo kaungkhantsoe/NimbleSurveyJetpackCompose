@@ -79,6 +79,8 @@ fun SurveyDetailScreen(
     val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
+    val isStartPage = currentPage == 0
+    val isLastPage = currentPage == surveyQuestions.size
 
     BackHandler {
         if (currentPage > 0) showConfirmDialog = true
@@ -130,15 +132,20 @@ fun SurveyDetailScreen(
                 .fillMaxWidth()
                 .align(Alignment.TopStart)
                 .padding(top = 57.dp, start = 4.dp, end = 15.dp),
-            showBack = currentPage == 0,
+            showBack = isStartPage,
             showClose = currentPage > 0,
             onClickClose = { showConfirmDialog = true }
         )
-        StartSurveyButton(
-            showButton = currentPage == 0,
-            onNextSlide = {
-                scope.launch {
-                    pagerState.animateScrollToPage(currentPage + 1)
+        StartOrSubmitButton(
+            showButton = isStartPage || isLastPage,
+            textRes = if (isStartPage) R.string.survey_detail_start_survey else R.string.survey_question_submit_survey,
+            onClick = {
+                if (isStartPage) {
+                    scope.launch {
+                        pagerState.animateScrollToPage(currentPage + 1)
+                    }
+                } else {
+                    // TODO: Implement submit survey action
                 }
             },
             modifier = Modifier
@@ -147,7 +154,7 @@ fun SurveyDetailScreen(
                 .semantics { contentDescription = startSurveyDescription }
         )
         NextQuestionButton(
-            showButton = currentPage > 0,
+            showButton = !isStartPage && !isLastPage,
             onNextSlide = {
                 scope.launch {
                     pagerState.animateScrollToPage(currentPage + 1)
@@ -183,9 +190,10 @@ fun SurveyDetailScreen(
 }
 
 @Composable
-fun StartSurveyButton(
+fun StartOrSubmitButton(
     showButton: Boolean,
-    onNextSlide: () -> Unit,
+    textRes: Int,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
@@ -197,13 +205,13 @@ fun StartSurveyButton(
     ) {
         if (it) {
             Button(
-                onClick = { onNextSlide() },
+                onClick = { onClick() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.height(56.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.survey_detail_start_survey),
+                    text = stringResource(id = textRes),
                     fontFamily = NeuzeitFamily,
                     fontWeight = FontWeight.Bold,
                     color = BlackRussian,

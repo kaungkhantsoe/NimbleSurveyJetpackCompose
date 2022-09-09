@@ -41,4 +41,5 @@
     <string name="survey_question_warning_dialog_yes">Yes</string>
     <string name="survey_question_warning_dialog_cancel">Cancel</string>
     <string name="survey_question_next_question">Survey next question</string>
+    <string name="survey_question_submit_survey">Submit</string>
 </resources>
