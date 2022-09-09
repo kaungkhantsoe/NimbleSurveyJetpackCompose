@@ -39,6 +39,38 @@ fun ErrorAlertDialog(
     )
 }
 
+@Composable
+fun ConfirmAlertDialog(
+    title: String,
+    message: String,
+    positiveButtonText: String,
+    negativeButtonText: String,
+    onClickPositiveButton: () -> Unit,
+    onClickNegativeButton: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onClickPositiveButton() },
+        title = { Text(text = title) },
+        text = { Text(text = message) },
+        backgroundColor = Color.White,
+        confirmButton = {
+            Row(
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = { onClickNegativeButton() }) {
+                    Text(text = negativeButtonText, color = CuriousBlue)
+                }
+                TextButton(onClick = { onClickPositiveButton() }) {
+                    Text(text = positiveButtonText, color = CuriousBlue)
+                }
+            }
+        }
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ErrorAlertDialogPreview() {
@@ -47,5 +79,18 @@ fun ErrorAlertDialogPreview() {
         title = "Error Title",
         buttonText = "OK",
         onClickButton = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConfirmAlertDialogPreview() {
+    ConfirmAlertDialog(
+        message = "Confirm",
+        title = "Title",
+        positiveButtonText = "OK",
+        negativeButtonText = "Cancel",
+        onClickPositiveButton = {},
+        onClickNegativeButton = {},
     )
 }

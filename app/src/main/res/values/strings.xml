@@ -33,4 +33,12 @@
     <string name="survey_detail_close_icon">Survey detail close icon</string>
     <string name="survey_detail_background_image">Survey detail background image</string>
     <string name="survey_detail_start_survey">Start Survey</string>
+
+    <!--SurveyQuestion-->
+    <string name="survey_question_number">%d/%d</string>
+    <string name="survey_question_warning_dialog_title">Warning!</string>
+    <string name="survey_question_warning_dialog_message">Are you sure you want to quit the survey?</string>
+    <string name="survey_question_warning_dialog_yes">Yes</string>
+    <string name="survey_question_warning_dialog_cancel">Cancel</string>
+    <string name="survey_question_next_question">Survey next question</string>
 </resources>
