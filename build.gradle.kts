@@ -9,11 +9,11 @@ plugins {
     id("com.android.application") version "7.2.1" apply false
     id("com.android.library") version "7.2.1" apply false
     id("org.jetbrains.kotlin.android") version "1.5.31" apply false
-    id("org.jetbrains.kotlinx.kover") version "0.6.0"
+    id("org.jetbrains.kotlinx.kover") version Versions.KOVER
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1" apply false
-    id("com.google.dagger.hilt.android") version "2.42" apply false
+    id("com.google.dagger.hilt.android") version Versions.HILT apply false
     id("org.jetbrains.kotlin.jvm") version "1.7.0" apply false
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
+    id("io.gitlab.arturbosch.detekt") version Versions.DETEKT
 }
 
 // https://detekt.dev/docs/gettingstarted/gradle
