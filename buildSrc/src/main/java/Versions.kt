@@ -6,6 +6,7 @@ object Versions {
     const val COROUTINE_TEST = "1.5.2"
     const val COIL = "2.2.0"
     const val COMPOSE = "1.2.0"
+    const val CORE_KTX = "1.7.0"
     const val COMPOSE_VIEWMODEL = "2.4.1"
     const val CONSTRAINT_COMPOSE = "1.0.1"
     const val COMPOSE_DESTINATION = "1.6.16-beta"

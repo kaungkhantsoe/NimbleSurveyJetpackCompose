@@ -40,12 +40,11 @@ koverMerged {
     filters { // common filters for all default Kover tasks
         classes { // common class filter for all default Kover tasks
             excludes += listOf(
+                "BuildConfig",
                 "com.kks.nimblesurveyjetpackcompose.cache.*",
                 "*_Factory",
                 "*_HiltModules*",
                 "com.kks.nimblesurveyjetpackcompose.di.*",
-                "com.kks.nimblesurveyjetpackcompose.ui.*",
-                "com.kks.nimblesurveyjetpackcompose.model.*",
                 "dagger.hilt.internal.aggregatedroot.codegen.*",
                 "hilt_aggregated_deps.*"
             ) // class exclusion rules

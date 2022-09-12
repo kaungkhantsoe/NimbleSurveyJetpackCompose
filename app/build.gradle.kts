@@ -55,7 +55,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = Versions.COMPOSE
     }
 
     packagingOptions {
@@ -64,7 +64,7 @@ android {
         }
     }
 
-    flavorDimensions("version")
+    flavorDimensions.add("version")
     productFlavors {
         create("prod") {
             dimension = "version"
@@ -138,7 +138,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:${Versions.CORE_KTX}")
     implementation("androidx.compose.ui:ui:${Versions.COMPOSE}")
     implementation("androidx.compose.material:material:${Versions.COMPOSE}")
     implementation("androidx.compose.ui:ui-tooling:${Versions.COMPOSE}")
