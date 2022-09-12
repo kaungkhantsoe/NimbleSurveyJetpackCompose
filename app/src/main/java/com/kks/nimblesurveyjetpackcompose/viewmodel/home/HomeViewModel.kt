@@ -19,6 +19,7 @@ import javax.inject.Inject
 const val DEFAULT_PAGE_SIZE = 5
 const val DEFAULT_NUMBER_OF_PAGE = 1
 const val DEFAULT_CURRENT_PAGE = 1
+private const val START_SURVEY_NUMBER = 0
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -32,12 +33,16 @@ class HomeViewModel @Inject constructor(
     private val _currentPageNumber = MutableStateFlow(DEFAULT_CURRENT_PAGE)
     private val _userAvatar = MutableStateFlow<String?>(null)
     private var totalNumberOfPage = DEFAULT_NUMBER_OF_PAGE
+    private val _selectedSurveyNumber = MutableStateFlow(START_SURVEY_NUMBER)
 
     init {
         getUserDetail()
         getSurveyListFromDb()
         getSurveyList()
     }
+
+    val selectedSurveyNumber: StateFlow<Int>
+        get() = _selectedSurveyNumber.asStateFlow()
 
     val surveyList: StateFlow<List<Survey>>
         get() = _surveyList.asStateFlow()
@@ -50,6 +55,10 @@ class HomeViewModel @Inject constructor(
 
     val userAvatar: StateFlow<String?>
         get() = _userAvatar.asStateFlow()
+
+    fun setSelectedSurveyNumber(surveyNumber: Int) {
+        _selectedSurveyNumber.value = surveyNumber
+    }
 
     private fun getUserDetail() {
         viewModelScope.launch(ioDispatcher) {
@@ -81,6 +90,7 @@ class HomeViewModel @Inject constructor(
             homeRepo.clearSurveyList()
             _currentPageNumber.value = DEFAULT_CURRENT_PAGE
             totalNumberOfPage = DEFAULT_NUMBER_OF_PAGE
+            _selectedSurveyNumber.value = START_SURVEY_NUMBER
             getSurveyListFromDb()
             getSurveyList()
         }

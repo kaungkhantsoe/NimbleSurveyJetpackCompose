@@ -33,6 +33,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -40,6 +41,7 @@ import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.SurveyDetailScreenDestination
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
@@ -47,12 +49,13 @@ import com.kks.nimblesurveyjetpackcompose.util.DateUtil
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 private const val FRACTION = 0.3f
 private const val IDLE = 0
 private const val LEFT_SWIPE = 1
 private const val RIGHT_SWIPE = -1
-private const val START_SURVEY_NUMBER = 0
 private const val START_ANCHOR = 0f
 private const val LEFT_STATE = "L"
 private const val RIGHT_STATE = "R"
@@ -62,12 +65,12 @@ private const val MID_STATE = "M"
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
     val activity = LocalContext.current as? Activity
 
     val surveyList by viewModel.surveyList.collectAsState()
     val error by viewModel.error.collectAsState()
-    var selectedSurveyNumber by remember { mutableStateOf(START_SURVEY_NUMBER) }
+    val selectedSurveyNumber by viewModel.selectedSurveyNumber.collectAsState()
     val swipeableState = rememberSwipeableState(initialValue = MID_STATE)
     val endAnchor = LocalDensity.current.run { LocalConfiguration.current.screenWidthDp.toDp().toPx() }
     // Maps anchor points (in px) to states
@@ -80,7 +83,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = {
             viewModel.clearCacheAndFetch()
-            selectedSurveyNumber = START_SURVEY_NUMBER
         },
         modifier = Modifier.fillMaxSize()
     ) {
@@ -106,7 +108,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                                     (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
                                     (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
                                 ) {
-                                    selectedSurveyNumber += threshold
+                                    viewModel.setSelectedSurveyNumber(selectedSurveyNumber + threshold)
                                     if (selectedSurveyNumber == (surveyList.size) - 2) viewModel.getNextPage()
                                 }
                                 threshold = IDLE
@@ -126,7 +128,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                         numberOfPage = surveyList.size,
                         selectedSurveyNumber = selectedSurveyNumber,
                         survey = surveyList[selectedSurveyNumber],
-                        userAvatar = userAvatar
+                        userAvatar = userAvatar,
+                        navigator = navigator
                     )
                 }
             }
@@ -157,6 +160,7 @@ fun SurveyContent(
     survey: Survey,
     numberOfPage: Int,
     selectedSurveyNumber: Int,
+    navigator: DestinationsNavigator,
     modifier: Modifier,
     userAvatar: String?
 ) {
@@ -164,7 +168,7 @@ fun SurveyContent(
 
     ConstraintLayout(modifier = modifier.semantics { contentDescription = surveyContentDescription }) {
         val (date, userImage, bottomView) = createRefs()
-        SurveyImage(imageUrl = survey.coverImageUrl)
+        SurveyImage(imageUrl = survey.coverImageFullUrl, placeholderUrl = survey.coverImagePlaceholderUrl)
         Image(
             painter = painterResource(id = R.drawable.survey_overlay),
             contentDescription = null,
@@ -205,13 +209,16 @@ fun SurveyContent(
                 .constrainAs(bottomView) { bottom.linkTo(parent.bottom, 54.dp) },
             numberOfPage = numberOfPage,
             currentPage = selectedSurveyNumber,
-            survey = survey
+            survey = survey,
+            navigator = navigator
         )
     }
 }
 
 @Composable
-fun SurveyImage(imageUrl: String) {
+fun SurveyImage(imageUrl: String, placeholderUrl: String) {
+    val placeholderPainter = rememberAsyncImagePainter(model = placeholderUrl)
+
     Crossfade(
         targetState = imageUrl,
         animationSpec = tween(TWEEN_ANIM_TIME)
@@ -221,7 +228,7 @@ fun SurveyImage(imageUrl: String) {
                 .data(it)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.ic_launcher_foreground),
+            placeholder = placeholderPainter,
             contentDescription = stringResource(id = R.string.home_survey_background_image),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -233,7 +240,7 @@ fun SurveyImage(imageUrl: String) {
 fun UserIcon(userAvatar: String?, modifier: Modifier) {
     AsyncImage(
         model = userAvatar,
-        placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+        placeholder = painterResource(id = R.drawable.ic_baseline_android_24),
         contentDescription = stringResource(
             id = R.string.home_user_image
         ),
@@ -246,6 +253,7 @@ fun BottomView(
     survey: Survey,
     numberOfPage: Int,
     currentPage: Int,
+    navigator: DestinationsNavigator,
     modifier: Modifier
 ) {
     Column(modifier = modifier) {
@@ -281,7 +289,7 @@ fun BottomView(
                     }
             )
             Button(
-                onClick = { },
+                onClick = { navigator.navigate(SurveyDetailScreenDestination(survey = survey)) },
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(56.dp)
@@ -330,5 +338,5 @@ fun SurveyText(
 @Preview(showBackground = true)
 @Composable
 fun HomeContentPreview() {
-    HomeScreen()
+    HomeScreen(EmptyDestinationsNavigator)
 }

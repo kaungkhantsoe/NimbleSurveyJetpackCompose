@@ -2,6 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.di
 
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
+import com.kks.nimblesurveyjetpackcompose.repo.survey.SurveyRepo
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.splash.FakeLoginRepo
 import dagger.Module
 import dagger.Provides
@@ -23,4 +24,8 @@ class FakeRepoModule {
     @Singleton
     @Provides
     fun provideFakeHomeRepo(): HomeRepo =  mockk()
+
+    @Singleton
+    @Provides
+    fun provideFakeSurveyRepo(): SurveyRepo = mockk()
 }

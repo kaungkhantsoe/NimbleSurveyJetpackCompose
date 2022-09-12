@@ -16,7 +16,7 @@ data class SurveyEntity(
 
 fun SurveyEntity.toSurvey() = Survey(
     id = id,
-    coverImageUrl = coverImageUrl,
+    coverImagePlaceholderUrl = coverImageUrl,
     title = title,
     description = description
 )

@@ -89,9 +89,7 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        BackgroundImage(
-            isBlurred = showLoginComponents
-        )
+        BackgroundImage(isBlurred = showLoginComponents)
         LogoImage(
             modifier = Modifier
                 .size(201.0.dp, 48.0.dp)

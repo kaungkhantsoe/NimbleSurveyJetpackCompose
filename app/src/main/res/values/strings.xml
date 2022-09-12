@@ -27,4 +27,21 @@
     <string name="home_shimmer">Home shimmer</string>
     <string name="home_dot">Home dots</string>
     <string name="home_survey_content">Home survey content</string>
+
+    <!--Survey-->
+    <string name="survey_detail_back_icon">Survey detail back icon</string>
+    <string name="survey_detail_close_icon">Survey detail close icon</string>
+    <string name="survey_detail_background_image">Survey detail background image</string>
+    <string name="survey_detail_start_survey">Start Survey</string>
+    <string name="survey_detail_next_question_btn">Next question button</string>
+
+    <!--SurveyQuestion-->
+    <string name="survey_question_number">%d/%d</string>
+    <string name="survey_question_warning_dialog_title">Warning!</string>
+    <string name="survey_question_warning_dialog_message">Are you sure you want to quit the survey?</string>
+    <string name="survey_question_warning_dialog_yes">Yes</string>
+    <string name="survey_question_warning_dialog_cancel">Cancel</string>
+    <string name="survey_question_next_question">Survey next question</string>
+    <string name="survey_question_submit_survey">Submit</string>
+    <string name="survey_question_thanks">Thanks for taking\nthe survey.</string>
 </resources>
