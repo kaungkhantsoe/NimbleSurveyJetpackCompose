@@ -30,9 +30,6 @@ detekt {
     // Android: Don't create tasks for the specified build flavor (e.g. "production")
     ignoredFlavors = listOf("prod")
 
-    // Android: Don't create tasks for the specified build variants (e.g. "productionRelease")
-    ignoredVariants = listOf("prodRelease")
-
     // Specify the base path for file paths in the formatted reports.
     // If not set, all file paths reported will be absolute file path.
     basePath = rootDir.path
@@ -45,7 +42,6 @@ koverMerged {
             excludes += listOf(
                 "com.kks.nimblesurveyjetpackcompose.cache.*",
                 "*_Factory",
-                "*Kt",
                 "*_HiltModules*",
                 "com.kks.nimblesurveyjetpackcompose.di.*",
                 "com.kks.nimblesurveyjetpackcompose.ui.*",

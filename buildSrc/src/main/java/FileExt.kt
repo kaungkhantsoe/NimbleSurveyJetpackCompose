@@ -1,12 +1,12 @@
 import java.io.File
 import java.util.*
 
-fun File.loadGradleProperties(fileName: String): Properties {
+fun File.loadProperties(fileName: String): Properties {
     val properties = Properties()
-    val signingProperties = File(this, fileName)
+    val propertiesFile = File(this, fileName)
 
-    if (signingProperties.isFile) {
-        properties.load(signingProperties.inputStream())
+    if (propertiesFile.isFile) {
+        properties.load(propertiesFile.inputStream())
     }
     return properties
 }

@@ -11,7 +11,7 @@ plugins {
     id("kover")
 }
 
-val props = rootDir.loadGradleProperties("signing.properties")
+val props = rootDir.loadProperties("signing.properties")
 
 android {
     compileSdk = 32
