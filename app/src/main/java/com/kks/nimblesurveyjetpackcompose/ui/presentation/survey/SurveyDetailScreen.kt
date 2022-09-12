@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.compose.rememberLottieRetrySignal
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -62,6 +69,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
 
+private const val SUBMIT_SUCCESS_LOTTIE_URL = "https://assets2.lottiefiles.com/packages/lf20_pmYw5P.json"
+private const val LOTTIE_ENDS = 1.0f
+private const val LOTTIE_FAIL_COUNT = 3
+
 @OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
@@ -73,6 +84,7 @@ fun SurveyDetailScreen(
     val currentPage by viewModel.currentPage.collectAsState()
     val surveyQuestions by viewModel.surveyQuestions.collectAsState()
     val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
+    val shouldShowThanks by viewModel.shouldShowThanks.collectAsState()
     val error by viewModel.error.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
     val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
@@ -144,8 +156,8 @@ fun SurveyDetailScreen(
                     scope.launch {
                         pagerState.animateScrollToPage(currentPage + 1)
                     }
-                } else {
-                    // TODO: Implement submit survey action
+                } else if (isLastPage) {
+                    viewModel.submitSurvey(surveyId = survey.id)
                 }
             },
             modifier = Modifier
@@ -153,6 +165,7 @@ fun SurveyDetailScreen(
                 .padding(bottom = 54.dp, end = 20.dp)
                 .semantics { contentDescription = startSurveyDescription }
         )
+        if (shouldShowThanks) LottieView(navigator = navigator)
         NextQuestionButton(
             showButton = !isStartPage && !isLastPage,
             onNextSlide = {
@@ -186,6 +199,39 @@ fun SurveyDetailScreen(
                 onClickButton = { viewModel.resetError() }
             )
         }
+    }
+}
+
+@Composable
+fun LottieView(navigator: DestinationsNavigator) {
+    val retrySignal = rememberLottieRetrySignal()
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Url(SUBMIT_SUCCESS_LOTTIE_URL),
+        onRetry = { failCount, _ ->
+            retrySignal.awaitRetry()
+            failCount < LOTTIE_FAIL_COUNT
+        }
+    )
+    val progress by animateLottieCompositionAsState(composition)
+
+    if (progress == LOTTIE_ENDS) navigator.popBackStack()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Black),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LottieAnimation(composition)
+        Text(
+            text = stringResource(id = R.string.survey_question_thanks),
+            fontFamily = NeuzeitFamily,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            fontSize = 28.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }
 

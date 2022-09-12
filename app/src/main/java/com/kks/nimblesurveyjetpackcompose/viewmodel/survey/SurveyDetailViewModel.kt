@@ -24,6 +24,7 @@ class SurveyDetailViewModel @Inject constructor(
     private val _surveyQuestions = MutableStateFlow(emptyList<SurveyQuestion>())
     private val _shouldShowLoading = MutableStateFlow(false)
     private val _error = MutableStateFlow<ErrorModel?>(null)
+    private val _shouldShowThanks = MutableStateFlow(false)
 
     val error: StateFlow<ErrorModel?>
         get() = _error.asStateFlow()
@@ -41,6 +42,9 @@ class SurveyDetailViewModel @Inject constructor(
         _currentPage.value = pageNumber
     }
 
+    val shouldShowThanks: StateFlow<Boolean>
+        get() = _shouldShowThanks.asStateFlow()
+
     fun getSurveyQuestions(surveyId: String) {
         viewModelScope.launch(ioDispatcher) {
             surveyRepo.getSurveyDetails(surveyId).collect {
@@ -52,6 +56,30 @@ class SurveyDetailViewModel @Inject constructor(
                     is ResourceState.Success -> {
                         _shouldShowLoading.value = false
                         _surveyQuestions.value = it.data
+                        resetError()
+                    }
+                    else -> {
+                        _shouldShowLoading.value = false
+                        it.mapError()?.let { errorModel ->
+                            _error.value = errorModel
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun submitSurvey(surveyId: String) {
+        viewModelScope.launch(ioDispatcher) {
+            surveyRepo.submitSurvey(surveyId = surveyId, surveyQuestions = _surveyQuestions.value).collect {
+                when (it) {
+                    is ResourceState.Loading -> {
+                        _shouldShowLoading.value = true
+                        resetError()
+                    }
+                    is ResourceState.Success -> {
+                        _shouldShowLoading.value = false
+                        _shouldShowThanks.value = true
                         resetError()
                     }
                     else -> {

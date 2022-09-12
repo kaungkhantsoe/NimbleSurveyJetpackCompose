@@ -132,7 +132,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .performTextInput(VALID_PASSWORD)
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
-            waitForIdle()
+            waitUntil { splashViewModel.isLoginSuccess.value }
             assertTrue(splashViewModel.isLoginSuccess.value)
         }
     }
@@ -147,6 +147,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .performTextInput(INVALID_PASSWORD)
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
+            waitForIdle()
             onNodeWithText(ERROR_MESSAGE).assertIsDisplayed()
         }
     }
