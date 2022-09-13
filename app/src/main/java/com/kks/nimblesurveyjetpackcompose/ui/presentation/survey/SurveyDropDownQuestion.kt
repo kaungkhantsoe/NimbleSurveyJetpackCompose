@@ -56,7 +56,9 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>) {
             )
             IconButton(onClick = { expanded = true }) {
                 Icon(
-                    painter = painterResource(id = if (expanded) android.R.drawable.arrow_up_float else android.R.drawable.arrow_down_float),
+                    painter = painterResource(
+                        id = if (expanded) android.R.drawable.arrow_up_float else android.R.drawable.arrow_down_float
+                    ),
                     contentDescription = null,
                     tint = Color.White
                 )
