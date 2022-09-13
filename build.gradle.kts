@@ -41,7 +41,6 @@ koverMerged {
         classes { // common class filter for all default Kover tasks
             excludes += listOf(
                 "BuildConfig",
-                "com.kks.nimblesurveyjetpackcompose.cache.*",
                 "*_Factory",
                 "*_HiltModules*",
                 "com.kks.nimblesurveyjetpackcompose.di.*",
