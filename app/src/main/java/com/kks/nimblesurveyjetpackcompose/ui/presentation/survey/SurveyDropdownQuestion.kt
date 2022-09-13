@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -32,10 +32,13 @@ import androidx.compose.ui.unit.toSize
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black60
 
+private const val INVALID_INDEX = -1
+
 @Composable
-fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
+fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit) {
+    val answerIndex = answers.indexOfFirst { it.selected }
     var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableStateOf(if (answerIndex == INVALID_INDEX) 0 else answerIndex) }
     var rowSize by remember { mutableStateOf(Size.Zero) }
     Box {
         Row(
@@ -46,6 +49,9 @@ fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
                 .onGloballyPositioned { rowSize = it.size.toSize() },
             verticalAlignment = Alignment.CenterVertically
         ) {
+            onChooseAnswer(
+                answers.toMutableList().also { it[selectedIndex] = answers[selectedIndex].copy(selected = true) }
+            )
             SurveyBoldText(
                 text = answers[selectedIndex].text,
                 fontSize = 20.sp,
@@ -68,7 +74,7 @@ fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.width(with(LocalDensity.current) { rowSize.width.toDp() }),
+            modifier = Modifier.size(width = with(LocalDensity.current) { rowSize.width.toDp() }, height = 150.dp),
         ) {
             answers.forEachIndexed { index, surveyAnswer ->
                 DropdownMenuItem(
@@ -86,6 +92,8 @@ fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
 
 @Preview(showBackground = true)
 @Composable
-fun SurveyDropdownQuestionPreview() {
-    SurveyDropdownQuestion(listOf())
+fun SurveyDropDownQuestionPreview() {
+    SurveyDropDownQuestion(listOf()) {
+        // Do nothing
+    }
 }

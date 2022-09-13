@@ -14,11 +14,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType
+import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 @Composable
-fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion, pageNumber: Int, totalNumberOfPage: Int) {
+fun SurveyQuestionScreen(
+    surveyQuestion: SurveyQuestion,
+    pageNumber: Int,
+    totalNumberOfPage: Int,
+    onChooseAnswer: (questionId: String, surveyAnswers: List<SurveyAnswer>) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,7 +42,9 @@ fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion, pageNumber: Int, totalN
         SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             if (surveyQuestion.questionDisplayType == QuestionDisplayType.DROPDOWN) {
-                SurveyDropdownQuestion(answers = surveyQuestion.answers)
+                SurveyDropDownQuestion(answers = surveyQuestion.answers) {
+                    onChooseAnswer(surveyQuestion.id, it)
+                }
             }
         }
     }
@@ -57,5 +65,7 @@ fun SurveyQuestionScreenPreview() {
         ),
         pageNumber = 1,
         totalNumberOfPage = 5
-    )
+    ) { _, _ ->
+        // Do nothing
+    }
 }

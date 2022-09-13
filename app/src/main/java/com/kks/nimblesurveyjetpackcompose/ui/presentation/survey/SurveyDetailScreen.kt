@@ -135,7 +135,9 @@ fun SurveyDetailScreen(
                     surveyQuestion = surveyQuestions[page - 1],
                     pageNumber = page,
                     totalNumberOfPage = surveyQuestions.size
-                )
+                ) { questionId, surveyAnswers ->
+                    viewModel.setAnswers(questionId = questionId, answers = surveyAnswers)
+                }
             }
         }
         SurveyToolbar(

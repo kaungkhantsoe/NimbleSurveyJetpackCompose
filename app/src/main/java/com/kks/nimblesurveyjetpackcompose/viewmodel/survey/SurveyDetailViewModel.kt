@@ -45,6 +45,11 @@ class SurveyDetailViewModel @Inject constructor(
     val shouldShowThanks: StateFlow<Boolean>
         get() = _shouldShowThanks.asStateFlow()
 
+    fun setAnswers(questionId: String, answers: List<SurveyAnswer>) {
+        val indexOfQuestion = _surveyQuestions.value.indexOfFirst { it.id == questionId }
+        _surveyQuestions.value[indexOfQuestion].answers = answers
+    }
+
     fun getSurveyQuestions(surveyId: String) {
         viewModelScope.launch(ioDispatcher) {
             surveyRepo.getSurveyDetails(surveyId).collect {
