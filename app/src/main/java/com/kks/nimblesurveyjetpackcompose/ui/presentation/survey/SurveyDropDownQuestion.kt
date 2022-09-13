@@ -2,7 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,7 +36,7 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>) {
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
     var rowSize by remember { mutableStateOf(Size.Zero) }
-    Column {
+    Box {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
