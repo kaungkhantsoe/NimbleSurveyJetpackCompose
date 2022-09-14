@@ -58,9 +58,6 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers
                 .onGloballyPositioned { rowSize = it.size.toSize() },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            onChooseAnswer(
-                answers.toMutableList().also { it[selectedIndex] = answers[selectedIndex].copy(selected = true) }
-            )
             SurveyBoldText(
                 text = answers[selectedIndex].text,
                 fontSize = 20.sp,
