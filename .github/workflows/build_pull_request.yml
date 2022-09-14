@@ -43,7 +43,7 @@ jobs:
         run: ./gradlew lint
 
       - name: Run unit test and Kover Coverage
-        run: ./gradlew :app:koverXmlReport
+        run: ./gradlew koverMergedXmlReport
 
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
