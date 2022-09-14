@@ -41,9 +41,17 @@ fun SurveyQuestionScreen(
         )
         SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (surveyQuestion.questionDisplayType == QuestionDisplayType.DROPDOWN) {
-                SurveyDropDownQuestion(answers = surveyQuestion.answers) {
-                    onChooseAnswer(surveyQuestion.id, it)
+            when(surveyQuestion.questionDisplayType) {
+                QuestionDisplayType.DROPDOWN -> {
+                    SurveyDropDownQuestion(answers = surveyQuestion.answers) {
+                        onChooseAnswer(surveyQuestion.id, it)
+                    }
+                }
+                QuestionDisplayType.SMILEY -> {
+                    SurveySmileyQuestion()
+                }
+                else -> {
+                    // Do nothing
                 }
             }
         }
