@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +41,13 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(if (answerIndex == INVALID_INDEX) 0 else answerIndex) }
     var rowSize by remember { mutableStateOf(Size.Zero) }
+    LaunchedEffect(key1 = selectedIndex) {
+        onChooseAnswer(
+            answers.mapIndexed { index, surveyAnswer ->
+                surveyAnswer.copy(selected = index == selectedIndex)
+            }
+        )
+    }
     Box {
         Row(
             modifier = Modifier
@@ -49,13 +57,11 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers
                 .onGloballyPositioned { rowSize = it.size.toSize() },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            onChooseAnswer(
-                answers.toMutableList().also { it[selectedIndex] = answers[selectedIndex].copy(selected = true) }
-            )
             SurveyBoldText(
                 text = answers[selectedIndex].text,
                 fontSize = 20.sp,
                 maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
