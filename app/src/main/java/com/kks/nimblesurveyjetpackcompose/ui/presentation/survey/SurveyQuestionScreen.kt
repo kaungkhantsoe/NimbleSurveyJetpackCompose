@@ -19,6 +19,8 @@ import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.model.sortedByDisplayOrder
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
+private const val NUMBER_OF_SMILEY_ANSWERS = 5
+
 @Composable
 fun SurveyQuestionScreen(
     surveyQuestion: SurveyQuestion,
@@ -47,7 +49,7 @@ fun SurveyQuestionScreen(
                     SurveyDropDownQuestion(answers = surveyQuestion.answers.sortedByDisplayOrder()) {
                         onChooseAnswer(surveyQuestion.id, it)
                     }
-                SMILEY -> if (surveyQuestion.answers.size >= 5) {
+                SMILEY -> if (surveyQuestion.answers.size >= NUMBER_OF_SMILEY_ANSWERS) {
                     SurveySmileyQuestion(answers = surveyQuestion.answers.sortedByDisplayOrder()) {
                         onChooseAnswer(surveyQuestion.id, it)
                     }
