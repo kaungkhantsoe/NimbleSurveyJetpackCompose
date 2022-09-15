@@ -16,6 +16,7 @@ import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.*
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.sortedByDisplayOrder
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 @Composable
@@ -42,10 +43,15 @@ fun SurveyQuestionScreen(
         SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             when (surveyQuestion.questionDisplayType) {
-                DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers) {
-                    onChooseAnswer(surveyQuestion.id, it)
+                DROPDOWN ->
+                    SurveyDropDownQuestion(answers = surveyQuestion.answers.sortedByDisplayOrder()) {
+                        onChooseAnswer(surveyQuestion.id, it)
+                    }
+                SMILEY -> if (surveyQuestion.answers.size >= 5) {
+                    SurveySmileyQuestion(answers = surveyQuestion.answers.sortedByDisplayOrder()) {
+                        onChooseAnswer(surveyQuestion.id, it)
+                    }
                 }
-                SMILEY -> SurveySmileyQuestion()
                 else -> {
                     // Do nothing
                 }

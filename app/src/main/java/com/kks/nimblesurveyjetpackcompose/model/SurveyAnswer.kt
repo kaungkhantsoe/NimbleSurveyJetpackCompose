@@ -6,9 +6,8 @@ data class SurveyAnswer(
     val id: String,
     var text: String,
     val displayOrder: Int,
-    var selected: Boolean = false,
-    var isIdOnlyAnswer: Boolean = false
+    var selected: Boolean = false
 )
 
-fun SurveyAnswer.toSurveyAnswerRequest(): SurveyAnswerRequest =
+fun SurveyAnswer.toSurveyAnswerRequest(isIdOnlyAnswer: Boolean): SurveyAnswerRequest =
     if (isIdOnlyAnswer) SurveyAnswerRequest(id = id) else SurveyAnswerRequest(id = id, answer = text)
