@@ -44,7 +44,7 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers
     LaunchedEffect(key1 = selectedIndex) {
         onChooseAnswer(
             answers.mapIndexed { index, surveyAnswer ->
-                surveyAnswer.copy(selected = index == selectedIndex)
+                surveyAnswer.copy(selected = index == selectedIndex, isIdOnlyAnswer = true)
             }
         )
     }
