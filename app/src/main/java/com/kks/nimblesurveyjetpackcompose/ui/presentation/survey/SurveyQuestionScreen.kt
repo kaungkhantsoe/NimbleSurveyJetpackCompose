@@ -34,7 +34,7 @@ fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion, pageNumber: Int, totalN
         SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             if (surveyQuestion.questionDisplayType == QuestionDisplayType.DROPDOWN) {
-                SurveyDropDownQuestion(answers = surveyQuestion.answers)
+                SurveyDropdownQuestion(answers = surveyQuestion.answers)
             }
         }
     }

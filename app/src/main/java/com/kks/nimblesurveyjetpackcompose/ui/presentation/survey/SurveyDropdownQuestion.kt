@@ -32,7 +32,7 @@ import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black60
 
 @Composable
-fun SurveyDropDownQuestion(answers: List<SurveyAnswer>) {
+fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
     var rowSize by remember { mutableStateOf(Size.Zero) }
@@ -52,7 +52,7 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(start = 12.dp)
+                    .padding(horizontal = 12.dp)
             )
             IconButton(onClick = { expanded = true }) {
                 Icon(
@@ -85,6 +85,6 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>) {
 
 @Preview(showBackground = true)
 @Composable
-fun SurveyDropDownQuestionPreview() {
-    SurveyDropDownQuestion(listOf())
+fun SurveyDropdownQuestionPreview() {
+    SurveyDropdownQuestion(listOf())
 }
