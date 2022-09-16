@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.*
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
@@ -41,9 +41,13 @@ fun SurveyQuestionScreen(
         )
         SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (surveyQuestion.questionDisplayType == QuestionDisplayType.DROPDOWN) {
-                SurveyDropDownQuestion(answers = surveyQuestion.answers) {
+            when (surveyQuestion.questionDisplayType) {
+                DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers) {
                     onChooseAnswer(surveyQuestion.id, it)
+                }
+                SMILEY -> SurveySmileyQuestion()
+                else -> {
+                    // Do nothing
                 }
             }
         }
@@ -60,7 +64,7 @@ fun SurveyQuestionScreenPreview() {
             displayOrder = 0,
             shortText = "",
             pick = "",
-            questionDisplayType = QuestionDisplayType.NONE,
+            questionDisplayType = NONE,
             answers = emptyList()
         ),
         pageNumber = 1,

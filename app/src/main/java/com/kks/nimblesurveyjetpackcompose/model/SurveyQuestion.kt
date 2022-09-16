@@ -13,7 +13,10 @@ data class SurveyQuestion(
 )
 
 enum class QuestionDisplayType(val typeValue: String) {
-    NONE("none"), INTRO("intro"), DROPDOWN("dropdown")
+    NONE("none"),
+    INTRO("intro"),
+    DROPDOWN("dropdown"),
+    SMILEY("smiley")
 }
 
 fun SurveyQuestion.toSurveyQuestionRequest(): SurveyQuestionRequest =
