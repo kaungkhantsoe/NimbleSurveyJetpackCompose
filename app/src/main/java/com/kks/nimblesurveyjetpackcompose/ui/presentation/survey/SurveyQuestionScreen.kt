@@ -13,10 +13,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.*
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NONE
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.sortedByDisplayOrder
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
+
+private const val NUMBER_OF_SMILEY_ANSWERS = 5
 
 @Composable
 fun SurveyQuestionScreen(
@@ -42,10 +47,14 @@ fun SurveyQuestionScreen(
         SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             when (surveyQuestion.questionDisplayType) {
-                DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers) {
+                DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers.sortedByDisplayOrder()) {
                     onChooseAnswer(surveyQuestion.id, it)
                 }
-                SMILEY -> SurveySmileyQuestion()
+                SMILEY -> if (surveyQuestion.answers.size >= NUMBER_OF_SMILEY_ANSWERS) {
+                    SurveySmileyQuestion(answers = surveyQuestion.answers.sortedByDisplayOrder()) {
+                        onChooseAnswer(surveyQuestion.id, it)
+                    }
+                }
                 else -> {
                     // Do nothing
                 }
