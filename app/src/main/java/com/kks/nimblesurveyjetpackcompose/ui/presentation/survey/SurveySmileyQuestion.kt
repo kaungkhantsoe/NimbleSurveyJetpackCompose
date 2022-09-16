@@ -25,9 +25,7 @@ fun SurveySmileyQuestion() {
     var selectedIndex by remember { mutableStateOf(-1) }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         SMILEY_EMOJIS.forEachIndexed { index, text ->
-            TextButton(onClick = {
-                selectedIndex = index
-            }) {
+            TextButton(onClick = { selectedIndex = index }) {
                 Text(
                     text = text,
                     color = if (selectedIndex == index) Color.Unspecified else Black50,
