@@ -19,9 +19,11 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 @Composable
 fun SurveyQuestionScreen(surveyQuestion: SurveyQuestion, pageNumber: Int, totalNumberOfPage: Int) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 20.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+    ) {
         Text(
             text = stringResource(
                 id = R.string.survey_question_number,

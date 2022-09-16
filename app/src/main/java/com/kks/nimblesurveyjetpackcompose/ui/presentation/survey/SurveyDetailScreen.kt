@@ -321,7 +321,7 @@ fun SurveyBoldText(
     fontSize: TextUnit,
     modifier: Modifier = Modifier,
     color: Color = Color.White,
-    maxLine: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE
 ) {
     Text(
         text = text,
@@ -329,7 +329,7 @@ fun SurveyBoldText(
         fontWeight = FontWeight.Bold,
         color = color,
         fontSize = fontSize,
-        maxLines = maxLine,
+        maxLines = maxLines,
         modifier = modifier.fillMaxWidth()
     )
 }
