@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -14,6 +14,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,11 +34,21 @@ import androidx.compose.ui.unit.toSize
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black60
 
+private const val INVALID_INDEX = -1
+
 @Composable
-fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
+fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit) {
+    val answerIndex = answers.indexOfFirst { it.selected }
     var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableStateOf(if (answerIndex == INVALID_INDEX) 0 else answerIndex) }
     var rowSize by remember { mutableStateOf(Size.Zero) }
+    LaunchedEffect(key1 = selectedIndex) {
+        onChooseAnswer(
+            answers.mapIndexed { index, surveyAnswer ->
+                surveyAnswer.copy(selected = index == selectedIndex, isIdOnlyAnswer = true)
+            }
+        )
+    }
     Box {
         Row(
             modifier = Modifier
@@ -50,6 +62,7 @@ fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
                 text = answers[selectedIndex].text,
                 fontSize = 20.sp,
                 maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
@@ -68,7 +81,7 @@ fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.width(with(LocalDensity.current) { rowSize.width.toDp() }),
+            modifier = Modifier.size(width = with(LocalDensity.current) { rowSize.width.toDp() }, height = 150.dp),
         ) {
             answers.forEachIndexed { index, surveyAnswer ->
                 DropdownMenuItem(
@@ -86,6 +99,8 @@ fun SurveyDropdownQuestion(answers: List<SurveyAnswer>) {
 
 @Preview(showBackground = true)
 @Composable
-fun SurveyDropdownQuestionPreview() {
-    SurveyDropdownQuestion(listOf())
+fun SurveyDropDownQuestionPreview() {
+    SurveyDropDownQuestion(listOf()) {
+        // Do nothing
+    }
 }
