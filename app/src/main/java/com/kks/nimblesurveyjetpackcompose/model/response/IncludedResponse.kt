@@ -79,8 +79,17 @@ data class IncludedAnswerResponse(
         @Json(name = "response_class") var responseClass: String? = null,
         @Json(name = "reference_identifier") var referenceIdentifier: String? = null,
         @Json(name = "score") var score: Int? = null,
-        @Json(name = "alerts") var alerts: List<String> = emptyList()
-    )
+        @Json(name = "alerts") var alerts: List<AlertResponse> = emptyList()
+    ) {
+        @JsonClass(generateAdapter = true)
+        data class AlertResponse(
+            @Json(name = "id") var id: String? = null,
+            @Json(name = "alert_type") var alertType: String? = null,
+            @Json(name = "recipient") var recipient: String? = null,
+            @Json(name = "is_only_business_hours") var isOnlyBusinessHours: Boolean? = null,
+            @Json(name = "answer_id") var answerId: String? = null
+        )
+    }
 }
 
 fun IncludedAnswerResponse.toSurveyAnswer() =
