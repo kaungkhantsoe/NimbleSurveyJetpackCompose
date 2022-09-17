@@ -83,11 +83,11 @@ data class IncludedAnswerResponse(
     ) {
         @JsonClass(generateAdapter = true)
         data class AlertResponse(
-            @Json(name = "id") var id: String? = null,
-            @Json(name = "alert_type") var alertType: String? = null,
-            @Json(name = "recipient") var recipient: String? = null,
-            @Json(name = "is_only_business_hours") var isOnlyBusinessHours: Boolean? = null,
-            @Json(name = "answer_id") var answerId: String? = null
+            @Json(name = "id") val id: String? = null,
+            @Json(name = "alert_type") val alertType: String? = null,
+            @Json(name = "recipient") val recipient: String? = null,
+            @Json(name = "is_only_business_hours") val isOnlyBusinessHours: Boolean? = null,
+            @Json(name = "answer_id") val answerId: String? = null
         )
     }
 }
