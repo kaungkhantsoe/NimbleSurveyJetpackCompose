@@ -25,9 +25,11 @@ private val THUMBS_EMOJIS = listOf("\uD83D\uDC4D", "\uD83D\uDC4D", "\uD83D\uDC4D
 fun SurveyEmojiQuestion(
     answers: List<SurveyAnswer>,
     questionDisplayType: QuestionDisplayType,
-    onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit,
+    onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
-    var selectedIndex by remember { mutableStateOf(-1) }
+    var selectedIndex by remember { mutableStateOf(answers.indexOfFirst { it.selected }) }
+    val isShowAllLeftEmoji = questionDisplayType != QuestionDisplayType.SMILEY
+
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
 
         when (questionDisplayType) {
@@ -45,7 +47,11 @@ fun SurveyEmojiQuestion(
             }) {
                 Text(
                     text = text,
-                    color = if (selectedIndex == index) Color.Unspecified else Black50,
+                    color = if (selectedIndex == index || (isShowAllLeftEmoji && index <= selectedIndex)) {
+                        Color.Unspecified
+                    } else {
+                        Black50
+                    },
                     fontSize = 28.sp
                 )
             }
