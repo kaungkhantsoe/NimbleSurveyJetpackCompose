@@ -20,7 +20,7 @@ enum class QuestionDisplayType(val typeValue: String, val isIdOnlyAnswer: Boolea
     THUMBS("thumbs", true)
 }
 
-fun List<SurveyAnswer>.sortedByDisplayOrder(): List<SurveyAnswer> = this.sortedBy { it.displayOrder }
+fun List<SurveyQuestion>.sortedByDisplayOrder(): List<SurveyQuestion> = this.sortedBy { it.displayOrder }
 
 fun SurveyQuestion.toSurveyQuestionRequest(): SurveyQuestionRequest =
     SurveyQuestionRequest(
