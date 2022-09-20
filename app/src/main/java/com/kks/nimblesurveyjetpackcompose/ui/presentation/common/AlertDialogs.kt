@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CuriousBlue
 import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
@@ -22,7 +24,7 @@ fun ErrorAlertDialog(
     AlertDialog(
         onDismissRequest = { onClickButton() },
         title = { Text(text = title) },
-        text = { Text(text = errorModel.errorMessage.orEmpty()) },
+        text = { Text(text = if (errorModel.errorType == ErrorType.NETWORK) stringResource(id = R.string.network_error) else errorModel.errorMessage.orEmpty()) },
         backgroundColor = Color.White,
         confirmButton = {
             Box(
