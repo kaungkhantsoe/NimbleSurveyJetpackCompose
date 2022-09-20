@@ -1,7 +1,13 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +30,15 @@ fun ErrorAlertDialog(
     AlertDialog(
         onDismissRequest = { onClickButton() },
         title = { Text(text = title) },
-        text = { Text(text = if (errorModel.errorType == ErrorType.NETWORK) stringResource(id = R.string.network_error) else errorModel.errorMessage.orEmpty()) },
+        text = {
+            Text(
+                text = if (errorModel.errorType == ErrorType.NETWORK) {
+                    stringResource(id = R.string.network_error)
+                } else {
+                    errorModel.errorMessage.orEmpty()
+                }
+            )
+        },
         backgroundColor = Color.White,
         confirmButton = {
             Box(
