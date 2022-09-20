@@ -9,6 +9,7 @@ import com.kks.nimblesurveyjetpackcompose.model.response.UserResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurvey
 import com.kks.nimblesurveyjetpackcompose.network.Api
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
+import com.kks.nimblesurveyjetpackcompose.util.extensions.catchError
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -40,9 +41,7 @@ class HomeRepoImpl @Inject constructor(
             is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
             else -> emit(ResourceState.NetworkError)
         }
-    }.catch { error ->
-        emit(ResourceState.Error(error.message.orEmpty()))
-    }
+    }.catchError()
 
     override fun fetchUserDetail(): Flow<ResourceState<UserResponse>> =
         flow {
@@ -57,9 +56,7 @@ class HomeRepoImpl @Inject constructor(
                 is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
                 else -> emit(ResourceState.NetworkError)
             }
-        }.catch { error ->
-            emit(ResourceState.Error(error.message.orEmpty()))
-        }
+        }.catchError()
 
     override fun getSurveyListFromDb(): Flow<List<Survey>> =
         surveyDao.getSurveys().transform { value: List<SurveyEntity> -> emit(value.map { it.toSurvey() }) }
