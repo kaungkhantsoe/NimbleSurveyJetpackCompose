@@ -28,14 +28,13 @@ fun SurveyEmojiQuestion(
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(answers.indexOfFirst { it.selected }) }
-    val isShowAllLeftEmoji = questionDisplayType != QuestionDisplayType.SMILEY
+    val shouldHighlightAllLeftEmojis = questionDisplayType != QuestionDisplayType.SMILEY
 
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-
         when (questionDisplayType) {
             QuestionDisplayType.SMILEY -> SMILEY_EMOJIS
             QuestionDisplayType.THUMBS -> THUMBS_EMOJIS
-            else -> listOf()
+            else -> emptyList()
         }.forEachIndexed { index, text ->
             TextButton(onClick = {
                 selectedIndex = index
@@ -47,7 +46,7 @@ fun SurveyEmojiQuestion(
             }) {
                 Text(
                     text = text,
-                    color = if (selectedIndex == index || (isShowAllLeftEmoji && index <= selectedIndex)) {
+                    color = if (selectedIndex == index || (shouldHighlightAllLeftEmojis && index <= selectedIndex)) {
                         Color.Unspecified
                     } else {
                         Black50
@@ -62,7 +61,7 @@ fun SurveyEmojiQuestion(
 @Preview(showBackground = true)
 @Composable
 fun PreviewSurveySmileyQuestion() {
-    SurveyEmojiQuestion(answers = listOf(), questionDisplayType = QuestionDisplayType.SMILEY) {
+    SurveyEmojiQuestion(answers = emptyList(), questionDisplayType = QuestionDisplayType.SMILEY) {
         // Do nothing
     }
 }

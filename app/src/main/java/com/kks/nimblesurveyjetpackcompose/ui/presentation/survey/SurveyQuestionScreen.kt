@@ -51,7 +51,8 @@ fun SurveyQuestionScreen(
                 DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers.sortedByDisplayOrder()) {
                     onChooseAnswer(surveyQuestion.id, it)
                 }
-                SMILEY, THUMBS -> if (surveyQuestion.answers.size >= NUMBER_OF_EMOJI_ANSWERS) {
+                SMILEY,
+                THUMBS -> if (surveyQuestion.answers.size >= NUMBER_OF_EMOJI_ANSWERS) {
                     SurveyEmojiQuestion(
                         answers = surveyQuestion.answers.sortedByDisplayOrder(),
                         questionDisplayType = surveyQuestion.questionDisplayType
