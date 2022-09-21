@@ -27,4 +27,5 @@ object Versions {
     const val RETROFIT = "2.9.0"
     const val TURBINE = "0.9.0"
     const val TIMBER = "5.0.1"
+    const val TRUTH = "1.1.3"
 }

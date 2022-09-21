@@ -11,3 +11,5 @@ data class SurveyAnswer(
 
 fun SurveyAnswer.toSurveyAnswerRequest(isIdOnlyAnswer: Boolean): SurveyAnswerRequest =
     if (isIdOnlyAnswer) SurveyAnswerRequest(id = id) else SurveyAnswerRequest(id = id, answer = text)
+
+fun List<SurveyAnswer>.sortedByDisplayOrder(): List<SurveyAnswer> = this.sortedBy { it.displayOrder }
