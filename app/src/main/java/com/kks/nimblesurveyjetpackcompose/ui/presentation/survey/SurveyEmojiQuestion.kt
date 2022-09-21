@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black50
 
@@ -28,12 +30,12 @@ fun SurveyEmojiQuestion(
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(answers.indexOfFirst { it.selected }) }
-    val shouldHighlightAllLeftEmojis = questionDisplayType != QuestionDisplayType.SMILEY
+    val shouldHighlightAllLeftEmojis = questionDisplayType != SMILEY
 
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         when (questionDisplayType) {
-            QuestionDisplayType.SMILEY -> SMILEY_EMOJIS
-            QuestionDisplayType.THUMBS -> THUMBS_EMOJIS
+            SMILEY -> SMILEY_EMOJIS
+            THUMBS -> THUMBS_EMOJIS
             else -> emptyList()
         }.forEachIndexed { index, text ->
             TextButton(onClick = {
@@ -61,7 +63,7 @@ fun SurveyEmojiQuestion(
 @Preview(showBackground = true)
 @Composable
 fun PreviewSurveySmileyQuestion() {
-    SurveyEmojiQuestion(answers = emptyList(), questionDisplayType = QuestionDisplayType.SMILEY) {
+    SurveyEmojiQuestion(answers = emptyList(), questionDisplayType = SMILEY) {
         // Do nothing
     }
 }
