@@ -27,14 +27,14 @@ class HomeRepoImpl @Inject constructor(
     override fun fetchSurveyList(
         pageNumber: Int,
         pageSize: Int,
-        clearCache: Boolean
+        isClearCache: Boolean
     ): Flow<ResourceState<Meta>> = flow {
         emit(ResourceState.Loading)
         val apiResult = safeApiCall(Dispatchers.IO) { apiInterface.getSurveyList(pageNumber, pageSize) }
         when (apiResult) {
             is ResourceState.Success -> {
                 apiResult.data.data?.let { surveyResponseList ->
-                    if (clearCache) surveyDao.clearSurveys()
+                    if (isClearCache) surveyDao.clearSurveys()
                     surveyDao.addSurveys(surveyResponseList.map { it.toSurvey() })
                 }
                 emit(ResourceState.Success(apiResult.data.meta?.toMeta() ?: Meta()))

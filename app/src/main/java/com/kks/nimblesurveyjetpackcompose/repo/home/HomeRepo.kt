@@ -11,7 +11,7 @@ interface HomeRepo {
     fun fetchSurveyList(
         pageNumber: Int,
         pageSize: Int,
-        clearCache: Boolean
+        isClearCache: Boolean
     ): Flow<ResourceState<Meta>>
     fun fetchUserDetail(): Flow<ResourceState<UserResponse>>
     fun getSurveyListFromDb(): Flow<List<Survey>>

@@ -33,7 +33,7 @@ class HomeViewModelTest : BaseViewModelTest() {
             homeRepo.fetchSurveyList(
                 pageNumber = 1,
                 pageSize = any(),
-                clearCache = false
+                isClearCache = false
             )
         }
     }
@@ -57,7 +57,7 @@ class HomeViewModelTest : BaseViewModelTest() {
             homeRepo.fetchSurveyList(
                 pageNumber = any(),
                 pageSize = any(),
-                clearCache = any()
+                isClearCache = any()
             )
         } returns flowOf(ResourceState.Error(errorMessage))
 
@@ -71,7 +71,7 @@ class HomeViewModelTest : BaseViewModelTest() {
             homeRepo.fetchSurveyList(
                 pageSize = any(),
                 pageNumber = any(),
-                clearCache = any()
+                isClearCache = any()
             )
         } returns flowOf(ResourceState.Success(Meta()))
 
@@ -87,7 +87,7 @@ class HomeViewModelTest : BaseViewModelTest() {
             homeRepo.fetchSurveyList(
                 pageNumber = any(),
                 pageSize = any(),
-                clearCache = any()
+                isClearCache = any()
             )
         } returns flowOf(ResourceState.Success(Meta(pages = 2, records = 10)))
 
@@ -100,7 +100,7 @@ class HomeViewModelTest : BaseViewModelTest() {
             homeRepo.fetchSurveyList(
                 pageNumber = 2,
                 pageSize = any(),
-                clearCache = false
+                isClearCache = false
             )
         }
     }

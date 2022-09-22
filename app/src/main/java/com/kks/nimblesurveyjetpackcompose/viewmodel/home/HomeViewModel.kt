@@ -87,7 +87,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             _pages = DEFAULT_PAGES
             _selectedSurveyNumber.value = START_SURVEY_NUMBER
-            getSurveyList(clearCache = true)
+            getSurveyList(isClearCache = true)
         }
     }
 
@@ -100,14 +100,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getSurveyList(clearCache: Boolean = false) {
-        val pageNumber = ((if (clearCache) START_SURVEY_NUMBER else _surveyList.value.size) / DEFAULT_PAGE_SIZE) + 1
-        if ((pageNumber <= _pages && _surveyList.value.size < _records) || clearCache) {
+    private fun getSurveyList(isClearCache: Boolean = false) {
+        val pageNumber = ((if (isClearCache) START_SURVEY_NUMBER else _surveyList.value.size) / DEFAULT_PAGE_SIZE) + 1
+        if ((pageNumber <= _pages && _surveyList.value.size < _records) || isClearCache) {
             viewModelScope.launch(ioDispatcher) {
                 homeRepo.fetchSurveyList(
                     pageNumber = pageNumber,
                     pageSize = DEFAULT_PAGE_SIZE,
-                    clearCache = clearCache
+                    isClearCache = isClearCache
                 ).collect { result ->
                     when (result) {
                         is ResourceState.Loading -> {
