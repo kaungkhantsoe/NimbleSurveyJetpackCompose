@@ -1,5 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.model.response
 
+import com.kks.nimblesurveyjetpackcompose.model.Meta
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -15,4 +16,12 @@ data class MetaResponse(
     val records: Int?,
     @Json(name = "message")
     val message: String?
+)
+
+fun MetaResponse.toMeta() = Meta(
+    page = page ?: 0,
+    pages = pages ?: 0,
+    pageSize = pageSize ?: 0,
+    records = records ?: 0,
+    message = message.orEmpty()
 )

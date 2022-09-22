@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.base.BaseAndroidComposeTest
+import com.kks.nimblesurveyjetpackcompose.model.Meta
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
 import com.kks.nimblesurveyjetpackcompose.surveys
@@ -57,7 +58,7 @@ class HomeScreenTest : BaseAndroidComposeTest() {
     @Test
     fun when_get_survey_list_is_successful_show_first_survey() {
         with(composeTestRule) {
-            every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Unit))
+            every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Meta()))
             every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
             setupHomeComposeRule()
             onNodeWithText(surveys.first().title).assertIsDisplayed()
@@ -69,7 +70,7 @@ class HomeScreenTest : BaseAndroidComposeTest() {
     @Test
     fun when_swipe_show_next_survey() {
         with(composeTestRule) {
-            every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Unit))
+            every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Meta()))
             every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
             setupHomeComposeRule()
             onNodeWithContentDescription(getString(R.string.home_survey_content)).performTouchInput {
