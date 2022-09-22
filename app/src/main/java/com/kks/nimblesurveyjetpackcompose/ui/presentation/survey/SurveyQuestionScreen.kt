@@ -16,6 +16,7 @@ import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NONE
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
@@ -51,6 +52,7 @@ fun SurveyQuestionScreen(
                     onChooseAnswer(surveyQuestion.id, it)
                 }
                 SMILEY,
+                STARS,
                 THUMBS -> if (surveyQuestion.answers.size >= NUMBER_OF_EMOJI_ANSWERS) {
                     SurveyEmojiQuestion(
                         answers = surveyQuestion.answers,
