@@ -51,7 +51,5 @@ class LoginRepoImpl @Inject constructor(
             is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
             else -> emit(ResourceState.NetworkError)
         }
-    }.catch { error ->
-        emit(ResourceState.Error(error.message.orEmpty()))
-    }
+    }.catchError()
 }
