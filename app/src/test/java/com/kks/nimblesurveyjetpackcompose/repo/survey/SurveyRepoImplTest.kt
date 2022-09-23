@@ -5,7 +5,10 @@ import com.kks.nimblesurveyjetpackcompose.attributeAnswerResponse
 import com.kks.nimblesurveyjetpackcompose.attributeQuestionResponse
 import com.kks.nimblesurveyjetpackcompose.includedAnswerResponse
 import com.kks.nimblesurveyjetpackcompose.includedQuestionResponse
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.request.SubmitSurveyRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.BaseResponse
@@ -27,8 +30,8 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class SurveyRepoImplTest {
 
-    val api: Api = mockk()
-    lateinit var sut: SurveyRepoImpl
+    private val api: Api = mockk()
+    private lateinit var sut: SurveyRepoImpl
 
     @Before
     fun setup() {
@@ -110,7 +113,7 @@ class SurveyRepoImplTest {
     @Test
     fun `When submitSurvey for Smiley question, answers with null is submitted`() = runTest {
         val smileyQuestion = surveyQuestion.copy(
-            questionDisplayType = QuestionDisplayType.SMILEY,
+            questionDisplayType = SMILEY,
             answers = listOf(surveyAnswer.copy(selected = true))
         )
 
@@ -125,7 +128,7 @@ class SurveyRepoImplTest {
     @Test
     fun `When submitSurvey for DropDown question, answers with null is submitted`() = runTest {
         val dropdownQuestion = surveyQuestion.copy(
-            questionDisplayType = QuestionDisplayType.DROPDOWN,
+            questionDisplayType = DROPDOWN,
             answers = listOf(surveyAnswer.copy(selected = true))
         )
 
@@ -140,7 +143,22 @@ class SurveyRepoImplTest {
     @Test
     fun `When submitSurvey for Thumbs question, answers with null is submitted`() = runTest {
         val thumbsQuestion = surveyQuestion.copy(
-            questionDisplayType = QuestionDisplayType.THUMBS,
+            questionDisplayType = THUMBS,
+            answers = listOf(surveyAnswer.copy(selected = true))
+        )
+
+        sut.submitSurvey(surveyId = "0", surveyQuestions = listOf(thumbsQuestion)).collect()
+
+        val expected = thumbsQuestion.toSurveyQuestionRequest()
+        assertThat(expected.answers.first().answer).isNull()
+
+        coVerify { api.submitSurvey(SubmitSurveyRequest(surveyId = "0", questions = listOf(expected))) }
+    }
+
+    @Test
+    fun `When submitSurvey for Star question, answers with null is submitted`() = runTest {
+        val thumbsQuestion = surveyQuestion.copy(
+            questionDisplayType = STARS,
             answers = listOf(surveyAnswer.copy(selected = true))
         )
 

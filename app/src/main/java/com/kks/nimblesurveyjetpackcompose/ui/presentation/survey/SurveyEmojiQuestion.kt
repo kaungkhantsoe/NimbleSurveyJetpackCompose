@@ -16,11 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black50
 
 private val SMILEY_EMOJIS = listOf("😡", "😕", "😐", "🙂", "😄")
+private val STARS_EMOJIS = listOf("⭐", "⭐", "⭐", "⭐", "⭐")
 private val THUMBS_EMOJIS = listOf("\uD83D\uDC4D", "\uD83D\uDC4D", "\uD83D\uDC4D", "\uD83D\uDC4D", "\uD83D\uDC4D")
 
 @Composable
@@ -35,6 +37,7 @@ fun SurveyEmojiQuestion(
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         when (questionDisplayType) {
             SMILEY -> SMILEY_EMOJIS
+            STARS -> STARS_EMOJIS
             THUMBS -> THUMBS_EMOJIS
             else -> emptyList()
         }.forEachIndexed { index, text ->
