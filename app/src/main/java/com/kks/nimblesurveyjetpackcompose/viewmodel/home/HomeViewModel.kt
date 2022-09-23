@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     private val _surveyList = MutableStateFlow<List<Survey>>(listOf())
     private val _userAvatar = MutableStateFlow<String?>(null)
-    private var _pages = DEFAULT_PAGES
+    private var _pageCount = DEFAULT_PAGES
     private var _records = DEFAULT_PAGES
     private val _selectedSurveyNumber = MutableStateFlow(START_SURVEY_NUMBER)
 
@@ -85,7 +85,7 @@ class HomeViewModel @Inject constructor(
 
     fun clearCacheAndFetch() {
         viewModelScope.launch(ioDispatcher) {
-            _pages = DEFAULT_PAGES
+            _pageCount = DEFAULT_PAGES
             _selectedSurveyNumber.value = START_SURVEY_NUMBER
             getSurveyList(isClearCache = true)
         }
@@ -101,11 +101,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getSurveyList(isClearCache: Boolean = false) {
-        val pageNumber = ((if (isClearCache) START_SURVEY_NUMBER else _surveyList.value.size) / DEFAULT_PAGE_SIZE) + 1
-        if ((pageNumber <= _pages && _surveyList.value.size < _records) || isClearCache) {
+        val currentPage = ((if (isClearCache) START_SURVEY_NUMBER else _surveyList.value.size) / DEFAULT_PAGE_SIZE) + 1
+        if ((currentPage <= _pageCount && _surveyList.value.size < _records) || isClearCache) {
             viewModelScope.launch(ioDispatcher) {
                 homeRepo.fetchSurveyList(
-                    pageNumber = pageNumber,
+                    pageNumber = currentPage,
                     pageSize = DEFAULT_PAGE_SIZE,
                     isClearCache = isClearCache
                 ).collect { result ->
@@ -115,7 +115,7 @@ class HomeViewModel @Inject constructor(
                             resetError()
                         }
                         is ResourceState.Success -> {
-                            this@HomeViewModel._pages = result.data.pages
+                            this@HomeViewModel._pageCount = result.data.pages
                             this@HomeViewModel._records = result.data.records
                             _isRefreshing.value = false
                             resetError()

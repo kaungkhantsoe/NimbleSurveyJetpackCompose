@@ -37,7 +37,7 @@ class HomeRepoImpl @Inject constructor(
                     if (isClearCache) surveyDao.clearSurveys()
                     surveyDao.addSurveys(surveyResponseList.map { it.toSurvey() })
                 }
-                emit(ResourceState.Success(apiResult.data.meta?.toMeta() ?: Meta()))
+                emit(ResourceState.Success(apiResult.data.meta.toMeta()))
             }
             is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
             else -> emit(ResourceState.NetworkError)

@@ -18,10 +18,10 @@ data class MetaResponse(
     val message: String?
 )
 
-fun MetaResponse.toMeta() = Meta(
-    page = page ?: 0,
-    pages = pages ?: 0,
-    pageSize = pageSize ?: 0,
-    records = records ?: 0,
-    message = message.orEmpty()
+fun MetaResponse?.toMeta() = Meta(
+    page = this?.page ?: 0,
+    pages = this?.pages ?: 0,
+    pageSize = this?.pageSize ?: 0,
+    records = this?.records ?: 0,
+    message = this?.message.orEmpty()
 )
