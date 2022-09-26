@@ -17,8 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val DEFAULT_PAGE_SIZE = 5
-const val DEFAULT_NUMBER_OF_PAGE = 1
-const val DEFAULT_CURRENT_PAGE = 1
+const val DEFAULT_PAGES = 1
 private const val START_SURVEY_NUMBER = 0
 
 @HiltViewModel
@@ -30,9 +29,9 @@ class HomeViewModel @Inject constructor(
     private var _error = MutableStateFlow<ErrorModel?>(null)
     private val _isRefreshing = MutableStateFlow(false)
     private val _surveyList = MutableStateFlow<List<Survey>>(listOf())
-    private val _currentPageNumber = MutableStateFlow(DEFAULT_CURRENT_PAGE)
     private val _userAvatar = MutableStateFlow<String?>(null)
-    private var totalNumberOfPage = DEFAULT_NUMBER_OF_PAGE
+    private var _pageCount = DEFAULT_PAGES
+    private var _records = DEFAULT_PAGES
     private val _selectedSurveyNumber = MutableStateFlow(START_SURVEY_NUMBER)
 
     init {
@@ -80,19 +79,15 @@ class HomeViewModel @Inject constructor(
 
     fun getNextPage() {
         if (!_isRefreshing.value) {
-            _currentPageNumber.value += 1
             getSurveyList()
         }
     }
 
     fun clearCacheAndFetch() {
         viewModelScope.launch(ioDispatcher) {
-            homeRepo.clearSurveyList()
-            _currentPageNumber.value = DEFAULT_CURRENT_PAGE
-            totalNumberOfPage = DEFAULT_NUMBER_OF_PAGE
+            _pageCount = DEFAULT_PAGES
             _selectedSurveyNumber.value = START_SURVEY_NUMBER
-            getSurveyListFromDb()
-            getSurveyList()
+            getSurveyList(isClearCache = true)
         }
     }
 
@@ -105,13 +100,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getSurveyList() {
-        if (_currentPageNumber.value <= totalNumberOfPage) {
+    private fun getSurveyList(isClearCache: Boolean = false) {
+        val currentPage = ((if (isClearCache) START_SURVEY_NUMBER else _surveyList.value.size) / DEFAULT_PAGE_SIZE) + 1
+        if ((currentPage <= _pageCount && _surveyList.value.size < _records) || isClearCache) {
             viewModelScope.launch(ioDispatcher) {
                 homeRepo.fetchSurveyList(
-                    pageNumber = _currentPageNumber.value,
+                    pageNumber = currentPage,
                     pageSize = DEFAULT_PAGE_SIZE,
-                    getNumberOfPage = { totalNumberOfPage = it }
+                    isClearCache = isClearCache
                 ).collect { result ->
                     when (result) {
                         is ResourceState.Loading -> {
@@ -119,6 +115,8 @@ class HomeViewModel @Inject constructor(
                             resetError()
                         }
                         is ResourceState.Success -> {
+                            this@HomeViewModel._pageCount = result.data.pages
+                            this@HomeViewModel._records = result.data.records
                             _isRefreshing.value = false
                             resetError()
                         }
