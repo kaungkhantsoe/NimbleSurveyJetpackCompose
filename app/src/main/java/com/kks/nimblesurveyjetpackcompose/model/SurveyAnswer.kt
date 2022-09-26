@@ -9,4 +9,7 @@ data class SurveyAnswer(
     var selected: Boolean = false
 )
 
-fun SurveyAnswer.toSurveyAnswerRequest(): SurveyAnswerRequest = SurveyAnswerRequest(id = id, answer = text)
+fun SurveyAnswer.toSurveyAnswerRequest(isIdOnlyAnswer: Boolean): SurveyAnswerRequest =
+    if (isIdOnlyAnswer) SurveyAnswerRequest(id = id) else SurveyAnswerRequest(id = id, answer = text)
+
+fun List<SurveyAnswer>.sortedByDisplayOrder(): List<SurveyAnswer> = this.sortedBy { it.displayOrder }

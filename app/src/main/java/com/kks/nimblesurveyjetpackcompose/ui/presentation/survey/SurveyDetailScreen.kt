@@ -39,6 +39,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -135,7 +136,9 @@ fun SurveyDetailScreen(
                     surveyQuestion = surveyQuestions[page - 1],
                     pageNumber = page,
                     totalNumberOfPage = surveyQuestions.size
-                )
+                ) { questionId, surveyAnswers ->
+                    viewModel.setAnswers(questionId = questionId, answers = surveyAnswers)
+                }
             }
         }
         SurveyToolbar(
@@ -301,7 +304,7 @@ fun NextQuestionButton(
 @Composable
 fun SurveyDetailStartScreen(survey: Survey, modifier: Modifier = Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        SurveyTitleText(text = survey.title, fontSize = 28.sp, modifier = Modifier.padding(horizontal = 20.dp))
+        SurveyBoldText(text = survey.title, fontSize = 28.sp, modifier = Modifier.padding(horizontal = 20.dp))
         Text(
             text = survey.description,
             fontFamily = NeuzeitFamily,
@@ -316,14 +319,23 @@ fun SurveyDetailStartScreen(survey: Survey, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SurveyTitleText(text: String, fontSize: TextUnit, modifier: Modifier = Modifier, color: Color = Color.White) {
+fun SurveyBoldText(
+    text: String,
+    fontSize: TextUnit,
+    modifier: Modifier = Modifier,
+    color: Color = Color.White,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip
+) {
     Text(
         text = text,
         fontFamily = NeuzeitFamily,
         fontWeight = FontWeight.Bold,
         color = color,
         fontSize = fontSize,
-        modifier = modifier.fillMaxWidth()
+        maxLines = maxLines,
+        modifier = modifier.fillMaxWidth(),
+        overflow = overflow
     )
 }
 

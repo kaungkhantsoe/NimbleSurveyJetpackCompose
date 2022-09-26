@@ -90,7 +90,7 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
             if (isRefreshing && surveyList.isEmpty()) {
                 item { HomeScreenShimmerLoading(modifier = Modifier.fillParentMaxSize()) }
             }
-            if (surveyList.isNotEmpty() && error == null) {
+            if (surveyList.isNotEmpty()) {
                 item {
                     LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
                         val currentSwipeState = swipeableState.offset.value

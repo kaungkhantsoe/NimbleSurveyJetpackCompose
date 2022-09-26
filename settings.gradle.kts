@@ -3,8 +3,8 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url = uri("https://plugins.gradle.org/m2/" )}
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/" )}
     }
 }
 dependencyResolutionManagement {
@@ -15,4 +15,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "NimbleSurveyJetpackCompose"
-include ':app'
+include (":app")

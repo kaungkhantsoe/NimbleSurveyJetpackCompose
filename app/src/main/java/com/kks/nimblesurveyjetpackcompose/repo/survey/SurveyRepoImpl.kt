@@ -8,8 +8,10 @@ import com.kks.nimblesurveyjetpackcompose.model.response.IncludedAnswerResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.IncludedQuestionResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.response.toSurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.sortedByDisplayOrder
 import com.kks.nimblesurveyjetpackcompose.model.toSurveyQuestionRequest
 import com.kks.nimblesurveyjetpackcompose.network.Api
+import com.kks.nimblesurveyjetpackcompose.util.extensions.catchError
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -35,19 +37,18 @@ class SurveyRepoImpl @Inject constructor(@ServiceQualifier private val api: Api)
                                         ?.answers
                                         ?.data
                                         ?.mapNotNull { answers[it.id]?.firstOrNull() }
+                                        ?.sortedByDisplayOrder()
                                         .orEmpty()
                                     surveyQuestion.answers = answerList
                                 }
                             }
-                        emit(ResourceState.Success(questions))
+                        emit(ResourceState.Success(questions.sortedByDisplayOrder()))
                     }
                 }
                 is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
                 else -> emit(ResourceState.NetworkError)
             }
-        }.catch { error ->
-            emit(ResourceState.Error(error.message.orEmpty()))
-        }
+        }.catchError()
 
     override fun submitSurvey(surveyId: String, surveyQuestions: List<SurveyQuestion>): Flow<ResourceState<Unit>> =
         flow {
@@ -62,9 +63,7 @@ class SurveyRepoImpl @Inject constructor(@ServiceQualifier private val api: Api)
                 is ResourceState.Error -> emit(ResourceState.Error(apiResult.error))
                 else -> emit(ResourceState.NetworkError)
             }
-        }.catch { error ->
-            emit(ResourceState.Error(error.message.orEmpty()))
-        }
+        }.catchError()
 }
 
 private fun List<SurveyQuestion>.toSubmitSurveyRequest(surveyId: String): SubmitSurveyRequest =

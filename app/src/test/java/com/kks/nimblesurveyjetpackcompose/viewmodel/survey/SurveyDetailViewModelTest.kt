@@ -69,4 +69,18 @@ class SurveyDetailViewModelTest : BaseViewModelTest() {
 
         assertEquals(true, viewModel.shouldShowThanks.value)
     }
+
+    @Test
+    fun `When setAnswers from dropdown, survey list should have one item with selected true`() = runTest {
+        val successState: ResourceState<List<SurveyQuestion>> = ResourceState.Success(surveyQuestions)
+        coEvery { surveyRepo.getSurveyDetails(any()) } returns flowOf(successState)
+        viewModel.getSurveyQuestions(surveyId = "1")
+
+        advanceUntilIdle()
+
+        val question = surveyQuestions.first()
+        val answers = question.answers.toMutableList().apply { this.first().selected = true }
+        viewModel.setAnswers(questionId = question.id, answers = answers)
+        assertEquals(viewModel.surveyQuestions.value.first().answers, answers)
+    }
 }

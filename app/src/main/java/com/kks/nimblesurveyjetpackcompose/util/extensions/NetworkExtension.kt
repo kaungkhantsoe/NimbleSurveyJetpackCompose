@@ -4,11 +4,17 @@ package com.kks.nimblesurveyjetpackcompose.util.extensions
 
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
+import com.kks.nimblesurveyjetpackcompose.model.response.BaseResponse
 import com.kks.nimblesurveyjetpackcompose.model.response.CustomErrorResponse
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -70,3 +76,8 @@ fun <T> ResourceState<T>.mapError(): ErrorModel? {
 enum class ErrorType {
     INFO, NETWORK
 }
+
+fun <T> Flow<ResourceState<T>>.catchError() =
+    catch { error ->
+        emit(ResourceState.Error(error.message.orEmpty()))
+    }

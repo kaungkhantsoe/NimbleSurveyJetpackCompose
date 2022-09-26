@@ -12,16 +12,31 @@ data class SurveyQuestion(
     var answers: List<SurveyAnswer>
 )
 
-enum class QuestionDisplayType(val typeValue: String) {
-    NONE("none"), INTRO("intro"), DROPDOWN("dropdown")
+enum class QuestionDisplayType(val typeValue: String, val isIdOnlyAnswer: Boolean) {
+    NONE("none", false),
+    INTRO("intro", false),
+    DROPDOWN("dropdown", true),
+    SMILEY("smiley", true),
+    THUMBS("thumbs", true),
+    STARS("star", true)
 }
 
+fun List<SurveyQuestion>.sortedByDisplayOrder(): List<SurveyQuestion> = this.sortedBy { it.displayOrder }
+
 fun SurveyQuestion.toSurveyQuestionRequest(): SurveyQuestionRequest =
-    SurveyQuestionRequest(id = id, answers = answers.filter { it.selected }.map { it.toSurveyAnswerRequest() })
+    SurveyQuestionRequest(
+        id = id,
+        answers = answers.filter { it.selected }.map {
+            it.toSurveyAnswerRequest(isIdOnlyAnswer = questionDisplayType.isIdOnlyAnswer)
+        }
+    )
 
 fun String.getQuestionDisplayType() =
     when (this) {
         QuestionDisplayType.INTRO.typeValue -> QuestionDisplayType.INTRO
         QuestionDisplayType.DROPDOWN.typeValue -> QuestionDisplayType.DROPDOWN
+        QuestionDisplayType.SMILEY.typeValue -> QuestionDisplayType.SMILEY
+        QuestionDisplayType.STARS.typeValue -> QuestionDisplayType.STARS
+        QuestionDisplayType.THUMBS.typeValue -> QuestionDisplayType.THUMBS
         else -> QuestionDisplayType.NONE
     }

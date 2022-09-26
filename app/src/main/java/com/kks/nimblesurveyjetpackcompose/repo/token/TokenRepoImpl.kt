@@ -6,6 +6,7 @@ import com.kks.nimblesurveyjetpackcompose.model.response.LoginResponse
 import com.kks.nimblesurveyjetpackcompose.network.AuthApi
 import com.kks.nimblesurveyjetpackcompose.util.*
 import com.kks.nimblesurveyjetpackcompose.util.extensions.SUCCESS_WITH_NULL_ERROR
+import com.kks.nimblesurveyjetpackcompose.util.extensions.catchError
 import com.kks.nimblesurveyjetpackcompose.util.extensions.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +49,5 @@ class TokenRepoImpl @Inject constructor(
                 ResourceState.NetworkError -> emit(ResourceState.NetworkError)
                 ResourceState.Loading -> emit(ResourceState.Loading)
             }
-        }.catch { error ->
-            emit(ResourceState.Error(error.message.orEmpty()))
-        }
+        }.catchError()
 }
