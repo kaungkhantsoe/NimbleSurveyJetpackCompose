@@ -3,6 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -45,7 +46,11 @@ fun SurveyQuestionScreen(
             fontSize = 15.sp,
             color = White50
         )
-        SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
+        SurveyBoldText(
+            text = surveyQuestion.title,
+            fontSize = 34.sp,
+            modifier = Modifier.fillMaxWidth()
+        )
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             when (surveyQuestion.questionDisplayType) {
                 DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers) {
