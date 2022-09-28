@@ -31,7 +31,7 @@ private const val START_INDEX = 0
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SurveyNPSQuestion(
+fun SurveyNpsQuestion(
     answers: List<SurveyAnswer>,
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
@@ -63,8 +63,8 @@ fun SurveyNPSQuestion(
                         shape = RoundedCornerShape(
                             topStart = if (index == START_INDEX) 10.dp else 0.dp,
                             bottomStart = if (index == START_INDEX) 10.dp else 0.dp,
-                            topEnd = if (index == answers.size - 1) 10.dp else 0.dp,
-                            bottomEnd = if (index == answers.size - 1) 10.dp else 0.dp
+                            topEnd = if (index == answers.lastIndex) 10.dp else 0.dp,
+                            bottomEnd = if (index == answers.lastIndex) 10.dp else 0.dp
                         ),
                         color = Color.Transparent,
                         modifier = Modifier.size(33.dp, 56.dp)
@@ -89,7 +89,8 @@ fun SurveyNPSQuestion(
             modifier = Modifier.constrainAs(notAtAll) {
                 top.linkTo(nps.bottom)
                 start.linkTo(nps.start)
-            }
+            },
+            color = White50
         )
         SurveyBoldText(
             text = stringResource(id = R.string.survey_question_extremely_likely),
@@ -105,8 +106,7 @@ fun SurveyNPSQuestion(
 @Preview(showBackground = true, backgroundColor = 0)
 @Composable
 fun PreviewSurveyNPSQuestion() {
-    SurveyNPSQuestion(answers = emptyList()) {
+    SurveyNpsQuestion(answers = emptyList()) {
         // Do nothing
     }
 }
-
