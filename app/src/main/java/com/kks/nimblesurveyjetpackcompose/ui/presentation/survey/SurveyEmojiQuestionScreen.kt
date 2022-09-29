@@ -26,7 +26,7 @@ private val STARS_EMOJIS = listOf("⭐", "⭐", "⭐", "⭐", "⭐")
 private val THUMBS_EMOJIS = listOf("\uD83D\uDC4D", "\uD83D\uDC4D", "\uD83D\uDC4D", "\uD83D\uDC4D", "\uD83D\uDC4D")
 
 @Composable
-fun SurveyEmojiQuestion(
+fun SurveyEmojiQuestionScreen(
     answers: List<SurveyAnswer>,
     questionDisplayType: QuestionDisplayType,
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
@@ -66,7 +66,7 @@ fun SurveyEmojiQuestion(
 @Preview(showBackground = true)
 @Composable
 fun PreviewSurveySmileyQuestion() {
-    SurveyEmojiQuestion(answers = emptyList(), questionDisplayType = SMILEY) {
+    SurveyEmojiQuestionScreen(answers = emptyList(), questionDisplayType = SMILEY) {
         // Do nothing
     }
 }

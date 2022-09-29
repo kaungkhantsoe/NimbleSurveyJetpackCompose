@@ -2,21 +2,22 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +32,7 @@ private const val START_INDEX = 0
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SurveyNpsQuestion(
+fun SurveyNpsQuestionScreen(
     answers: List<SurveyAnswer>,
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
@@ -49,27 +50,28 @@ fun SurveyNpsQuestion(
             horizontalArrangement = Arrangement.Center
         ) {
             answers.forEachIndexed { index, surveyAnswer ->
-                Box(contentAlignment = Alignment.Center) {
-                    Surface(
-                        onClick = {
-                            selectedIndex = index
-                            onChooseAnswer(
-                                answers.mapIndexed { index, surveyAnswer ->
-                                    surveyAnswer.copy(selected = index == selectedIndex)
-                                }
-                            )
-                        },
-                        border = BorderStroke(0.5.dp, Color.White),
-                        shape = RoundedCornerShape(
-                            topStart = if (index == START_INDEX) 10.dp else 0.dp,
-                            bottomStart = if (index == START_INDEX) 10.dp else 0.dp,
-                            topEnd = if (index == answers.lastIndex) 10.dp else 0.dp,
-                            bottomEnd = if (index == answers.lastIndex) 10.dp else 0.dp
-                        ),
-                        color = Color.Transparent,
-                        modifier = Modifier.size(33.dp, 56.dp)
-                    ) { /* Do nothing */ }
-
+                val eachItemWidth = LocalDensity.current.run {
+                    (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / answers.size
+                }
+                TextButton(
+                    onClick = {
+                        selectedIndex = index
+                        onChooseAnswer(
+                            answers.mapIndexed { index, surveyAnswer ->
+                                surveyAnswer.copy(selected = index == selectedIndex)
+                            }
+                        )
+                    },
+                    border = BorderStroke(0.5.dp, Color.White),
+                    shape = RoundedCornerShape(
+                        topStart = if (index == START_INDEX) 10.dp else 0.dp,
+                        bottomStart = if (index == START_INDEX) 10.dp else 0.dp,
+                        topEnd = if (index == answers.lastIndex) 10.dp else 0.dp,
+                        bottomEnd = if (index == answers.lastIndex) 10.dp else 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+                    modifier = Modifier.size(eachItemWidth,56.dp)
+                ) {
                     SurveyBoldText(
                         text = surveyAnswer.text,
                         color = if (index <= selectedIndex) {
@@ -106,7 +108,7 @@ fun SurveyNpsQuestion(
 @Preview(showBackground = true, backgroundColor = 0)
 @Composable
 fun PreviewSurveyNPSQuestion() {
-    SurveyNpsQuestion(answers = emptyList()) {
+    SurveyNpsQuestionScreen(answers = emptyList()) {
         // Do nothing
     }
 }
