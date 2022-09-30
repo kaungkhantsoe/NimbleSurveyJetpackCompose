@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,59 +28,53 @@ import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val START_INDEX = 0
+private const val MAX_NUMBER_OF_NPS_QUESTION = 10
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SurveyNpsQuestionScreen(
-    answers: List<SurveyAnswer>,
-    onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
+    answers: List<SurveyAnswer>, onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(answers.indexOfFirst { it.selected }) }
 
     ConstraintLayout(modifier = Modifier.wrapContentWidth()) {
         val (nps, notAtAll, extremely) = createRefs()
         Row(
-            modifier = Modifier
-                .constrainAs(nps) {
-                    start.linkTo(parent.start, 20.dp)
-                    end.linkTo(parent.end, 20.dp)
-                    top.linkTo(parent.top)
-                },
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier.constrainAs(nps) {
+                start.linkTo(parent.start, 20.dp)
+                end.linkTo(parent.end, 20.dp)
+                top.linkTo(parent.top)
+            }, horizontalArrangement = Arrangement.Center
         ) {
             answers.forEachIndexed { index, surveyAnswer ->
-                val eachItemWidth = LocalDensity.current.run {
-                    (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / answers.size
-                }
-                TextButton(
-                    onClick = {
-                        selectedIndex = index
-                        onChooseAnswer(
-                            answers.mapIndexed { index, surveyAnswer ->
+                if (index < MAX_NUMBER_OF_NPS_QUESTION) {
+                    val eachItemWidth = LocalDensity.current.run {
+                        (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / MAX_NUMBER_OF_NPS_QUESTION
+                    }
+                    TextButton(
+                        onClick = {
+                            selectedIndex = index
+                            onChooseAnswer(answers.mapIndexed { index, surveyAnswer ->
                                 surveyAnswer.copy(selected = index == selectedIndex)
-                            }
-                        )
-                    },
-                    border = BorderStroke(0.5.dp, Color.White),
-                    shape = RoundedCornerShape(
-                        topStart = if (index == START_INDEX) 10.dp else 0.dp,
-                        bottomStart = if (index == START_INDEX) 10.dp else 0.dp,
-                        topEnd = if (index == answers.lastIndex) 10.dp else 0.dp,
-                        bottomEnd = if (index == answers.lastIndex) 10.dp else 0.dp
-                    ),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-                    modifier = Modifier.size(eachItemWidth,56.dp)
-                ) {
-                    SurveyBoldText(
-                        text = surveyAnswer.text,
-                        color = if (index <= selectedIndex) {
-                            Color.White
-                        } else {
-                            White50
+                            })
                         },
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center
-                    )
+                        border = BorderStroke(0.5.dp, Color.White),
+                        shape = RoundedCornerShape(
+                            topStart = if (index == START_INDEX) 10.dp else 0.dp,
+                            bottomStart = if (index == START_INDEX) 10.dp else 0.dp,
+                            topEnd = if (index == MAX_NUMBER_OF_NPS_QUESTION - 1) 10.dp else 0.dp,
+                            bottomEnd = if (index == MAX_NUMBER_OF_NPS_QUESTION - 1) 10.dp else 0.dp
+                        ),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+                        modifier = Modifier.size(eachItemWidth, 56.dp)
+                    ) {
+                        SurveyBoldText(
+                            text = surveyAnswer.text, color = if (index <= selectedIndex) {
+                                Color.White
+                            } else {
+                                White50
+                            }, fontSize = 20.sp, textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }
@@ -94,14 +87,12 @@ fun SurveyNpsQuestionScreen(
             },
             color = White50
         )
-        SurveyBoldText(
-            text = stringResource(id = R.string.survey_question_extremely_likely),
+        SurveyBoldText(text = stringResource(id = R.string.survey_question_extremely_likely),
             fontSize = 17.sp,
             modifier = Modifier.constrainAs(extremely) {
                 top.linkTo(nps.bottom)
                 end.linkTo(nps.end)
-            }
-        )
+            })
     }
 }
 
