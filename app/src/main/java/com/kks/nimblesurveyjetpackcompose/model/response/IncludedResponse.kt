@@ -2,6 +2,7 @@ package com.kks.nimblesurveyjetpackcompose.model.response
 
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
 import com.kks.nimblesurveyjetpackcompose.model.getQuestionDisplayType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -48,10 +49,19 @@ fun IncludedQuestionResponse.toSurveyQuestion() =
         title = attributes?.text.orEmpty().trim(),
         displayOrder = attributes?.displayOrder ?: 0,
         shortText = attributes?.shortText.orEmpty(),
-        pick = attributes?.pick.orEmpty(),
+        pick = attributes?.pick.toSurveyQuestionPickType(),
         questionDisplayType = attributes?.displayType.orEmpty().getQuestionDisplayType(),
         answers = emptyList()
     )
+
+private const val SINGLE_PICK = "one"
+
+fun String?.toSurveyQuestionPickType(): SurveyQuestionPickType {
+    this?.let { pick ->
+        return if (pick == SINGLE_PICK) SurveyQuestionPickType.SINGLE else SurveyQuestionPickType.MULTIPLE
+    }
+    return SurveyQuestionPickType.NONE
+}
 
 @JsonClass(generateAdapter = true)
 data class IncludedAnswerResponse(

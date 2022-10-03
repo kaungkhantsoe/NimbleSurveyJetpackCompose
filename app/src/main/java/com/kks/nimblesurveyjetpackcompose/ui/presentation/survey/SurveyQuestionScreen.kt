@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.CHOICE
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NONE
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NPS
@@ -22,6 +23,7 @@ import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val NUMBER_OF_EMOJI_ANSWERS = 5
@@ -54,6 +56,9 @@ fun SurveyQuestionScreen(
         )
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             when (surveyQuestion.questionDisplayType) {
+                CHOICE -> SurveyChoiceQuestionScreen(answers = surveyQuestion.answers, pickType = surveyQuestion.pick) {
+                    onChooseAnswer(surveyQuestion.id, it)
+                }
                 NPS -> SurveyNpsQuestionScreen(answers = surveyQuestion.answers) {
                     onChooseAnswer(surveyQuestion.id, it)
                 }
@@ -87,7 +92,7 @@ fun SurveyQuestionScreenPreview() {
             title = "",
             displayOrder = 0,
             shortText = "",
-            pick = "",
+            pick = SurveyQuestionPickType.SINGLE,
             questionDisplayType = NONE,
             answers = emptyList()
         ),
