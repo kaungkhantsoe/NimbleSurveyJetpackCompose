@@ -31,6 +31,8 @@ import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
+private const val CHOICE_WEIGHT = .75f
+
 @Composable
 fun SurveyChoiceQuestionScreen(
     answers: List<SurveyAnswer>,
@@ -73,7 +75,7 @@ fun SurveyChoiceQuestionScreen(
                             fontSize = 20.sp,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(end = 10.dp).weight(.75f)
+                            modifier = Modifier.padding(end = 10.dp).weight(CHOICE_WEIGHT)
                         )
                         Surface(
                             border = BorderStroke(0.5.dp, if (isSelected) Color.White else White50),
