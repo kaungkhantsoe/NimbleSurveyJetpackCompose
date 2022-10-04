@@ -4,6 +4,7 @@ import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
 
 val surveys = listOf(
     Survey(id = "1", coverImagePlaceholderUrl = "", title = "title1", description = "description1"),
@@ -15,7 +16,7 @@ val surveyQuestion = SurveyQuestion(
     title = "title question",
     displayOrder = 0,
     shortText = "",
-    pick = "none",
+    pick = SurveyQuestionPickType.NONE,
     questionDisplayType = QuestionDisplayType.NONE,
     answers = listOf(
         SurveyAnswer(
