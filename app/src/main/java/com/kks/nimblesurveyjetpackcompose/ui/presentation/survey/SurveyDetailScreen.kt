@@ -1,5 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 
+import android.os.CountDownTimer
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -95,9 +97,34 @@ fun SurveyDetailScreen(
     val isStartPage = currentPage == 0
     val isLastPage = currentPage == surveyQuestions.size
 
+    var scale by remember { mutableStateOf(1f) }
+
+    LaunchedEffect(key1 = Unit) {
+        object : CountDownTimer(500,25) {
+            override fun onTick(millisUntilFinished: Long) {
+                scale += 0.025f
+            }
+
+            override fun onFinish() {
+                scale = 1.5f
+            }
+        }.start()
+    }
+
+    val popBackAnimationTimer = object : CountDownTimer(500,25) {
+        override fun onTick(millisUntilFinished: Long) {
+            scale -= 0.025f
+        }
+
+        override fun onFinish() {
+            scale = 1f
+            navigator.popBackStack()
+        }
+    }
+
     BackHandler {
         if (currentPage > 0) showConfirmDialog = true
-        else navigator.popBackStack()
+        else popBackAnimationTimer.start()
     }
 
     LaunchedEffect(key1 = pagerState) {
@@ -114,7 +141,12 @@ fun SurveyDetailScreen(
         AsyncImage(
             model = survey.coverImageFullUrl,
             contentDescription = stringResource(id = R.string.survey_detail_background_image),
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale
+                ),
             placeholder = placeholderPainter,
             contentScale = ContentScale.Crop
         )
@@ -142,7 +174,7 @@ fun SurveyDetailScreen(
             }
         }
         SurveyToolbar(
-            navigator = navigator,
+            popBackAnimationTimer = popBackAnimationTimer,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopStart)
@@ -168,7 +200,7 @@ fun SurveyDetailScreen(
                 .padding(bottom = 54.dp, end = 20.dp)
                 .semantics { contentDescription = startSurveyDescription }
         )
-        if (shouldShowThanks) LottieView(navigator = navigator)
+        if (shouldShowThanks) LottieView(popBackAnimationTimer = popBackAnimationTimer)
         NextQuestionButton(
             showButton = !isStartPage && !isLastPage,
             onNextSlide = {
@@ -188,7 +220,7 @@ fun SurveyDetailScreen(
                 negativeButtonText = stringResource(id = R.string.survey_question_warning_dialog_cancel),
                 onClickPositiveButton = {
                     showConfirmDialog = false
-                    navigator.popBackStack()
+                    popBackAnimationTimer.start()
                 },
                 onClickNegativeButton = { showConfirmDialog = false }
             )
@@ -206,7 +238,7 @@ fun SurveyDetailScreen(
 }
 
 @Composable
-fun LottieView(navigator: DestinationsNavigator) {
+fun LottieView(popBackAnimationTimer: CountDownTimer) {
     val retrySignal = rememberLottieRetrySignal()
     val composition by rememberLottieComposition(
         LottieCompositionSpec.Url(SUBMIT_SUCCESS_LOTTIE_URL),
@@ -217,7 +249,7 @@ fun LottieView(navigator: DestinationsNavigator) {
     )
     val progress by animateLottieCompositionAsState(composition)
 
-    if (progress == LOTTIE_ENDS) navigator.popBackStack()
+    if (progress == LOTTIE_ENDS) popBackAnimationTimer.start()
 
     Column(
         modifier = Modifier
@@ -349,7 +381,7 @@ fun SurveyBoldText(
 
 @Composable
 fun SurveyToolbar(
-    navigator: DestinationsNavigator,
+    popBackAnimationTimer: CountDownTimer,
     modifier: Modifier,
     showBack: Boolean,
     showClose: Boolean,
@@ -358,7 +390,7 @@ fun SurveyToolbar(
     Box(modifier = modifier) {
         if (showBack) {
             IconButton(
-                onClick = { navigator.popBackStack() },
+                onClick = { popBackAnimationTimer.start() },
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Image(
