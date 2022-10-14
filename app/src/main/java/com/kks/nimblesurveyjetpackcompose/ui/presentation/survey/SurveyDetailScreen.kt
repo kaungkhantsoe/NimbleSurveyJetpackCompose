@@ -76,6 +76,12 @@ private const val SUBMIT_SUCCESS_LOTTIE_URL = "https://assets2.lottiefiles.com/p
 private const val LOTTIE_ENDS = 1.0f
 private const val LOTTIE_FAIL_COUNT = 3
 
+private const val ZOOM_DURATION_IN_MILLIS = 500L
+private const val ZOOM_INTERVAL_IN_MILLIS = 25L
+private const val SCALE_PER_COUNTDOWN = 0.025f
+private const val ZOOMED_IN_SCALE = 1.5f
+private const val ORIGINAL_SCALE = 1f
+
 @OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
@@ -100,24 +106,24 @@ fun SurveyDetailScreen(
     var scale by remember { mutableStateOf(1f) }
 
     LaunchedEffect(key1 = Unit) {
-        object : CountDownTimer(500,25) {
+        object : CountDownTimer(ZOOM_DURATION_IN_MILLIS, ZOOM_INTERVAL_IN_MILLIS) {
             override fun onTick(millisUntilFinished: Long) {
-                scale += 0.025f
+                scale += SCALE_PER_COUNTDOWN
             }
 
             override fun onFinish() {
-                scale = 1.5f
+                scale = ZOOMED_IN_SCALE
             }
         }.start()
     }
 
-    val popBackAnimationTimer = object : CountDownTimer(500,25) {
+    val popBackAnimationTimer = object : CountDownTimer(ZOOM_DURATION_IN_MILLIS, ZOOM_INTERVAL_IN_MILLIS) {
         override fun onTick(millisUntilFinished: Long) {
-            scale -= 0.025f
+            scale -= SCALE_PER_COUNTDOWN
         }
 
         override fun onFinish() {
-            scale = 1f
+            scale = ORIGINAL_SCALE
             navigator.popBackStack()
         }
     }
