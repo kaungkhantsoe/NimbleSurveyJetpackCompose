@@ -45,36 +45,35 @@ fun SurveyNpsQuestionScreen(
                 top.linkTo(parent.top)
             }, horizontalArrangement = Arrangement.Center
         ) {
-            answers.forEachIndexed { index, surveyAnswer ->
-                if (index < MAX_NUMBER_OF_NPS_QUESTION) {
-                    val eachItemWidth = LocalDensity.current.run {
-                        (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / MAX_NUMBER_OF_NPS_QUESTION
-                    }
-                    TextButton(
-                        onClick = {
-                            selectedIndex = index
-                            onChooseAnswer(answers.mapIndexed { index, surveyAnswer ->
-                                surveyAnswer.copy(selected = index == selectedIndex)
-                            })
-                        },
-                        border = BorderStroke(0.5.dp, Color.White),
-                        shape = RoundedCornerShape(
-                            topStart = if (index == START_INDEX) 10.dp else 0.dp,
-                            bottomStart = if (index == START_INDEX) 10.dp else 0.dp,
-                            topEnd = if (index == MAX_NUMBER_OF_NPS_QUESTION - 1) 10.dp else 0.dp,
-                            bottomEnd = if (index == MAX_NUMBER_OF_NPS_QUESTION - 1) 10.dp else 0.dp
-                        ),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-                        modifier = Modifier.size(eachItemWidth, 56.dp)
-                    ) {
-                        SurveyBoldText(
-                            text = surveyAnswer.text, color = if (index <= selectedIndex) {
-                                Color.White
-                            } else {
-                                White50
-                            }, fontSize = 20.sp, textAlign = TextAlign.Center
-                        )
-                    }
+            answers.take(MAX_NUMBER_OF_NPS_QUESTION)
+                .forEachIndexed { index, surveyAnswer ->
+                val eachItemWidth = LocalDensity.current.run {
+                    (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / MAX_NUMBER_OF_NPS_QUESTION
+                }
+                TextButton(
+                    onClick = {
+                        selectedIndex = index
+                        onChooseAnswer(answers.mapIndexed { index, surveyAnswer ->
+                            surveyAnswer.copy(selected = index == selectedIndex)
+                        })
+                    },
+                    border = BorderStroke(0.5.dp, Color.White),
+                    shape = RoundedCornerShape(
+                        topStart = if (index == START_INDEX) 10.dp else 0.dp,
+                        bottomStart = if (index == START_INDEX) 10.dp else 0.dp,
+                        topEnd = if (index == MAX_NUMBER_OF_NPS_QUESTION - 1) 10.dp else 0.dp,
+                        bottomEnd = if (index == MAX_NUMBER_OF_NPS_QUESTION - 1) 10.dp else 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+                    modifier = Modifier.size(eachItemWidth, 56.dp)
+                ) {
+                    SurveyBoldText(
+                        text = surveyAnswer.text, color = if (index <= selectedIndex) {
+                            Color.White
+                        } else {
+                            White50
+                        }, fontSize = 20.sp, textAlign = TextAlign.Center
+                    )
                 }
             }
         }
