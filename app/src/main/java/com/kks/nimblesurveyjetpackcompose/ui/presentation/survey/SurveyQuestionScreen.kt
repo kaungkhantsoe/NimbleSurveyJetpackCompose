@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NONE
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NPS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
@@ -53,13 +54,16 @@ fun SurveyQuestionScreen(
         )
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             when (surveyQuestion.questionDisplayType) {
-                DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers) {
+                NPS -> SurveyNpsQuestionScreen(answers = surveyQuestion.answers) {
+                    onChooseAnswer(surveyQuestion.id, it)
+                }
+                DROPDOWN -> SurveyDropDownQuestionScreen(answers = surveyQuestion.answers) {
                     onChooseAnswer(surveyQuestion.id, it)
                 }
                 SMILEY,
                 STARS,
                 THUMBS -> if (surveyQuestion.answers.size >= NUMBER_OF_EMOJI_ANSWERS) {
-                    SurveyEmojiQuestion(
+                    SurveyEmojiQuestionScreen(
                         answers = surveyQuestion.answers,
                         questionDisplayType = surveyQuestion.questionDisplayType
                     ) {

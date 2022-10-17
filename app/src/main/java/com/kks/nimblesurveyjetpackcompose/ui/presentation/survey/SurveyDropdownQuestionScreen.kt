@@ -37,7 +37,7 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.Black60
 private const val INVALID_INDEX = -1
 
 @Composable
-fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit) {
+fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit) {
     val answerIndex = answers.indexOfFirst { it.selected }
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(if (answerIndex == INVALID_INDEX) 0 else answerIndex) }
@@ -100,7 +100,7 @@ fun SurveyDropDownQuestion(answers: List<SurveyAnswer>, onChooseAnswer: (answers
 @Preview(showBackground = true)
 @Composable
 fun SurveyDropDownQuestionPreview() {
-    SurveyDropDownQuestion(listOf()) {
+    SurveyDropDownQuestionScreen(listOf()) {
         // Do nothing
     }
 }
