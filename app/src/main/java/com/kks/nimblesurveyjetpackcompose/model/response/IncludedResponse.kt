@@ -7,6 +7,9 @@ import com.kks.nimblesurveyjetpackcompose.model.getQuestionDisplayType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+private const val PICK_SINGLE = "one"
+private const val PICK_MULTIPLE = "any"
+
 enum class SurveyType(val typeValue: String) {
     QUESTION("question"), ANSWER("answer")
 }
@@ -54,13 +57,12 @@ fun IncludedQuestionResponse.toSurveyQuestion() =
         answers = emptyList()
     )
 
-private const val SINGLE_PICK = "one"
-
 fun String?.toSurveyQuestionPickType(): SurveyQuestionPickType {
-    this?.let { pick ->
-        return if (pick == SINGLE_PICK) SurveyQuestionPickType.SINGLE else SurveyQuestionPickType.MULTIPLE
+    return when (this) {
+        PICK_SINGLE -> SurveyQuestionPickType.SINGLE
+        PICK_MULTIPLE -> SurveyQuestionPickType.MULTIPLE
+        else -> SurveyQuestionPickType.NONE
     }
-    return SurveyQuestionPickType.NONE
 }
 
 @JsonClass(generateAdapter = true)

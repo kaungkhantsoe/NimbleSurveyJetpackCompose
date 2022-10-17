@@ -2,11 +2,11 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -39,7 +39,7 @@ fun SurveyChoiceQuestionScreen(
     pickType: SurveyQuestionPickType,
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
-    val selectedIndexList = remember {
+    val selectedIndices = remember {
         mutableStateListOf<Int>().also { snapShot ->
             answers.forEachIndexed { index, surveyAnswer ->
                 if (surveyAnswer.selected) snapShot.add(index)
@@ -47,61 +47,63 @@ fun SurveyChoiceQuestionScreen(
         }
     }
 
-    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 70.dp)) {
+    LazyColumn(modifier = Modifier.padding(horizontal = 20.dp, vertical = 70.dp)) {
         answers.forEachIndexed { index, surveyAnswer ->
-            Box {
-                Row {
-                    Spacer(modifier = Modifier.weight(1f))
-                    TextButton(
-                        onClick = {
-                            if (selectedIndexList.contains(index)) {
-                                selectedIndexList.remove(index)
-                            } else {
-                                if (pickType == SurveyQuestionPickType.SINGLE) selectedIndexList.clear()
-                                selectedIndexList.add(index)
+            item {
+                Box {
+                    Row {
+                        Spacer(modifier = Modifier.weight(1f))
+                        TextButton(
+                            onClick = {
+                                if (selectedIndices.contains(index)) {
+                                    selectedIndices.remove(index)
+                                } else {
+                                    if (pickType == SurveyQuestionPickType.SINGLE) selectedIndices.clear()
+                                    selectedIndices.add(index)
 
+                                }
+                                onChooseAnswer(answers.mapIndexed { index, surveyAnswer ->
+                                    surveyAnswer.copy(selected = selectedIndices.contains(index))
+                                })
                             }
-                            onChooseAnswer(answers.mapIndexed { index, surveyAnswer ->
-                                surveyAnswer.copy(selected = selectedIndexList.contains(index))
-                            })
-                        }
-                    ) {
-                        val isSelected = selectedIndexList.contains(index)
-                        Text(
-                            text = surveyAnswer.text,
-                            fontFamily = NeuzeitFamily,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            color = if (isSelected) Color.White else White50,
-                            fontSize = 20.sp,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(end = 10.dp).weight(CHOICE_WEIGHT)
-                        )
-                        Surface(
-                            border = BorderStroke(0.5.dp, if (isSelected) Color.White else White50),
-                            shape = CircleShape,
-                            modifier = Modifier.size(25.dp),
-                            color = if (isSelected) Color.White else Color.Transparent
                         ) {
-                            if (isSelected) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_baseline_check),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .padding(5.dp)
-                                )
+                            val isSelected = selectedIndices.contains(index)
+                            Text(
+                                text = surveyAnswer.text,
+                                fontFamily = NeuzeitFamily,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isSelected) Color.White else White50,
+                                fontSize = 20.sp,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(end = 10.dp).weight(CHOICE_WEIGHT)
+                            )
+                            Surface(
+                                border = BorderStroke(0.5.dp, if (isSelected) Color.White else White50),
+                                shape = CircleShape,
+                                modifier = Modifier.size(25.dp),
+                                color = if (isSelected) Color.White else Color.Transparent
+                            ) {
+                                if (isSelected) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_baseline_check),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(25.dp)
+                                            .padding(5.dp)
+                                    )
+                                }
                             }
                         }
+                        Spacer(modifier = Modifier.weight(1f))
                     }
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-                if (index != answers.lastIndex) {
-                    Divider(
-                        color = Color.White,
-                        thickness = 0.5.dp,
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                    )
+                    if (index != answers.lastIndex) {
+                        Divider(
+                            color = Color.White,
+                            thickness = 0.5.dp,
+                            modifier = Modifier.align(Alignment.BottomCenter)
+                        )
+                    }
                 }
             }
         }
