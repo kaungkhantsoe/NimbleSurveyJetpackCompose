@@ -44,4 +44,6 @@
     <string name="survey_question_next_question">Survey next question</string>
     <string name="survey_question_submit_survey">Submit</string>
     <string name="survey_question_thanks">Thanks for taking\nthe survey.</string>
+    <string name="survey_question_not_at_all_likely">Not at all Likely</string>
+    <string name="survey_question_extremely_likely">Extremely Likely</string>
 </resources>

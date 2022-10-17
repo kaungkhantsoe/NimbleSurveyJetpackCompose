@@ -304,7 +304,13 @@ fun NextQuestionButton(
 @Composable
 fun SurveyDetailStartScreen(survey: Survey, modifier: Modifier = Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        SurveyBoldText(text = survey.title, fontSize = 28.sp, modifier = Modifier.padding(horizontal = 20.dp))
+        SurveyBoldText(
+            text = survey.title,
+            fontSize = 28.sp,
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth()
+        )
         Text(
             text = survey.description,
             fontFamily = NeuzeitFamily,
@@ -325,7 +331,8 @@ fun SurveyBoldText(
     modifier: Modifier = Modifier,
     color: Color = Color.White,
     maxLines: Int = Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip
+    overflow: TextOverflow = TextOverflow.Clip,
+    textAlign: TextAlign? = null
 ) {
     Text(
         text = text,
@@ -334,8 +341,9 @@ fun SurveyBoldText(
         color = color,
         fontSize = fontSize,
         maxLines = maxLines,
-        modifier = modifier.fillMaxWidth(),
-        overflow = overflow
+        modifier = modifier,
+        overflow = overflow,
+        textAlign = textAlign
     )
 }
 
