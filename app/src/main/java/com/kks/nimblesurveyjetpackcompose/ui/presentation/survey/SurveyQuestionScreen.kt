@@ -3,6 +3,7 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,13 +14,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.CHOICE
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NONE
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NPS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
+import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val NUMBER_OF_EMOJI_ANSWERS = 5
@@ -45,16 +49,26 @@ fun SurveyQuestionScreen(
             fontSize = 15.sp,
             color = White50
         )
-        SurveyBoldText(text = surveyQuestion.title, fontSize = 34.sp)
+        SurveyBoldText(
+            text = surveyQuestion.title,
+            fontSize = 34.sp,
+            modifier = Modifier.fillMaxWidth()
+        )
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             when (surveyQuestion.questionDisplayType) {
-                DROPDOWN -> SurveyDropDownQuestion(answers = surveyQuestion.answers) {
+                CHOICE -> SurveyChoiceQuestionScreen(answers = surveyQuestion.answers, pickType = surveyQuestion.pick) {
+                    onChooseAnswer(surveyQuestion.id, it)
+                }
+                NPS -> SurveyNpsQuestionScreen(answers = surveyQuestion.answers) {
+                    onChooseAnswer(surveyQuestion.id, it)
+                }
+                DROPDOWN -> SurveyDropDownQuestionScreen(answers = surveyQuestion.answers) {
                     onChooseAnswer(surveyQuestion.id, it)
                 }
                 SMILEY,
                 STARS,
                 THUMBS -> if (surveyQuestion.answers.size >= NUMBER_OF_EMOJI_ANSWERS) {
-                    SurveyEmojiQuestion(
+                    SurveyEmojiQuestionScreen(
                         answers = surveyQuestion.answers,
                         questionDisplayType = surveyQuestion.questionDisplayType
                     ) {
@@ -78,7 +92,7 @@ fun SurveyQuestionScreenPreview() {
             title = "",
             displayOrder = 0,
             shortText = "",
-            pick = "",
+            pick = SurveyQuestionPickType.SINGLE,
             questionDisplayType = NONE,
             answers = emptyList()
         ),

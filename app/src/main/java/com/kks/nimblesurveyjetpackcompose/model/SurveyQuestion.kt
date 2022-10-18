@@ -7,10 +7,14 @@ data class SurveyQuestion(
     val title: String,
     val displayOrder: Int,
     val shortText: String,
-    val pick: String,
+    val pick: SurveyQuestionPickType,
     val questionDisplayType: QuestionDisplayType,
     var answers: List<SurveyAnswer>
 )
+
+enum class SurveyQuestionPickType {
+    NONE, SINGLE, MULTIPLE
+}
 
 enum class QuestionDisplayType(val typeValue: String, val isIdOnlyAnswer: Boolean) {
     NONE("none", false),
@@ -18,7 +22,9 @@ enum class QuestionDisplayType(val typeValue: String, val isIdOnlyAnswer: Boolea
     DROPDOWN("dropdown", true),
     SMILEY("smiley", true),
     THUMBS("thumbs", true),
-    STARS("star", true)
+    STARS("star", true),
+    NPS("nps", true),
+    CHOICE("choice",true)
 }
 
 fun List<SurveyQuestion>.sortedByDisplayOrder(): List<SurveyQuestion> = this.sortedBy { it.displayOrder }
@@ -38,5 +44,7 @@ fun String.getQuestionDisplayType() =
         QuestionDisplayType.SMILEY.typeValue -> QuestionDisplayType.SMILEY
         QuestionDisplayType.STARS.typeValue -> QuestionDisplayType.STARS
         QuestionDisplayType.THUMBS.typeValue -> QuestionDisplayType.THUMBS
+        QuestionDisplayType.NPS.typeValue -> QuestionDisplayType.NPS
+        QuestionDisplayType.CHOICE.typeValue -> QuestionDisplayType.CHOICE
         else -> QuestionDisplayType.NONE
     }

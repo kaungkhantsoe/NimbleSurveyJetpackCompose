@@ -9,6 +9,7 @@ import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
 import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NPS
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.request.SubmitSurveyRequest
 import com.kks.nimblesurveyjetpackcompose.model.response.BaseResponse
@@ -157,14 +158,29 @@ class SurveyRepoImplTest {
 
     @Test
     fun `When submitSurvey for Star question, answers with null is submitted`() = runTest {
-        val thumbsQuestion = surveyQuestion.copy(
+        val starQuestion = surveyQuestion.copy(
             questionDisplayType = STARS,
             answers = listOf(surveyAnswer.copy(selected = true))
         )
 
-        sut.submitSurvey(surveyId = "0", surveyQuestions = listOf(thumbsQuestion)).collect()
+        sut.submitSurvey(surveyId = "0", surveyQuestions = listOf(starQuestion)).collect()
 
-        val expected = thumbsQuestion.toSurveyQuestionRequest()
+        val expected = starQuestion.toSurveyQuestionRequest()
+        assertThat(expected.answers.first().answer).isNull()
+
+        coVerify { api.submitSurvey(SubmitSurveyRequest(surveyId = "0", questions = listOf(expected))) }
+    }
+
+    @Test
+    fun `When submitSurvey for NPS question, answers with null is submitted`() = runTest {
+        val npsQuestion = surveyQuestion.copy(
+            questionDisplayType = NPS,
+            answers = listOf(surveyAnswer.copy(selected = true))
+        )
+
+        sut.submitSurvey(surveyId = "0", surveyQuestions = listOf(npsQuestion)).collect()
+
+        val expected = npsQuestion.toSurveyQuestionRequest()
         assertThat(expected.answers.first().answer).isNull()
 
         coVerify { api.submitSurvey(SubmitSurveyRequest(surveyId = "0", questions = listOf(expected))) }
