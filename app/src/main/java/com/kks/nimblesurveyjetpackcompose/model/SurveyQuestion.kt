@@ -19,6 +19,7 @@ enum class SurveyQuestionPickType {
 enum class QuestionDisplayType(val typeValue: String, val isIdOnlyAnswer: Boolean) {
     NONE("none", false),
     INTRO("intro", false),
+    OUTRO("outro", false),
     DROPDOWN("dropdown", true),
     SMILEY("smiley", true),
     THUMBS("thumbs", true),
@@ -40,6 +41,7 @@ fun SurveyQuestion.toSurveyQuestionRequest(): SurveyQuestionRequest =
 fun String.getQuestionDisplayType() =
     when (this) {
         QuestionDisplayType.INTRO.typeValue -> QuestionDisplayType.INTRO
+        QuestionDisplayType.OUTRO.typeValue -> QuestionDisplayType.OUTRO
         QuestionDisplayType.DROPDOWN.typeValue -> QuestionDisplayType.DROPDOWN
         QuestionDisplayType.SMILEY.typeValue -> QuestionDisplayType.SMILEY
         QuestionDisplayType.STARS.typeValue -> QuestionDisplayType.STARS
