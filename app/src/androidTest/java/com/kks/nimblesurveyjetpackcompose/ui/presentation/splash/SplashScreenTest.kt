@@ -8,6 +8,7 @@ import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
+import com.kks.nimblesurveyjetpackcompose.waitUntilExists
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -168,5 +169,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 )
             }
         }
+        composeTestRule.waitUntilExists(hasText(getString(R.string.login_log_in_button)))
     }
 }
