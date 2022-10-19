@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyBoldText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val START_INDEX = 0

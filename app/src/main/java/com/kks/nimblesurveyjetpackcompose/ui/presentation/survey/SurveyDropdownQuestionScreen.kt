@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyBoldText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black60
 
 private const val INVALID_INDEX = -1

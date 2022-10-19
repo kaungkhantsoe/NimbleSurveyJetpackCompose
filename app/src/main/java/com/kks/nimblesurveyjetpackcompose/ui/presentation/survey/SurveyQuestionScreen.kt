@@ -24,6 +24,7 @@ import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyBoldText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val NUMBER_OF_EMOJI_ANSWERS = 5
@@ -83,13 +84,13 @@ fun SurveyQuestionScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0)
 @Composable
 fun SurveyQuestionScreenPreview() {
     SurveyQuestionScreen(
         surveyQuestion = SurveyQuestion(
             id = "",
-            title = "",
+            title = "Title",
             displayOrder = 0,
             shortText = "",
             pick = SurveyQuestionPickType.SINGLE,
