@@ -1,6 +1,5 @@
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.survey
 
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,13 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,13 +21,9 @@ import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 private const val NUMBER_OF_EMOJI_ANSWERS = 5
-private const val DELAY_TO_CLEAR_FOCUS = 500L
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SurveyQuestionScreen(
     surveyQuestion: SurveyQuestion,
@@ -41,23 +31,10 @@ fun SurveyQuestionScreen(
     totalNumberOfPage: Int,
     onChooseAnswer: (questionId: String, surveyAnswers: List<SurveyAnswer>) -> Unit
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    keyboardController?.hide()
-                    // Need to wait for keyboard hiding before clearFocus. If not the screen doesn't resize.
-                    coroutineScope.launch {
-                        delay(DELAY_TO_CLEAR_FOCUS)
-                        focusManager.clearFocus()
-                    }
-                })
-            }
             .padding(horizontal = 20.dp)
     ) {
         Text(
