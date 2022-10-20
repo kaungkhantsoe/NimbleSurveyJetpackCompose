@@ -15,7 +15,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.*
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.CHOICE
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NONE
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NPS
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType

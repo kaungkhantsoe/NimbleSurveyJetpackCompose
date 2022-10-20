@@ -46,4 +46,5 @@
     <string name="survey_question_thanks">Thanks for taking\nthe survey.</string>
     <string name="survey_question_not_at_all_likely">Not at all Likely</string>
     <string name="survey_question_extremely_likely">Extremely Likely</string>
+    <string name="survey_question_your_thoughts">Your thoughts</string>
 </resources>
