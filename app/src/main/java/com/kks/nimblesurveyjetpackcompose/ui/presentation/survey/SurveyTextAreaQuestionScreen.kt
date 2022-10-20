@@ -13,19 +13,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
-import com.kks.nimblesurveyjetpackcompose.ui.theme.White30
 
 @Composable
 fun SurveyTextAreaQuestionScreen(
     answers: List<SurveyAnswer>,
+    shortText: String,
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
     var answer by remember { mutableStateOf("") }
@@ -38,9 +36,9 @@ fun SurveyTextAreaQuestionScreen(
         shape = RoundedCornerShape(10.dp),
         placeholder = {
             SurveyText(
-                text = stringResource(id = R.string.survey_question_your_thoughts),
+                text = shortText,
                 fontSize = 17.sp,
-                color = White30
+                color = White20
             )
         },
         colors = TextFieldDefaults.textFieldColors(
@@ -64,5 +62,5 @@ fun SurveyTextAreaQuestionScreen(
 @Preview(showBackground = true, backgroundColor = 0)
 @Composable
 fun SurveyTextAreaQuestionScreenPreview() {
-    SurveyTextAreaQuestionScreen(emptyList(), {})
+    SurveyTextAreaQuestionScreen(emptyList(), "", {})
 }

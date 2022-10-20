@@ -38,6 +38,6 @@ fun SurveyText(
 
 @Preview(showBackground = true, backgroundColor = 0)
 @Composable
-fun SurveyBoldTextPreview() {
-    SurveyBoldText(text = "Text", fontSize = 24.sp)
+fun SurveyTextPreview() {
+    SurveyText(text = "Text", fontSize = 24.sp)
 }
