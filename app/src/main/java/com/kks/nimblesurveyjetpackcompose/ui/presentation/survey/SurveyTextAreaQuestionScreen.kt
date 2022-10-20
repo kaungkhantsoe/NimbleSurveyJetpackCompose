@@ -11,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,11 +25,14 @@ fun SurveyTextAreaQuestionScreen(
     shortText: String,
     onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
 ) {
-    var answer by remember { mutableStateOf("") }
+    var answer by remember { mutableStateOf(answers.first().answer) }
 
     TextField(
         value = answer,
-        onValueChange = { answer = it },
+        onValueChange = {
+            answer = it
+            onChooseAnswer(answers.map { surveyAnswer -> surveyAnswer.copy(answer = answer, selected = true) })
+        },
         shape = RoundedCornerShape(10.dp),
         placeholder = {
             SurveyText(
@@ -49,16 +51,13 @@ fun SurveyTextAreaQuestionScreen(
         modifier = Modifier
             .fillMaxWidth()
             .height(168.dp)
-            .onFocusChanged {
-                if (!it.isFocused) {
-                    onChooseAnswer(answers.map { surveyAnswer -> surveyAnswer.copy(text = answer, selected = true) })
-                }
-            }
     )
 }
 
 @Preview(showBackground = true, backgroundColor = 0)
 @Composable
 fun SurveyTextAreaQuestionScreenPreview() {
-    SurveyTextAreaQuestionScreen(emptyList(), "", {})
+    SurveyTextAreaQuestionScreen(
+        listOf(SurveyAnswer("", "Choice 1", 0, false, "")), {}
+    )
 }

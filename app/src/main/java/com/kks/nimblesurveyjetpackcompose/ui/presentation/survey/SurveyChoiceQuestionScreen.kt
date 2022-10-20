@@ -115,8 +115,8 @@ fun SurveyChoiceQuestionScreen(
 fun PreviewSurveyChoiceQuestionScreen() {
     SurveyChoiceQuestionScreen(
         answers = listOf(
-            SurveyAnswer("", "Choice 1", 0, false),
-            SurveyAnswer("", "Choice 2", 1, true)
+            SurveyAnswer("", "Choice 1", 0, false, ""),
+            SurveyAnswer("", "Choice 2", 1, true, "")
         ),
         pickType = SurveyQuestionPickType.SINGLE
     ) {
