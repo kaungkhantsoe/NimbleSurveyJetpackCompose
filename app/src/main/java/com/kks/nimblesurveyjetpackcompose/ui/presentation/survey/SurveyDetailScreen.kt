@@ -96,7 +96,7 @@ fun SurveyDetailScreen(
         viewModel.getSurveyQuestions(surveyId = survey.id)
     }
 
-    fun zoomOut() {
+    val zoomOut = {
         object : CountDownTimer(ZOOM_DURATION_IN_MILLIS, ZOOM_INTERVAL_IN_MILLIS) {
             override fun onTick(millisUntilFinished: Long) {
                 scale -= SCALE_PER_COUNTDOWN
@@ -128,7 +128,7 @@ fun SurveyDetailScreen(
             onClickClose = { showConfirmDialog = true },
             onPopBack = { zoomOut() }
         )
-        if (shouldShowThanks) LottieView(onLottieEnds = { zoomOut() })
+        if (shouldShowThanks) LottieView(onLottieEnds = { navigator.popBackStack() })
         if (showConfirmDialog) {
             ConfirmAlertDialog(
                 title = stringResource(id = R.string.survey_question_warning_dialog_title),
