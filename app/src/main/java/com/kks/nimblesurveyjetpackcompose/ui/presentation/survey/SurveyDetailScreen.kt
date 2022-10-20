@@ -120,12 +120,8 @@ fun SurveyDetailScreen(
             surveyQuestions = surveyQuestions,
             currentPage = currentPage,
             scale = scale,
-            onSetCurrentPage = {
-                viewModel.setCurrentPage(it)
-            },
-            onSubmitSurvey = {
-                viewModel.submitSurvey(surveyId = survey.id)
-            },
+            onSetCurrentPage = { viewModel.setCurrentPage(it) },
+            onSubmitSurvey = { viewModel.submitSurvey(surveyId = survey.id) },
             onSetAnswers = { questionId, surveyAnswers ->
                 viewModel.setAnswers(questionId = questionId, answers = surveyAnswers)
             },

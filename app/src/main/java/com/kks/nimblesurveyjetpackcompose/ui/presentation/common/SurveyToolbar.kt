@@ -2,17 +2,19 @@ package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.kks.nimblesurveyjetpackcompose.R
 
 @Composable
 fun SurveyToolbar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     showBack: Boolean,
     showClose: Boolean,
     onClickClose: () -> Unit,
@@ -42,4 +44,14 @@ fun SurveyToolbar(
             }
         }
     }
+}
+
+@Preview(showBackground = true, backgroundColor = 0)
+@Composable
+fun SurveyToolbarPreview() {
+    SurveyToolbar(
+        modifier = Modifier.fillMaxWidth(),
+        showBack = true,
+        showClose = true,
+        onClickClose = { /* Do nothing*/ }) {}
 }
