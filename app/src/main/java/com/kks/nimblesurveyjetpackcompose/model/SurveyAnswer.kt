@@ -7,7 +7,7 @@ data class SurveyAnswer(
     val text: String,
     val displayOrder: Int,
     var selected: Boolean = false,
-    var answer: String
+    var answer: String = ""
 )
 
 fun SurveyAnswer.toSurveyAnswerRequest(isIdOnlyAnswer: Boolean): SurveyAnswerRequest =

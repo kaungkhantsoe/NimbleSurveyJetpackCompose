@@ -108,6 +108,5 @@ fun IncludedAnswerResponse.toSurveyAnswer() =
     SurveyAnswer(
         id = id.orEmpty(),
         text = attributes?.text.orEmpty().trim(),
-        displayOrder = attributes?.displayOrder ?: 0,
-        answer = ""
+        displayOrder = attributes?.displayOrder ?: 0
     )
