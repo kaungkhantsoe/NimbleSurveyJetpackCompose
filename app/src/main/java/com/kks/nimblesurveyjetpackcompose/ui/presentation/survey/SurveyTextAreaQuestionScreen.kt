@@ -30,9 +30,7 @@ fun SurveyTextAreaQuestionScreen(
 
     TextField(
         value = answer,
-        onValueChange = {
-            answer = it
-        },
+        onValueChange = { answer = it },
         shape = RoundedCornerShape(10.dp),
         placeholder = {
             SurveyText(
