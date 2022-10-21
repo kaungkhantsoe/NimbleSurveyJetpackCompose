@@ -66,8 +66,10 @@ fun SurveyQuestionScreen(
                 DROPDOWN -> SurveyDropDownQuestionScreen(answers = surveyQuestion.answers) {
                     onChooseAnswer(surveyQuestion.id, it)
                 }
-                TEXTAREA -> SurveyTextAreaQuestionScreen(answers = surveyQuestion.answers) {
-                    onChooseAnswer(surveyQuestion.id, it)
+                TEXTAREA -> if (surveyQuestion.answers.isNotEmpty()) {
+                    SurveyTextAreaQuestionScreen(answers = surveyQuestion.answers) {
+                        onChooseAnswer(surveyQuestion.id, it)
+                    }
                 }
                 SMILEY,
                 STARS,

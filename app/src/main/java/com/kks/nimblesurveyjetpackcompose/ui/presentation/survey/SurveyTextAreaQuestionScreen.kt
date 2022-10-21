@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,25 +19,35 @@ import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+private const val DELAY_VALUE_CHANE_MILLI = 300L
 
 @Composable
 fun SurveyTextAreaQuestionScreen(
     answers: List<SurveyAnswer>,
-    shortText: String,
-    onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit
+    onAnswerChange: (answers: List<SurveyAnswer>) -> Unit
 ) {
     var answer by remember { mutableStateOf(answers.first().answer) }
+    val coroutineScope = rememberCoroutineScope()
+    var debounceJob: Job? = null
 
     TextField(
         value = answer,
         onValueChange = {
             answer = it
-            onChooseAnswer(answers.map { surveyAnswer -> surveyAnswer.copy(answer = answer, selected = true) })
+            if (debounceJob?.isActive == true) debounceJob?.cancel()
+            debounceJob = coroutineScope.launch {
+                delay(DELAY_VALUE_CHANE_MILLI)
+                onAnswerChange(answers.map { surveyAnswer -> surveyAnswer.copy(answer = answer, selected = true) })
+            }
         },
         shape = RoundedCornerShape(10.dp),
         placeholder = {
             SurveyText(
-                text = shortText,
+                text = answers.first().text,
                 fontSize = 17.sp,
                 color = White20
             )
@@ -58,6 +69,6 @@ fun SurveyTextAreaQuestionScreen(
 @Composable
 fun SurveyTextAreaQuestionScreenPreview() {
     SurveyTextAreaQuestionScreen(
-        listOf(SurveyAnswer("", "Choice 1", 0, false, "")), {}
-    )
+        listOf(SurveyAnswer("", "Your thought", 0, false, ""))
+    ) {}
 }
