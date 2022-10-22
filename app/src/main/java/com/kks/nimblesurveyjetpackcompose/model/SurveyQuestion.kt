@@ -26,7 +26,8 @@ enum class QuestionDisplayType(val typeValue: String, val isIdOnlyAnswer: Boolea
     STARS("star", true),
     NPS("nps", true),
     CHOICE("choice", true),
-    TEXTAREA("textarea", false)
+    TEXTAREA("textarea", false),
+    TEXTFIELD("textfield", false)
 }
 
 fun List<SurveyQuestion>.sortedByDisplayOrder(): List<SurveyQuestion> = this.sortedBy { it.displayOrder }
@@ -50,5 +51,6 @@ fun String.getQuestionDisplayType() =
         QuestionDisplayType.NPS.typeValue -> QuestionDisplayType.NPS
         QuestionDisplayType.CHOICE.typeValue -> QuestionDisplayType.CHOICE
         QuestionDisplayType.TEXTAREA.typeValue -> QuestionDisplayType.TEXTAREA
+        QuestionDisplayType.TEXTFIELD.typeValue -> QuestionDisplayType.TEXTFIELD
         else -> QuestionDisplayType.NONE
     }

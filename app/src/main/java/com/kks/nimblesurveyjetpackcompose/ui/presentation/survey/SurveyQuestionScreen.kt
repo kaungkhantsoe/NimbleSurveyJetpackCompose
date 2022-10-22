@@ -71,6 +71,11 @@ fun SurveyQuestionScreen(
                         onChooseAnswer(surveyQuestion.id, it)
                     }
                 }
+                TEXTFIELD -> if (surveyQuestion.answers.isNotEmpty()) {
+                    SurveyTextFieldQuestionScreen(answers = surveyQuestion.answers) {
+                        onChooseAnswer(surveyQuestion.id, it)
+                    }
+                }
                 SMILEY,
                 STARS,
                 THUMBS -> if (surveyQuestion.answers.size >= NUMBER_OF_EMOJI_ANSWERS) {
