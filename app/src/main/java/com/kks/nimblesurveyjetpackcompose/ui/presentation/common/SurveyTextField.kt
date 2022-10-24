@@ -12,9 +12,11 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White40
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -35,6 +37,7 @@ fun SurveyTextField(
         onValueChange = { text ->
             onValueChange(text)
         },
+        textStyle = TextStyle.Default.copy(fontFamily = NeuzeitFamily),
         shape = RoundedCornerShape(10.dp),
         placeholder = {
             SurveyText(
