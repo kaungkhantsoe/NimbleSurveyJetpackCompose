@@ -20,16 +20,12 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.White30
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White40
 import kotlinx.coroutines.delay
 
-private const val TEXT_FIELD_HEIGHT = 56
-private const val SPACE_BETWEEN_TEXT_FIELDS = 16
-
 @Composable
 fun SurveyTextFieldQuestionScreen(
     answers: List<SurveyAnswer>,
     onAnswerChange: (answers: List<SurveyAnswer>) -> Unit
 ) {
     var answerState by remember { mutableStateOf(answers.map { it.answer }) }
-    val heightOfQuestions = (TEXT_FIELD_HEIGHT * answers.size) + (SPACE_BETWEEN_TEXT_FIELDS * (answers.size - 1))
 
     LaunchedEffect(key1 = answerState) {
         delay(DELAY_VALUE_CHANE_MILLI)
@@ -38,7 +34,7 @@ fun SurveyTextFieldQuestionScreen(
         })
     }
 
-    Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.height(heightOfQuestions.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         answers.forEachIndexed { index, surveyAnswer ->
             SurveyTextField(
                 value = answerState[index],
