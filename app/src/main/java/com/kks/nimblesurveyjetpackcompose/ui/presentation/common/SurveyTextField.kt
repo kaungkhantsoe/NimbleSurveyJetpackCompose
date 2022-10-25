@@ -34,9 +34,7 @@ fun SurveyTextField(
 
     TextField(
         value = value,
-        onValueChange = { text ->
-            onValueChange(text)
-        },
+        onValueChange = { text -> onValueChange(text) },
         textStyle = TextStyle.Default.copy(fontFamily = NeuzeitFamily),
         shape = RoundedCornerShape(10.dp),
         placeholder = {
@@ -57,9 +55,7 @@ fun SurveyTextField(
             onNext = { focusManager.moveFocus(FocusDirection.Down) },
             onDone = { keyboardController?.hide() }
         ),
-        keyboardOptions = KeyboardOptions(
-            imeAction = imeAction
-        ),
+        keyboardOptions = KeyboardOptions(imeAction = imeAction),
         modifier = modifier
     )
 }
