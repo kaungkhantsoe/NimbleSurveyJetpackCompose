@@ -17,7 +17,7 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.White30
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White40
 import kotlinx.coroutines.delay
 
-private const val DELAY_VALUE_CHANGE_MILLI = 300L
+const val DELAY_VALUE_CHANGE_MILLI = 300L
 
 @Composable
 fun SurveyTextAreaQuestionScreen(

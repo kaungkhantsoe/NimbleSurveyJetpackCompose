@@ -28,7 +28,7 @@ fun SurveyTextFieldQuestionScreen(
     var answerState by remember { mutableStateOf(answers.map { it.answer }) }
 
     LaunchedEffect(key1 = answerState) {
-        delay(DELAY_VALUE_CHANE_MILLI)
+        delay(DELAY_VALUE_CHANGE_MILLI)
         onAnswerChange(answers.mapIndexed { index, surveyAnswer ->
             surveyAnswer.copy(answer = answerState[index], selected = true)
         })
