@@ -1,3 +1,4 @@
+@file:Suppress("MatchingDeclarationName")
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
