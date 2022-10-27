@@ -5,10 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,41 +36,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.airbnb.lottie.compose.rememberLottieRetrySignal
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.Survey
+import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
+import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ConfirmAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.LottieView
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyToolbar
 import com.kks.nimblesurveyjetpackcompose.ui.theme.BlackRussian
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
-import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.survey.SurveyDetailViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
-
-private const val SUBMIT_SUCCESS_LOTTIE_URL = "https://assets2.lottiefiles.com/packages/lf20_pmYw5P.json"
-private const val LOTTIE_ENDS = 1.0f
-private const val LOTTIE_FAIL_COUNT = 3
 
 private const val ZOOM_DURATION_IN_MILLIS = 500L
 private const val ZOOM_INTERVAL_IN_MILLIS = 25L
@@ -82,7 +68,6 @@ private const val SCALE_PER_COUNTDOWN = 0.025f
 private const val ZOOMED_IN_SCALE = 1.5f
 private const val ORIGINAL_SCALE = 1f
 
-@OptIn(ExperimentalPagerApi::class)
 @Destination
 @Composable
 fun SurveyDetailScreen(
@@ -96,13 +81,6 @@ fun SurveyDetailScreen(
     val shouldShowThanks by viewModel.shouldShowThanks.collectAsState()
     val error by viewModel.error.collectAsState()
     var showConfirmDialog by remember { mutableStateOf(false) }
-    val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
-    val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
-    val pagerState = rememberPagerState()
-    val scope = rememberCoroutineScope()
-    val isStartPage = currentPage == 0
-    val isLastPage = currentPage == surveyQuestions.size
-
     var scale by remember { mutableStateOf(1f) }
 
     LaunchedEffect(key1 = Unit) {
@@ -115,32 +93,91 @@ fun SurveyDetailScreen(
                 scale = ZOOMED_IN_SCALE
             }
         }.start()
+        viewModel.getSurveyQuestions(surveyId = survey.id)
     }
 
-    val popBackAnimationTimer = object : CountDownTimer(ZOOM_DURATION_IN_MILLIS, ZOOM_INTERVAL_IN_MILLIS) {
-        override fun onTick(millisUntilFinished: Long) {
-            scale -= SCALE_PER_COUNTDOWN
-        }
+    fun zoomOut() {
+        object : CountDownTimer(ZOOM_DURATION_IN_MILLIS, ZOOM_INTERVAL_IN_MILLIS) {
+            override fun onTick(millisUntilFinished: Long) {
+                scale -= SCALE_PER_COUNTDOWN
+            }
 
-        override fun onFinish() {
-            scale = ORIGINAL_SCALE
-            navigator.popBackStack()
-        }
+            override fun onFinish() {
+                scale = ORIGINAL_SCALE
+                navigator.popBackStack()
+            }
+        }.start()
     }
 
     BackHandler {
         if (currentPage > 0) showConfirmDialog = true
-        else popBackAnimationTimer.start()
+        else zoomOut()
     }
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        SurveyQuestionDetailContent(
+            survey = survey,
+            surveyQuestions = surveyQuestions,
+            currentPage = currentPage,
+            scale = scale,
+            onSetCurrentPage = { viewModel.setCurrentPage(it) },
+            onSubmitSurvey = { viewModel.submitSurvey(surveyId = survey.id) },
+            onSetAnswers = { questionId, surveyAnswers ->
+                viewModel.setAnswers(questionId = questionId, answers = surveyAnswers)
+            },
+            onClickClose = { showConfirmDialog = true },
+            onPopBack = { zoomOut() }
+        )
+        if (shouldShowThanks) LottieView(onLottieEnds = { zoomOut() })
+        if (showConfirmDialog) {
+            ConfirmAlertDialog(
+                title = stringResource(id = R.string.survey_question_warning_dialog_title),
+                message = stringResource(id = R.string.survey_question_warning_dialog_message),
+                positiveButtonText = stringResource(id = R.string.survey_question_warning_dialog_yes),
+                negativeButtonText = stringResource(id = R.string.survey_question_warning_dialog_cancel),
+                onClickPositiveButton = {
+                    showConfirmDialog = false
+                    zoomOut()
+                },
+                onClickNegativeButton = { showConfirmDialog = false }
+            )
+        }
+        if (shouldShowLoading) Loading()
+        error?.let { error ->
+            ErrorAlertDialog(
+                errorModel = error,
+                title = stringResource(id = R.string.oops),
+                buttonText = stringResource(id = android.R.string.ok),
+                onClickButton = { viewModel.resetError() }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun SurveyQuestionDetailContent(
+    survey: Survey,
+    surveyQuestions: List<SurveyQuestion>,
+    scale: Float,
+    currentPage: Int,
+    onSetCurrentPage: (page: Int) -> Unit,
+    onSubmitSurvey: () -> Unit,
+    onSetAnswers: (questionId: String, answers: List<SurveyAnswer>) -> Unit,
+    onClickClose: () -> Unit,
+    onPopBack: () -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    val isStartPage = currentPage == 0
+    val isLastPage = currentPage == surveyQuestions.size
+    val startSurveyDescription = stringResource(id = R.string.survey_detail_start_survey)
+    val placeholderPainter = rememberAsyncImagePainter(model = survey.coverImagePlaceholderUrl)
+    val pagerState = rememberPagerState()
 
     LaunchedEffect(key1 = pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            viewModel.setCurrentPage(page)
+            onSetCurrentPage(page)
         }
-    }
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getSurveyQuestions(surveyId = survey.id)
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -175,19 +212,19 @@ fun SurveyDetailScreen(
                     pageNumber = page,
                     totalNumberOfPage = surveyQuestions.size
                 ) { questionId, surveyAnswers ->
-                    viewModel.setAnswers(questionId = questionId, answers = surveyAnswers)
+                    onSetAnswers(questionId, surveyAnswers)
                 }
             }
         }
         SurveyToolbar(
-            popBackAnimationTimer = popBackAnimationTimer,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopStart)
                 .padding(top = 57.dp, start = 4.dp, end = 15.dp),
-            showBack = isStartPage,
-            showClose = currentPage > 0,
-            onClickClose = { showConfirmDialog = true }
+            shouldShowBack = isStartPage,
+            shouldShowClose = currentPage > 0,
+            onClickClose = { onClickClose() },
+            onPopBack = { onPopBack() }
         )
         StartOrSubmitButton(
             showButton = isStartPage || isLastPage,
@@ -198,7 +235,7 @@ fun SurveyDetailScreen(
                         pagerState.animateScrollToPage(currentPage + 1)
                     }
                 } else if (isLastPage) {
-                    viewModel.submitSurvey(surveyId = survey.id)
+                    onSubmitSurvey()
                 }
             },
             modifier = Modifier
@@ -206,7 +243,6 @@ fun SurveyDetailScreen(
                 .padding(bottom = 54.dp, end = 20.dp)
                 .semantics { contentDescription = startSurveyDescription }
         )
-        if (shouldShowThanks) LottieView(popBackAnimationTimer = popBackAnimationTimer)
         NextQuestionButton(
             showButton = !isStartPage && !isLastPage,
             onNextSlide = {
@@ -217,61 +253,6 @@ fun SurveyDetailScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 54.dp, end = 20.dp)
-        )
-        if (showConfirmDialog) {
-            ConfirmAlertDialog(
-                title = stringResource(id = R.string.survey_question_warning_dialog_title),
-                message = stringResource(id = R.string.survey_question_warning_dialog_message),
-                positiveButtonText = stringResource(id = R.string.survey_question_warning_dialog_yes),
-                negativeButtonText = stringResource(id = R.string.survey_question_warning_dialog_cancel),
-                onClickPositiveButton = {
-                    showConfirmDialog = false
-                    popBackAnimationTimer.start()
-                },
-                onClickNegativeButton = { showConfirmDialog = false }
-            )
-        }
-        if (shouldShowLoading) Loading()
-        error?.let { error ->
-            ErrorAlertDialog(
-                errorModel = error,
-                title = stringResource(id = R.string.oops),
-                buttonText = stringResource(id = android.R.string.ok),
-                onClickButton = { viewModel.resetError() }
-            )
-        }
-    }
-}
-
-@Composable
-fun LottieView(popBackAnimationTimer: CountDownTimer) {
-    val retrySignal = rememberLottieRetrySignal()
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.Url(SUBMIT_SUCCESS_LOTTIE_URL),
-        onRetry = { failCount, _ ->
-            retrySignal.awaitRetry()
-            failCount < LOTTIE_FAIL_COUNT
-        }
-    )
-    val progress by animateLottieCompositionAsState(composition)
-
-    if (progress == LOTTIE_ENDS) popBackAnimationTimer.start()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Black),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LottieAnimation(composition)
-        Text(
-            text = stringResource(id = R.string.survey_question_thanks),
-            fontFamily = NeuzeitFamily,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            fontSize = 28.sp,
-            textAlign = TextAlign.Center
         )
     }
 }
@@ -339,96 +320,25 @@ fun NextQuestionButton(
     }
 }
 
-@Composable
-fun SurveyDetailStartScreen(survey: Survey, modifier: Modifier = Modifier) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        SurveyBoldText(
-            text = survey.title,
-            fontSize = 28.sp,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth()
-        )
-        Text(
-            text = survey.description,
-            fontFamily = NeuzeitFamily,
-            fontWeight = FontWeight.Normal,
-            color = White70,
-            fontSize = 17.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        )
-    }
-}
-
-@Composable
-fun SurveyBoldText(
-    text: String,
-    fontSize: TextUnit,
-    modifier: Modifier = Modifier,
-    color: Color = Color.White,
-    maxLines: Int = Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip,
-    textAlign: TextAlign? = null
-) {
-    Text(
-        text = text,
-        fontFamily = NeuzeitFamily,
-        fontWeight = FontWeight.Bold,
-        color = color,
-        fontSize = fontSize,
-        maxLines = maxLines,
-        modifier = modifier,
-        overflow = overflow,
-        textAlign = textAlign
-    )
-}
-
-@Composable
-fun SurveyToolbar(
-    popBackAnimationTimer: CountDownTimer,
-    modifier: Modifier,
-    showBack: Boolean,
-    showClose: Boolean,
-    onClickClose: () -> Unit
-) {
-    Box(modifier = modifier) {
-        if (showBack) {
-            IconButton(
-                onClick = { popBackAnimationTimer.start() },
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_back_accent),
-                    contentDescription = stringResource(id = R.string.survey_detail_back_icon)
-                )
-            }
-        }
-        if (showClose) {
-            IconButton(
-                onClick = { onClickClose() },
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_close_button_white),
-                    contentDescription = stringResource(id = R.string.survey_detail_close_icon),
-                )
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0)
 @Composable
 fun SurveyHomeDetailScreenPreview() {
-    SurveyDetailScreen(
-        navigator = EmptyDestinationsNavigator,
+    SurveyQuestionDetailContent(
         survey = Survey(
             id = "",
             coverImagePlaceholderUrl = "https://dhdbhh0jsld0o.cloudfront.net/m/c96c480fc8b69d50e75a_",
             title = "Tree Tops Australia",
             description = "We'd love to hear from you!"
-        )
+        ),
+        surveyQuestions = emptyList(),
+        scale = 0f,
+        currentPage = 1,
+        onSetCurrentPage = {},
+        onSubmitSurvey = {},
+        onSetAnswers = { _, _ ->
+
+        },
+        onClickClose = {},
+        onPopBack = {}
     )
 }
