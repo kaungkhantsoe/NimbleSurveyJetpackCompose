@@ -21,7 +21,7 @@ import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import kotlinx.coroutines.delay
 
-private const val DELAY_VALUE_CHANE_MILLI = 300L
+private const val DELAY_VALUE_CHANGE_MILLI = 300L
 
 @Composable
 fun SurveyTextAreaQuestionScreen(
@@ -31,7 +31,7 @@ fun SurveyTextAreaQuestionScreen(
     var answer by remember { mutableStateOf(answers.first().answer) }
 
     LaunchedEffect(key1 = answer) {
-        delay(DELAY_VALUE_CHANE_MILLI)
+        delay(DELAY_VALUE_CHANGE_MILLI)
         onAnswerChange(answers.map { surveyAnswer -> surveyAnswer.copy(answer = answer, selected = true) })
     }
 
