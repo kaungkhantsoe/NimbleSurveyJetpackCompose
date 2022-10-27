@@ -1,5 +1,6 @@
 package com.kks.nimblesurveyjetpackcompose.viewmodel.home
 
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
@@ -7,6 +8,7 @@ import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
+import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,19 +22,46 @@ const val DEFAULT_PAGE_SIZE = 5
 const val DEFAULT_PAGES = 1
 private const val START_SURVEY_NUMBER = 0
 
+data class HomeUiState(
+    val surveyList: List<Survey> = emptyList(),
+    val userAvatar: String? = null,
+    val error: ErrorModel? = null,
+    val isRefreshing: Boolean = false,
+    val selectedSurveyNumber: Int = START_SURVEY_NUMBER
+)
+
+class HomeUiStatePreviewParameterProvider : PreviewParameterProvider<HomeUiState> {
+    override val values = sequenceOf(
+        HomeUiState(
+            surveyList = listOf(
+                Survey("", "", "Title1", "Description1"),
+                Survey("", "", "Title2", "Description2"),
+            )
+        ),
+        HomeUiState(
+            surveyList = listOf(
+                Survey("", "", "Title1", "Description1"),
+                Survey("", "", "Title2", "Description2"),
+            ),
+            error = ErrorModel(ErrorType.INFO, "Error")
+        ),
+        HomeUiState(error = ErrorModel(ErrorType.INFO, "Error")),
+        HomeUiState(isRefreshing = true)
+    )
+}
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeRepo: HomeRepo,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    private var _error = MutableStateFlow<ErrorModel?>(null)
-    private val _isRefreshing = MutableStateFlow(false)
-    private val _surveyList = MutableStateFlow<List<Survey>>(listOf())
-    private val _userAvatar = MutableStateFlow<String?>(null)
     private var _pageCount = DEFAULT_PAGES
     private var _records = DEFAULT_PAGES
-    private val _selectedSurveyNumber = MutableStateFlow(START_SURVEY_NUMBER)
+    private val _homeUiState = MutableStateFlow(HomeUiState())
+
+    val homeUiState: StateFlow<HomeUiState>
+        get() = _homeUiState.asStateFlow()
 
     init {
         getUserDetail()
@@ -40,23 +69,8 @@ class HomeViewModel @Inject constructor(
         getSurveyList()
     }
 
-    val selectedSurveyNumber: StateFlow<Int>
-        get() = _selectedSurveyNumber.asStateFlow()
-
-    val surveyList: StateFlow<List<Survey>>
-        get() = _surveyList.asStateFlow()
-
-    val isRefreshing: StateFlow<Boolean>
-        get() = _isRefreshing.asStateFlow()
-
-    val error: StateFlow<ErrorModel?>
-        get() = _error.asStateFlow()
-
-    val userAvatar: StateFlow<String?>
-        get() = _userAvatar.asStateFlow()
-
     fun setSelectedSurveyNumber(surveyNumber: Int) {
-        _selectedSurveyNumber.value = surveyNumber
+        _homeUiState.value = _homeUiState.value.copy(selectedSurveyNumber = surveyNumber)
     }
 
     private fun getUserDetail() {
@@ -64,12 +78,12 @@ class HomeViewModel @Inject constructor(
             homeRepo.fetchUserDetail().collect { result ->
                 when (result) {
                     is ResourceState.Success -> {
-                        _userAvatar.value = result.data.attributes?.avatarUrl
+                        _homeUiState.value = _homeUiState.value.copy(userAvatar = result.data.attributes?.avatarUrl)
                         resetError()
                     }
                     else -> {
                         result.mapError()?.let { errorModel ->
-                            _error.value = errorModel
+                            _homeUiState.value = _homeUiState.value.copy(error = errorModel)
                         }
                     }
                 }
@@ -78,7 +92,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getNextPage() {
-        if (!_isRefreshing.value) {
+        if (!_homeUiState.value.isRefreshing) {
             getSurveyList()
         }
     }
@@ -86,7 +100,7 @@ class HomeViewModel @Inject constructor(
     fun clearCacheAndFetch() {
         viewModelScope.launch(ioDispatcher) {
             _pageCount = DEFAULT_PAGES
-            _selectedSurveyNumber.value = START_SURVEY_NUMBER
+            _homeUiState.value = _homeUiState.value.copy(selectedSurveyNumber = START_SURVEY_NUMBER)
             getSurveyList(isClearCache = true)
         }
     }
@@ -94,15 +108,15 @@ class HomeViewModel @Inject constructor(
     private fun getSurveyListFromDb() {
         viewModelScope.launch(ioDispatcher) {
             homeRepo.getSurveyListFromDb().collect {
-                _surveyList.value = it
-                _isRefreshing.value = _surveyList.value.isEmpty()
+                _homeUiState.value = _homeUiState.value.copy(surveyList = it, isRefreshing = false)
             }
         }
     }
 
     private fun getSurveyList(isClearCache: Boolean = false) {
-        val currentPage = ((if (isClearCache) START_SURVEY_NUMBER else _surveyList.value.size) / DEFAULT_PAGE_SIZE) + 1
-        if ((currentPage <= _pageCount && _surveyList.value.size < _records) || isClearCache) {
+        val currentPage =
+            ((if (isClearCache) START_SURVEY_NUMBER else _homeUiState.value.surveyList.size) / DEFAULT_PAGE_SIZE) + 1
+        if ((currentPage <= _pageCount && _homeUiState.value.surveyList.size < _records) || isClearCache) {
             viewModelScope.launch(ioDispatcher) {
                 homeRepo.fetchSurveyList(
                     pageNumber = currentPage,
@@ -111,20 +125,17 @@ class HomeViewModel @Inject constructor(
                 ).collect { result ->
                     when (result) {
                         is ResourceState.Loading -> {
-                            _isRefreshing.value = true
+                            _homeUiState.value = _homeUiState.value.copy(isRefreshing = true)
                             resetError()
                         }
                         is ResourceState.Success -> {
-                            this@HomeViewModel._pageCount = result.data.pages
-                            this@HomeViewModel._records = result.data.records
-                            _isRefreshing.value = false
+                            _pageCount = result.data.pages
+                            _records = result.data.records
                             resetError()
                         }
                         else -> {
-                            _isRefreshing.value = false
-                            result.mapError()?.let { errorModel ->
-                                _error.value = errorModel
-                            }
+                            _homeUiState.value =
+                                _homeUiState.value.copy(isRefreshing = false, error = result.mapError())
                         }
                     }
                 }
@@ -133,6 +144,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun resetError() {
-        _error.value = null
+        _homeUiState.value = _homeUiState.value.copy(error = null)
     }
 }
