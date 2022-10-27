@@ -221,8 +221,8 @@ fun SurveyQuestionDetailContent(
                 .fillMaxWidth()
                 .align(Alignment.TopStart)
                 .padding(top = 57.dp, start = 4.dp, end = 15.dp),
-            showBack = isStartPage,
-            showClose = currentPage > 0,
+            shouldShowBack = isStartPage,
+            shouldShowClose = currentPage > 0,
             onClickClose = { onClickClose() },
             onPopBack = { onPopBack() }
         )

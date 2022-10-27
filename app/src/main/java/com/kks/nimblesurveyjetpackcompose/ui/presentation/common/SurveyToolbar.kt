@@ -15,13 +15,13 @@ import com.kks.nimblesurveyjetpackcompose.R
 @Composable
 fun SurveyToolbar(
     modifier: Modifier = Modifier,
-    showBack: Boolean,
-    showClose: Boolean,
+    shouldShowBack: Boolean,
+    shouldShowClose: Boolean,
     onClickClose: () -> Unit,
     onPopBack: () -> Unit
 ) {
     Box(modifier = modifier) {
-        if (showBack) {
+        if (shouldShowBack) {
             IconButton(
                 onClick = { onPopBack() },
                 modifier = Modifier.align(Alignment.CenterStart)
@@ -32,7 +32,7 @@ fun SurveyToolbar(
                 )
             }
         }
-        if (showClose) {
+        if (shouldShowClose) {
             IconButton(
                 onClick = { onClickClose() },
                 modifier = Modifier.align(Alignment.CenterEnd)
@@ -51,7 +51,7 @@ fun SurveyToolbar(
 fun SurveyToolbarPreview() {
     SurveyToolbar(
         modifier = Modifier.fillMaxWidth(),
-        showBack = true,
-        showClose = true,
+        shouldShowBack = true,
+        shouldShowClose = true,
         onClickClose = { /* Do nothing*/ }) {}
 }
