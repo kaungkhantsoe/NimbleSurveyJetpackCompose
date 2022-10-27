@@ -13,19 +13,20 @@ import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
 
 @Composable
-fun SurveyBoldText(
+fun SurveyText(
     text: String,
     fontSize: TextUnit,
     modifier: Modifier = Modifier,
     color: Color = Color.White,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
-    textAlign: TextAlign? = null
+    textAlign: TextAlign? = null,
+    fontWeight: FontWeight = FontWeight.Normal
 ) {
     Text(
         text = text,
         fontFamily = NeuzeitFamily,
-        fontWeight = FontWeight.Bold,
+        fontWeight = fontWeight,
         color = color,
         fontSize = fontSize,
         maxLines = maxLines,
@@ -37,6 +38,6 @@ fun SurveyBoldText(
 
 @Preview(showBackground = true, backgroundColor = 0)
 @Composable
-fun SurveyBoldTextPreview() {
-    SurveyBoldText(text = "Text", fontSize = 24.sp)
+fun SurveyTextPreview() {
+    SurveyText(text = "Text", fontSize = 24.sp)
 }

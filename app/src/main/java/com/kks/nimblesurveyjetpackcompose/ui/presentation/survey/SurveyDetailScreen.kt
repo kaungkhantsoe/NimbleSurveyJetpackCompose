@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,11 +27,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -60,6 +65,7 @@ import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.survey.SurveyDetailViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private const val ZOOM_DURATION_IN_MILLIS = 500L
@@ -67,7 +73,9 @@ private const val ZOOM_INTERVAL_IN_MILLIS = 25L
 private const val SCALE_PER_COUNTDOWN = 0.025f
 private const val ZOOMED_IN_SCALE = 1.5f
 private const val ORIGINAL_SCALE = 1f
+private const val DELAY_TO_CLEAR_FOCUS = 500L
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Destination
 @Composable
 fun SurveyDetailScreen(
@@ -83,6 +91,10 @@ fun SurveyDetailScreen(
     var showConfirmDialog by remember { mutableStateOf(false) }
     var scale by remember { mutableStateOf(1f) }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(key1 = Unit) {
         object : CountDownTimer(ZOOM_DURATION_IN_MILLIS, ZOOM_INTERVAL_IN_MILLIS) {
             override fun onTick(millisUntilFinished: Long) {
@@ -96,7 +108,7 @@ fun SurveyDetailScreen(
         viewModel.getSurveyQuestions(surveyId = survey.id)
     }
 
-    fun zoomOut() {
+    val zoomOut = {
         object : CountDownTimer(ZOOM_DURATION_IN_MILLIS, ZOOM_INTERVAL_IN_MILLIS) {
             override fun onTick(millisUntilFinished: Long) {
                 scale -= SCALE_PER_COUNTDOWN
@@ -114,7 +126,20 @@ fun SurveyDetailScreen(
         else zoomOut()
     }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    keyboardController?.hide()
+                    // Need to wait for keyboard hiding before clearFocus. If not the screen doesn't resize.
+                    coroutineScope.launch {
+                        delay(DELAY_TO_CLEAR_FOCUS)
+                        focusManager.clearFocus()
+                    }
+                })
+            },
+        contentAlignment = Alignment.Center
+    ) {
         SurveyQuestionDetailContent(
             survey = survey,
             surveyQuestions = surveyQuestions,
@@ -128,7 +153,7 @@ fun SurveyDetailScreen(
             onClickClose = { showConfirmDialog = true },
             onPopBack = { zoomOut() }
         )
-        if (shouldShowThanks) LottieView(onLottieEnds = { zoomOut() })
+        if (shouldShowThanks) LottieView(onLottieEnds = { navigator.popBackStack() })
         if (showConfirmDialog) {
             ConfirmAlertDialog(
                 title = stringResource(id = R.string.survey_question_warning_dialog_title),

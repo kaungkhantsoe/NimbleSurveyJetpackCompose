@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -12,24 +11,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.model.Survey
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyBoldText
-import com.kks.nimblesurveyjetpackcompose.ui.theme.NeuzeitFamily
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
 
 @Composable
 fun SurveyDetailStartScreen(survey: Survey, modifier: Modifier = Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        SurveyBoldText(
+        SurveyText(
             text = survey.title,
             fontSize = 28.sp,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            fontWeight = FontWeight.Bold
         )
-        Text(
+        SurveyText(
             text = survey.description,
-            fontFamily = NeuzeitFamily,
-            fontWeight = FontWeight.Normal,
             color = White70,
             fontSize = 17.sp,
             modifier = Modifier

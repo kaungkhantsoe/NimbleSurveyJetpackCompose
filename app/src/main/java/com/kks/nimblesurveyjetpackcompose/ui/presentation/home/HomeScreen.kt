@@ -182,12 +182,12 @@ fun SurveyContent(
             },
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            SurveyText(
+            SurveyCrossfadeText(
                 text = DateUtil.getBeautifiedDate(),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
-            SurveyText(
+            SurveyCrossfadeText(
                 text = stringResource(id = R.string.home_today),
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold
@@ -266,7 +266,7 @@ fun BottomView(
             space = 5.dp
         )
         Spacer(modifier = Modifier.height(26.dp))
-        SurveyText(
+        SurveyCrossfadeText(
             text = survey.title,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
@@ -274,7 +274,7 @@ fun BottomView(
         )
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (description, detailBtn) = createRefs()
-            SurveyText(
+            SurveyCrossfadeText(
                 text = survey.description,
                 fontSize = 17.sp,
                 color = White70,
@@ -311,7 +311,7 @@ fun BottomView(
 }
 
 @Composable
-fun SurveyText(
+fun SurveyCrossfadeText(
     text: String,
     fontSize: TextUnit,
     modifier: Modifier = Modifier,

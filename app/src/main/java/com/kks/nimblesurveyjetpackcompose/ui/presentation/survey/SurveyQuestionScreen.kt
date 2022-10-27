@@ -10,21 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kks.nimblesurveyjetpackcompose.R
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.CHOICE
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.DROPDOWN
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NONE
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.NPS
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.SMILEY
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.STARS
-import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.THUMBS
+import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.*
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyBoldText
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val NUMBER_OF_EMOJI_ANSWERS = 5
@@ -36,6 +31,7 @@ fun SurveyQuestionScreen(
     totalNumberOfPage: Int,
     onChooseAnswer: (questionId: String, surveyAnswers: List<SurveyAnswer>) -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,12 +46,16 @@ fun SurveyQuestionScreen(
             fontSize = 15.sp,
             color = White50
         )
-        SurveyBoldText(
+        SurveyText(
             text = surveyQuestion.title,
             fontSize = 34.sp,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            fontWeight = FontWeight.Bold
         )
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             when (surveyQuestion.questionDisplayType) {
                 CHOICE -> SurveyChoiceQuestionScreen(answers = surveyQuestion.answers, pickType = surveyQuestion.pick) {
                     onChooseAnswer(surveyQuestion.id, it)

@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyBoldText
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val START_INDEX = 0
@@ -68,31 +69,39 @@ fun SurveyNpsQuestionScreen(
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
                     modifier = Modifier.size(eachItemWidth, 56.dp)
                 ) {
-                    SurveyBoldText(
-                        text = surveyAnswer.text, color = if (index <= selectedIndex) {
+                    SurveyText(
+                        text = surveyAnswer.text,
+                        color = if (index <= selectedIndex) {
                             Color.White
                         } else {
                             White50
-                        }, fontSize = 20.sp, textAlign = TextAlign.Center
+                        },
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
-        SurveyBoldText(
+        SurveyText(
             text = stringResource(id = R.string.survey_question_not_at_all_likely),
             fontSize = 17.sp,
             modifier = Modifier.constrainAs(notAtAll) {
                 top.linkTo(nps.bottom)
                 start.linkTo(nps.start)
             },
-            color = White50
+            color = White50,
+            fontWeight = FontWeight.Bold
         )
-        SurveyBoldText(text = stringResource(id = R.string.survey_question_extremely_likely),
+        SurveyText(
+            text = stringResource(id = R.string.survey_question_extremely_likely),
             fontSize = 17.sp,
             modifier = Modifier.constrainAs(extremely) {
                 top.linkTo(nps.bottom)
                 end.linkTo(nps.end)
-            })
+            },
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
