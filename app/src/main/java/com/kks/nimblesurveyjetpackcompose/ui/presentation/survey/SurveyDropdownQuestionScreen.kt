@@ -100,10 +100,15 @@ fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (a
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SurveyDropDownQuestionPreview() {
-    SurveyDropDownQuestionScreen(listOf()) {
+    SurveyDropDownQuestionScreen(
+        listOf(
+            SurveyAnswer("", "Text1", 0, true, "answer1"),
+            SurveyAnswer("", "Text2", 1, true, "answer2")
+        )
+    ) {
         // Do nothing
     }
 }
