@@ -70,21 +70,20 @@ class HomeViewModel @Inject constructor(
         getSurveyList()
     }
 
-    fun setSelectedSurveyNumber(surveyNumber: Int) {
-        _homeUiState.value = _homeUiState.value.copy(selectedSurveyNumber = surveyNumber)
-    }
+    fun setSelectedSurveyNumber(surveyNumber: Int) =
+        _homeUiState.update { it.copy(selectedSurveyNumber = surveyNumber) }
 
     private fun getUserDetail() {
         viewModelScope.launch(ioDispatcher) {
             homeRepo.fetchUserDetail().collect { result ->
                 when (result) {
                     is ResourceState.Success -> {
-                        _homeUiState.value = _homeUiState.value.copy(userAvatar = result.data.attributes?.avatarUrl)
+                        _homeUiState.update { it.copy(userAvatar = result.data.attributes?.avatarUrl) }
                         resetError()
                     }
                     else -> {
                         result.mapError()?.let { errorModel ->
-                            _homeUiState.value = _homeUiState.value.copy(error = errorModel)
+                            _homeUiState.update { it.copy(error = errorModel) }
                         }
                     }
                 }
@@ -101,7 +100,7 @@ class HomeViewModel @Inject constructor(
     fun clearCacheAndFetch() {
         viewModelScope.launch(ioDispatcher) {
             _pageCount = DEFAULT_PAGES
-            _homeUiState.update { _homeUiState.value.copy(selectedSurveyNumber = START_SURVEY_NUMBER) }
+            _homeUiState.update { it.copy(selectedSurveyNumber = START_SURVEY_NUMBER) }
             getSurveyList(isClearCache = true)
         }
     }
@@ -109,7 +108,7 @@ class HomeViewModel @Inject constructor(
     private fun getSurveyListFromDb() {
         viewModelScope.launch(ioDispatcher) {
             homeRepo.getSurveyListFromDb().collect { surveyList ->
-                _homeUiState.update { _homeUiState.value.copy(surveyList = surveyList, isRefreshing = false) }
+                _homeUiState.update { it.copy(surveyList = surveyList, isRefreshing = false) }
             }
         }
     }
@@ -126,7 +125,7 @@ class HomeViewModel @Inject constructor(
                 ).collect { result ->
                     when (result) {
                         is ResourceState.Loading -> {
-                            _homeUiState.update { _homeUiState.value.copy(isRefreshing = true) }
+                            _homeUiState.update { it.copy(isRefreshing = true) }
                             resetError()
                         }
                         is ResourceState.Success -> {
@@ -135,9 +134,7 @@ class HomeViewModel @Inject constructor(
                             resetError()
                         }
                         else -> {
-                            _homeUiState.update {
-                                _homeUiState.value.copy(isRefreshing = false, error = result.mapError())
-                            }
+                            _homeUiState.update { it.copy(isRefreshing = false, error = result.mapError()) }
                         }
                     }
                 }
@@ -145,7 +142,5 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun resetError() {
-        _homeUiState.value = _homeUiState.value.copy(error = null)
-    }
+    fun resetError() = _homeUiState.update { it.copy(error = null) }
 }
