@@ -132,7 +132,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .performTextInput(VALID_PASSWORD)
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
-            onNodeWithText(ERROR_MESSAGE).assertIsNotDisplayed()
+            onNodeWithText(ERROR_MESSAGE).assertDoesNotExist()
         }
     }
 
