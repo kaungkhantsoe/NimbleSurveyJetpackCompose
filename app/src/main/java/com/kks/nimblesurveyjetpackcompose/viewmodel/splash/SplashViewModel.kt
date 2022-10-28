@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -51,30 +52,30 @@ class SplashViewModel @Inject constructor(
     fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
-            if (preferenceManager.getStringData(PREF_REFRESH_TOKEN).isNullOrEmpty()) {
-                _splashUiState.value = _splashUiState.value.copy(shouldNavigateToLogin = true)
-            } else {
-                _splashUiState.value = _splashUiState.value.copy(isLoginSuccess = true)
+            val shouldNavigateToLogin = preferenceManager.getStringData(PREF_REFRESH_TOKEN).isNullOrEmpty()
+            _splashUiState.update {
+                it.copy(
+                    shouldNavigateToLogin = shouldNavigateToLogin,
+                    isLoginSuccess = !shouldNavigateToLogin
+                )
             }
         }
     }
 
     fun login(email: String, password: String) {
         viewModelScope.launch(ioDispatcher) {
-            loginRepo.loginWithEmailAndPassword(email = email, password = password).collect {
-                when (it) {
+            loginRepo.loginWithEmailAndPassword(email = email, password = password).collect { loginState ->
+                when (loginState) {
                     is ResourceState.Loading -> {
-                        _splashUiState.value = _splashUiState.value.copy(shouldShowLoading = true)
+                        _splashUiState.update { it.copy(shouldShowLoading = true) }
                         resetError()
                     }
                     is ResourceState.Success -> {
-                        _splashUiState.value =
-                            _splashUiState.value.copy(isLoginSuccess = true, shouldShowLoading = false)
+                        _splashUiState.update { it.copy(isLoginSuccess = true, shouldShowLoading = false) }
                         resetError()
                     }
                     else -> {
-                        _splashUiState.value =
-                            _splashUiState.value.copy(shouldShowLoading = false, error = it.mapError())
+                        _splashUiState.update { it.copy(shouldShowLoading = false, error = loginState.mapError()) }
                     }
                 }
             }
@@ -82,6 +83,6 @@ class SplashViewModel @Inject constructor(
     }
 
     fun resetError() {
-        _splashUiState.value = _splashUiState.value.copy(error = null)
+        _splashUiState.update { it.copy(error = null) }
     }
 }
