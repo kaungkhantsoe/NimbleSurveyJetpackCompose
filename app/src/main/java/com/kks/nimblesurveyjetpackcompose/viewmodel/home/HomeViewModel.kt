@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -100,15 +101,15 @@ class HomeViewModel @Inject constructor(
     fun clearCacheAndFetch() {
         viewModelScope.launch(ioDispatcher) {
             _pageCount = DEFAULT_PAGES
-            _homeUiState.value = _homeUiState.value.copy(selectedSurveyNumber = START_SURVEY_NUMBER)
+            _homeUiState.update { _homeUiState.value.copy(selectedSurveyNumber = START_SURVEY_NUMBER) }
             getSurveyList(isClearCache = true)
         }
     }
 
     private fun getSurveyListFromDb() {
         viewModelScope.launch(ioDispatcher) {
-            homeRepo.getSurveyListFromDb().collect {
-                _homeUiState.value = _homeUiState.value.copy(surveyList = it, isRefreshing = false)
+            homeRepo.getSurveyListFromDb().collect { surveyList ->
+                _homeUiState.update { _homeUiState.value.copy(surveyList = surveyList, isRefreshing = false) }
             }
         }
     }
@@ -125,7 +126,7 @@ class HomeViewModel @Inject constructor(
                 ).collect { result ->
                     when (result) {
                         is ResourceState.Loading -> {
-                            _homeUiState.value = _homeUiState.value.copy(isRefreshing = true)
+                            _homeUiState.update { _homeUiState.value.copy(isRefreshing = true) }
                             resetError()
                         }
                         is ResourceState.Success -> {
@@ -134,8 +135,9 @@ class HomeViewModel @Inject constructor(
                             resetError()
                         }
                         else -> {
-                            _homeUiState.value =
+                            _homeUiState.update {
                                 _homeUiState.value.copy(isRefreshing = false, error = result.mapError())
+                            }
                         }
                     }
                 }
