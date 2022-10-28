@@ -1,17 +1,41 @@
+@file:Suppress("TooManyFunctions")
 package com.kks.nimblesurveyjetpackcompose.ui.presentation.splash
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.Spring.StiffnessVeryLow
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -31,11 +55,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.HomeScreenDestination
@@ -43,12 +69,13 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CornerRadius
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
+import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashUiState
+import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashUiStatePreviewParameterProvider
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavHostParam
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
 
 private const val SPLASH_TIME = 2000L
@@ -61,19 +88,39 @@ fun SplashScreen(
     @NavHostParam splashTime: Long = SPLASH_TIME,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
-    val showLoginComponents by viewModel.shouldNavigateToLogin.collectAsState()
-    val shouldShowLoading by viewModel.shouldShowLoading.collectAsState()
-    val errorState by viewModel.error.collectAsState()
-    val isLoginSuccess by viewModel.isLoginSuccess.collectAsState()
-    val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
-    val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
+    val splashUiState by viewModel.splashUiState.collectAsState()
 
-    if (isLoginSuccess) {
+    if (splashUiState.isLoginSuccess) {
         navigator.navigate(HomeScreenDestination)
     }
 
-    LaunchedEffect(key1 = showLoginComponents) {
-        if (showLoginComponents) {
+    SplashScreenContent(
+        shouldShowLoginComponents = splashUiState.shouldNavigateToLogin,
+        shouldShowLoading = splashUiState.shouldShowLoading,
+        error = splashUiState.error,
+        onClickLogin = { email, password ->
+            viewModel.login(email = email, password = password)
+        }
+    ) {
+        viewModel.resetError()
+    }
+
+    viewModel.startTimerToNavigateToLogin(splashTime = splashTime)
+}
+
+@Composable
+fun SplashScreenContent(
+    shouldShowLoginComponents: Boolean,
+    shouldShowLoading: Boolean,
+    error: ErrorModel?,
+    onClickLogin: (email: String, password: String) -> Unit,
+    onCloseErrorDialog: () -> Unit
+) {
+    val logoOffset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
+    val positionToAnimate = -LocalDensity.current.run { 221.dp.toPx() }
+
+    LaunchedEffect(key1 = shouldShowLoginComponents) {
+        if (shouldShowLoginComponents) {
             launch {
                 logoOffset.animateTo(
                     Offset(logoOffset.value.x, positionToAnimate),
@@ -85,11 +132,12 @@ fun SplashScreen(
             }
         }
     }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        BackgroundImage(isBlurred = showLoginComponents)
+        BackgroundImage(isBlurred = shouldShowLoginComponents)
         LogoImage(
             modifier = Modifier
                 .size(201.0.dp, 48.0.dp)
@@ -100,18 +148,17 @@ fun SplashScreen(
                     )
                 }
         )
-        AnimatedVisibility(visible = showLoginComponents, enter = fadeIn()) { LoginComponents() }
+        AnimatedVisibility(visible = shouldShowLoginComponents, enter = fadeIn()) { LoginComponents(onClickLogin) }
         if (shouldShowLoading) Loading()
-        errorState?.let { error ->
+        error?.let { error ->
             ErrorAlertDialog(
                 errorModel = error,
                 title = stringResource(id = R.string.oops),
                 buttonText = stringResource(id = android.R.string.ok),
-                onClickButton = { viewModel.resetError() }
+                onClickButton = onCloseErrorDialog
             )
         }
     }
-    viewModel.startTimerToNavigateToLogin(splashTime = splashTime)
 }
 
 @Composable
@@ -139,7 +186,7 @@ fun LogoImage(modifier: Modifier) {
 }
 
 @Composable
-fun LoginComponents(viewModel: SplashViewModel = hiltViewModel()) {
+fun LoginComponents(onClickLogin: (email: String, password: String) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
         var enableLoginButton by remember { mutableStateOf(false) }
         var email by remember { mutableStateOf("") }
@@ -159,9 +206,7 @@ fun LoginComponents(viewModel: SplashViewModel = hiltViewModel()) {
                 enableLoginButton = email.isNotEmpty() && password.isNotEmpty()
             }
         )
-        LoginButton(loginButtonState = enableLoginButton) {
-            viewModel.login(email = email, password = password)
-        }
+        LoginButton(loginButtonState = enableLoginButton) { onClickLogin(email, password) }
     }
 }
 
@@ -265,8 +310,15 @@ private fun Modifier.loginTextFieldModifier() = this
     .padding(horizontal = 24.dp)
     .height(56.dp)
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun SplashPreview() {
-    SplashScreen(EmptyDestinationsNavigator)
+fun SplashPreview(
+    @PreviewParameter(SplashUiStatePreviewParameterProvider::class) splashUiState: SplashUiState
+) {
+    SplashScreenContent(
+        shouldShowLoginComponents = splashUiState.shouldNavigateToLogin,
+        shouldShowLoading = splashUiState.shouldShowLoading,
+        error = splashUiState.error,
+        onClickLogin = { _, _ -> }
+    ) {}
 }

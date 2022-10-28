@@ -133,8 +133,8 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .performTextInput(VALID_PASSWORD)
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
-            waitUntil { splashViewModel.isLoginSuccess.value }
-            assertTrue(splashViewModel.isLoginSuccess.value)
+            waitUntil { splashViewModel.splashUiState.value.isLoginSuccess }
+            assertTrue(splashViewModel.splashUiState.value.isLoginSuccess)
         }
     }
 
