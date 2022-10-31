@@ -41,7 +41,7 @@ fun SurveyTextAreaQuestionScreen(
         shape = RoundedCornerShape(10.dp),
         placeholder = {
             SurveyText(
-                text = answers.first().text,
+                text = answers.firstOrNull()?.text.orEmpty(),
                 fontSize = 17.sp,
                 color = White20
             )
