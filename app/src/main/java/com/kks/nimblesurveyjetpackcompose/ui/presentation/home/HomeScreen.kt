@@ -18,9 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberSwipeableState
@@ -59,6 +58,8 @@ import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.HomeUiState
+import com.kks.nimblesurveyjetpackcompose.model.HomeUiStatePreviewParameterProvider
 import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DayNightPreviews
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
@@ -69,8 +70,6 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.White20
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White70
 import com.kks.nimblesurveyjetpackcompose.util.DateUtil
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
-import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeUiState
-import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeUiStatePreviewParameterProvider
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -330,34 +329,26 @@ fun BottomView(
                         width = Dimension.fillToConstraints
                     }
             )
-            SurveyRoundedButton(
-                modifier = Modifier.constrainAs(detailBtn) {
-                    end.linkTo(parent.end, 20.dp)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                },
-                onClick = onClickSurveyDetail
-            )
+            FloatingActionButton(
+                onClick = onClickSurveyDetail,
+                backgroundColor = Color.White,
+                modifier = Modifier
+                    .constrainAs(detailBtn) {
+                        end.linkTo(parent.end, 20.dp)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .clip(CircleShape)
+                    .size(56.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
+                    contentDescription = stringResource(id = R.string.home_survey_detail_button)
+                )
+            }
             Spacer(modifier = Modifier.width(20.dp))
         }
     }
-}
-
-@Composable
-fun SurveyRoundedButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .clip(CircleShape)
-            .size(56.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
-            contentDescription = stringResource(id = R.string.home_survey_detail_button)
-        )
-    }
-    Spacer(modifier = Modifier.width(20.dp))
 }
 
 @Composable

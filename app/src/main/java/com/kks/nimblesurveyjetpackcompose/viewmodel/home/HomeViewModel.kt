@@ -1,14 +1,11 @@
 package com.kks.nimblesurveyjetpackcompose.viewmodel.home
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
-import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
+import com.kks.nimblesurveyjetpackcompose.model.HomeUiState
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
-import com.kks.nimblesurveyjetpackcompose.model.Survey
 import com.kks.nimblesurveyjetpackcompose.repo.home.HomeRepo
-import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,35 +18,7 @@ import javax.inject.Inject
 
 const val DEFAULT_PAGE_SIZE = 5
 const val DEFAULT_PAGES = 1
-private const val START_SURVEY_NUMBER = 0
-
-data class HomeUiState(
-    val surveyList: List<Survey> = emptyList(),
-    val userAvatar: String? = null,
-    val error: ErrorModel? = null,
-    val isRefreshing: Boolean = false,
-    val selectedSurveyNumber: Int = START_SURVEY_NUMBER
-)
-
-class HomeUiStatePreviewParameterProvider : PreviewParameterProvider<HomeUiState> {
-    override val values = sequenceOf(
-        HomeUiState(
-            surveyList = listOf(
-                Survey("", "", "Title1", "Description1"),
-                Survey("", "", "Title2", "Description2"),
-            )
-        ),
-        HomeUiState(
-            surveyList = listOf(
-                Survey("", "", "Title1", "Description1"),
-                Survey("", "", "Title2", "Description2"),
-            ),
-            error = ErrorModel(ErrorType.INFO, "Error")
-        ),
-        HomeUiState(error = ErrorModel(ErrorType.INFO, "Error")),
-        HomeUiState(isRefreshing = true)
-    )
-}
+const val START_SURVEY_NUMBER = 0
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -59,8 +28,8 @@ class HomeViewModel @Inject constructor(
 
     private var _pageCount = DEFAULT_PAGES
     private var _records = DEFAULT_PAGES
-    private val _homeUiState = MutableStateFlow(HomeUiState())
 
+    private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState: StateFlow<HomeUiState>
         get() = _homeUiState.asStateFlow()
 
