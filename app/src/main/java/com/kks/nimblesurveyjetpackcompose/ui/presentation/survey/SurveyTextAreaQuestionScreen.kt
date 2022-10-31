@@ -34,7 +34,7 @@ fun SurveyTextAreaQuestionScreen(
     SurveyTextField(
         value = answer,
         onValueChange = { answer = it },
-        placeholderText = answers.first().text,
+        placeholderText = answers.firstOrNull()?.text.orEmpty(),
         backgroundColor = if (answer.isNotEmpty()) White40 else White30,
         modifier = Modifier
             .fillMaxWidth()
