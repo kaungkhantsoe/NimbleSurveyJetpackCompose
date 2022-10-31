@@ -25,7 +25,8 @@ enum class QuestionDisplayType(val typeValue: String, val isIdOnlyAnswer: Boolea
     THUMBS("thumbs", true),
     STARS("star", true),
     NPS("nps", true),
-    CHOICE("choice", true)
+    CHOICE("choice", true),
+    TEXTAREA("textarea", false)
 }
 
 fun List<SurveyQuestion>.sortedByDisplayOrder(): List<SurveyQuestion> = this.sortedBy { it.displayOrder }
@@ -48,5 +49,6 @@ fun String.getQuestionDisplayType() =
         QuestionDisplayType.THUMBS.typeValue -> QuestionDisplayType.THUMBS
         QuestionDisplayType.NPS.typeValue -> QuestionDisplayType.NPS
         QuestionDisplayType.CHOICE.typeValue -> QuestionDisplayType.CHOICE
+        QuestionDisplayType.TEXTAREA.typeValue -> QuestionDisplayType.TEXTAREA
         else -> QuestionDisplayType.NONE
     }

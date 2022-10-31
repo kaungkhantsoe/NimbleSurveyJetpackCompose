@@ -13,7 +13,8 @@ import com.kks.nimblesurveyjetpackcompose.model.response.SurveyQuestionsResponse
 val surveyAnswer = SurveyAnswer(
     id = "0",
     text = "text",
-    displayOrder = 0
+    displayOrder = 0,
+    answer = "answer"
 )
 
 val surveyQuestion = SurveyQuestion(
