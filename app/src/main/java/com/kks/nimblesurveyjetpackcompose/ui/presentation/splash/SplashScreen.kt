@@ -62,6 +62,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
+import com.kks.nimblesurveyjetpackcompose.model.SplashUiState
+import com.kks.nimblesurveyjetpackcompose.model.SplashUiStatePreviewParameterProvider
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.Loading
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.HomeScreenDestination
@@ -69,8 +71,6 @@ import com.kks.nimblesurveyjetpackcompose.ui.theme.Concord
 import com.kks.nimblesurveyjetpackcompose.ui.theme.CornerRadius
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White18
 import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
-import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashUiState
-import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashUiStatePreviewParameterProvider
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavHostParam

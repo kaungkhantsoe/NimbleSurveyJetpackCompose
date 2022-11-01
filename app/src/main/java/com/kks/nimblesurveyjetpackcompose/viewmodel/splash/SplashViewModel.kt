@@ -1,15 +1,13 @@
 package com.kks.nimblesurveyjetpackcompose.viewmodel.splash
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
-import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
+import com.kks.nimblesurveyjetpackcompose.model.SplashUiState
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.util.PREF_REFRESH_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
-import com.kks.nimblesurveyjetpackcompose.util.extensions.ErrorType
 import com.kks.nimblesurveyjetpackcompose.util.extensions.mapError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,22 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class SplashUiState(
-    val shouldShowLoading: Boolean = false,
-    val shouldNavigateToLogin: Boolean = false,
-    val isLoginSuccess: Boolean = false,
-    val error: ErrorModel? = null
-)
-
-class SplashUiStatePreviewParameterProvider : PreviewParameterProvider<SplashUiState> {
-    override val values: Sequence<SplashUiState> = sequenceOf(
-        SplashUiState(shouldShowLoading = true),
-        SplashUiState(shouldNavigateToLogin = true),
-        SplashUiState(isLoginSuccess = true),
-        SplashUiState(error = ErrorModel(ErrorType.INFO, errorMessage = "Error"))
-    )
-}
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
