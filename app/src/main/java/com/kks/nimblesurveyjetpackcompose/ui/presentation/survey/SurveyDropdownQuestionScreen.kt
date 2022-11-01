@@ -40,6 +40,7 @@ private const val INVALID_INDEX = -1
 
 @Composable
 fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit) {
+    if (answers.isEmpty()) return
     val answerIndex = answers.indexOfFirst { it.selected }
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(if (answerIndex == INVALID_INDEX) 0 else answerIndex) }
