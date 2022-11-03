@@ -20,8 +20,8 @@ android {
         applicationId = "com.kks.nimblesurveyjetpackcompose"
         minSdk = 21
         targetSdk = 32
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 6
+        versionName = "0.6.0"
 
         testInstrumentationRunner = "com.kks.nimblesurveyjetpackcompose.di.CustomTestRunner"
         vectorDrawables {
@@ -115,8 +115,8 @@ android {
     }
     kotlinOptions.jvmTarget = "1.8"
 
-    lintOptions {
-        isAbortOnError = false
+    lint {
+        abortOnError = false
     }
 
     configurations {
