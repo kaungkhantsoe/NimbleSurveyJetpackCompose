@@ -3,8 +3,8 @@ package com.kks.nimblesurveyjetpackcompose.viewmodel.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kks.nimblesurveyjetpackcompose.di.IoDispatcher
-import com.kks.nimblesurveyjetpackcompose.model.ErrorModel
 import com.kks.nimblesurveyjetpackcompose.model.ResourceState
+import com.kks.nimblesurveyjetpackcompose.model.SplashUiState
 import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.util.PREF_REFRESH_TOKEN
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
@@ -15,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,52 +25,39 @@ class SplashViewModel @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val preferenceManager: PreferenceManager,
 ) : ViewModel() {
-    private val _shouldShowLoading = MutableStateFlow(false)
-    private val _shouldNavigateToLogin = MutableStateFlow(false)
-    private val _isLoginSuccess = MutableStateFlow(false)
-    private var _error = MutableStateFlow<ErrorModel?>(null)
 
-    val error: StateFlow<ErrorModel?>
-        get() = _error.asStateFlow()
+    private val _splashUiState = MutableStateFlow(SplashUiState())
 
-    val shouldNavigateToLogin: StateFlow<Boolean>
-        get() = _shouldNavigateToLogin.asStateFlow()
-
-    val shouldShowLoading: StateFlow<Boolean>
-        get() = _shouldShowLoading.asStateFlow()
-
-    val isLoginSuccess: StateFlow<Boolean>
-        get() = _isLoginSuccess.asStateFlow()
+    val splashUiState: StateFlow<SplashUiState>
+        get() = _splashUiState.asStateFlow()
 
     fun startTimerToNavigateToLogin(splashTime: Long) {
         viewModelScope.launch(ioDispatcher) {
             delay(splashTime)
-            if (preferenceManager.getStringData(PREF_REFRESH_TOKEN).isNullOrEmpty()) {
-                _shouldNavigateToLogin.value = true
-            } else {
-                _isLoginSuccess.value = true
+            val shouldNavigateToLogin = preferenceManager.getStringData(PREF_REFRESH_TOKEN).isNullOrEmpty()
+            _splashUiState.update {
+                it.copy(
+                    shouldNavigateToLogin = shouldNavigateToLogin,
+                    isLoginSuccess = !shouldNavigateToLogin
+                )
             }
         }
     }
 
     fun login(email: String, password: String) {
         viewModelScope.launch(ioDispatcher) {
-            loginRepo.loginWithEmailAndPassword(email = email, password = password).collect {
-                when (it) {
+            loginRepo.loginWithEmailAndPassword(email = email, password = password).collect { loginState ->
+                when (loginState) {
                     is ResourceState.Loading -> {
-                        _shouldShowLoading.value = true
+                        _splashUiState.update { it.copy(shouldShowLoading = true) }
                         resetError()
                     }
                     is ResourceState.Success -> {
-                        _shouldShowLoading.value = false
-                        _isLoginSuccess.value = true
+                        _splashUiState.update { it.copy(isLoginSuccess = true, shouldShowLoading = false) }
                         resetError()
                     }
                     else -> {
-                        _shouldShowLoading.value = false
-                        it.mapError()?.let { errorModel ->
-                            _error.value = errorModel
-                        }
+                        _splashUiState.update { it.copy(shouldShowLoading = false, error = loginState.mapError()) }
                     }
                 }
             }
@@ -77,6 +65,6 @@ class SplashViewModel @Inject constructor(
     }
 
     fun resetError() {
-        _error.value = null
+        _splashUiState.update { it.copy(error = null) }
     }
 }

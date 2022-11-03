@@ -15,7 +15,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
 import kotlinx.coroutines.Dispatchers
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -133,8 +132,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .performTextInput(VALID_PASSWORD)
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
-            waitUntil { splashViewModel.isLoginSuccess.value }
-            assertTrue(splashViewModel.isLoginSuccess.value)
+            onNodeWithText(ERROR_MESSAGE).assertDoesNotExist()
         }
     }
 
