@@ -77,7 +77,7 @@ class HomeViewModel @Inject constructor(
     private fun getSurveyListFromDb() {
         viewModelScope.launch(ioDispatcher) {
             homeRepo.getSurveyListFromDb().collect { surveyList ->
-                _homeUiState.update { it.copy(surveyList = surveyList, isRefreshing = false) }
+                _homeUiState.update { it.copy(surveyList = surveyList, isRefreshing = surveyList.isEmpty()) }
             }
         }
     }
