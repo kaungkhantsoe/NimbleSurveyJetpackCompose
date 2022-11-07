@@ -62,7 +62,7 @@ class HomeViewModelTest : BaseViewModelTest() {
         } returns flowOf(ResourceState.Error(errorMessage))
 
         advanceUntilIdle()
-        assertEquals(viewModel.error.value?.errorMessage, errorMessage)
+        assertEquals(viewModel.homeUiState.value.error?.errorMessage, errorMessage)
     }
 
     @Test
@@ -76,7 +76,7 @@ class HomeViewModelTest : BaseViewModelTest() {
         } returns flowOf(ResourceState.Success(Meta()))
 
         advanceUntilIdle()
-        assertEquals(viewModel.surveyList.value, emptyList<Survey>())
+        assertEquals(viewModel.homeUiState.value.surveyList, emptyList<Survey>())
     }
 
     @Test

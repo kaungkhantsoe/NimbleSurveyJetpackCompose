@@ -6,11 +6,31 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.Text
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.material.swipeable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +45,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +58,10 @@ import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.kks.nimblesurveyjetpackcompose.R
+import com.kks.nimblesurveyjetpackcompose.model.HomeUiState
+import com.kks.nimblesurveyjetpackcompose.model.HomeUiStatePreviewParameterProvider
 import com.kks.nimblesurveyjetpackcompose.model.Survey
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DayNightPreviews
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.DotsIndicator
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.ErrorAlertDialog
 import com.kks.nimblesurveyjetpackcompose.ui.presentation.destinations.SurveyDetailScreenDestination
@@ -50,7 +73,6 @@ import com.kks.nimblesurveyjetpackcompose.util.TWEEN_ANIM_TIME
 import com.kks.nimblesurveyjetpackcompose.viewmodel.home.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 private const val FRACTION = 0.3f
 private const val IDLE = 0
@@ -61,108 +83,127 @@ private const val LEFT_STATE = "L"
 private const val RIGHT_STATE = "R"
 private const val MID_STATE = "M"
 
-@Suppress("ComplexCondition", "LongMethod", "ComplexMethod")
-@OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
 fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
+
+    val homeUiState by viewModel.homeUiState.collectAsState()
     val activity = LocalContext.current as? Activity
 
-    val surveyList by viewModel.surveyList.collectAsState()
-    val error by viewModel.error.collectAsState()
-    val selectedSurveyNumber by viewModel.selectedSurveyNumber.collectAsState()
+    HomeScreenContent(
+        homeUiState = homeUiState,
+        onRefresh = { viewModel.clearCacheAndFetch() },
+        onSwipe = {
+            viewModel.setSelectedSurveyNumber(it)
+            if (homeUiState.selectedSurveyNumber == (homeUiState.surveyList.size) - 2) viewModel.getNextPage()
+        },
+        onResetError = { viewModel.resetError() },
+        onClickSurveyDetail = {
+            navigator.navigate(
+                SurveyDetailScreenDestination(survey = homeUiState.surveyList[homeUiState.selectedSurveyNumber])
+            )
+        }
+    )
+    BackHandler {
+        activity?.finish()
+    }
+}
+
+@Suppress("ComplexCondition", "ComplexMethod")
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun HomeScreenContent(
+    homeUiState: HomeUiState,
+    onClickSurveyDetail: () -> Unit,
+    onRefresh: () -> Unit,
+    onSwipe: (page: Int) -> Unit,
+    onResetError: () -> Unit,
+) {
     val swipeableState = rememberSwipeableState(initialValue = MID_STATE)
     val endAnchor = LocalDensity.current.run { LocalConfiguration.current.screenWidthDp.toDp().toPx() }
     // Maps anchor points (in px) to states
     val anchors = mapOf(START_ANCHOR to LEFT_STATE, endAnchor / 2 to MID_STATE, endAnchor to RIGHT_STATE)
     var threshold by remember { mutableStateOf(IDLE) }
-    val isRefreshing by viewModel.isRefreshing.collectAsState()
-    val userAvatar by viewModel.userAvatar.collectAsState()
 
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = {
-            viewModel.clearCacheAndFetch()
-        },
-        modifier = Modifier.fillMaxSize()
-    ) {
-        LazyColumn {
-            if (isRefreshing && surveyList.isEmpty()) {
-                item { HomeScreenShimmerLoading(modifier = Modifier.fillParentMaxSize()) }
-            }
-            if (surveyList.isNotEmpty()) {
-                item {
-                    LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
-                        val currentSwipeState = swipeableState.offset.value
-                        when {
-                            currentSwipeState < endAnchor / 2 && threshold == IDLE -> {
-                                // Swipe to left
-                                threshold = LEFT_SWIPE
-                            }
-                            currentSwipeState > endAnchor / 2 && threshold == IDLE -> {
-                                // Swipe to right
-                                threshold = RIGHT_SWIPE
-                            }
-                            currentSwipeState == endAnchor / 2 -> {
-                                if (
-                                    (selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
-                                    (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
-                                ) {
-                                    viewModel.setSelectedSurveyNumber(selectedSurveyNumber + threshold)
-                                    if (selectedSurveyNumber == (surveyList.size) - 2) viewModel.getNextPage()
-                                }
-                                threshold = IDLE
-                            }
-                        }
-                        swipeableState.snapTo(targetValue = MID_STATE)
-                    })
-                    SurveyContent(
-                        modifier = Modifier
-                            .fillParentMaxSize()
-                            .swipeable(
-                                state = swipeableState,
-                                anchors = anchors,
-                                thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
-                                orientation = Orientation.Horizontal
-                            ),
-                        numberOfPage = surveyList.size,
-                        selectedSurveyNumber = selectedSurveyNumber,
-                        survey = surveyList[selectedSurveyNumber],
-                        userAvatar = userAvatar,
-                        navigator = navigator
-                    )
+    homeUiState.apply {
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = onRefresh,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            LazyColumn(Modifier.fillMaxSize()) {
+                if (isRefreshing && surveyList.isEmpty()) {
+                    item { HomeScreenShimmerLoading(modifier = Modifier.fillParentMaxSize()) }
                 }
-            }
-            error?.let { error ->
-                item {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ErrorAlertDialog(
-                            errorModel = error,
-                            title = stringResource(id = R.string.oops),
-                            buttonText = stringResource(id = android.R.string.ok),
-                            onClickButton = { viewModel.resetError() }
+                if (surveyList.isNotEmpty()) {
+                    item {
+                        LaunchedEffect(keys = arrayOf(swipeableState.offset.value), block = {
+                            val currentSwipeState = swipeableState.offset.value
+                            when {
+                                currentSwipeState < endAnchor / 2 && threshold == IDLE -> {
+                                    // Swipe to left
+                                    threshold = LEFT_SWIPE
+                                }
+                                currentSwipeState > endAnchor / 2 && threshold == IDLE -> {
+                                    // Swipe to right
+                                    threshold = RIGHT_SWIPE
+                                }
+                                currentSwipeState == endAnchor / 2 -> {
+                                    if ((selectedSurveyNumber < surveyList.size - 1 && threshold == LEFT_SWIPE) ||
+                                        (selectedSurveyNumber != 0 && threshold == RIGHT_SWIPE)
+                                    ) {
+                                        onSwipe(selectedSurveyNumber + threshold)
+                                    }
+                                    threshold = IDLE
+                                }
+                            }
+                            swipeableState.snapTo(targetValue = MID_STATE)
+                        })
+                        SurveyContent(
+                            survey = homeUiState.surveyList[selectedSurveyNumber],
+                            userAvatar = homeUiState.userAvatar.orEmpty(),
+                            numberOfPage = homeUiState.surveyList.size,
+                            selectedSurveyNumber = selectedSurveyNumber,
+                            modifier = Modifier
+                                .fillParentMaxSize()
+                                .swipeable(
+                                    state = swipeableState,
+                                    anchors = anchors,
+                                    thresholds = { _, _ -> FractionalThreshold(fraction = FRACTION) },
+                                    orientation = Orientation.Horizontal
+                                ),
+                            onClickSurveyDetail = onClickSurveyDetail
                         )
+                    }
+                }
+                error?.let { error ->
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            ErrorAlertDialog(
+                                errorModel = error,
+                                title = stringResource(id = R.string.oops),
+                                buttonText = stringResource(id = android.R.string.ok),
+                                onClickButton = onResetError
+                            )
+                        }
                     }
                 }
             }
         }
-    }
-    BackHandler {
-        activity?.finish()
     }
 }
 
 @Composable
 fun SurveyContent(
     survey: Survey,
+    userAvatar: String,
     numberOfPage: Int,
     selectedSurveyNumber: Int,
-    navigator: DestinationsNavigator,
-    modifier: Modifier,
-    userAvatar: String?
+    onClickSurveyDetail: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val surveyContentDescription = stringResource(id = R.string.home_survey_content)
 
@@ -182,12 +223,12 @@ fun SurveyContent(
             },
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            SurveyText(
+            SurveyCrossfadeText(
                 text = DateUtil.getBeautifiedDate(),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
-            SurveyText(
+            SurveyCrossfadeText(
                 text = stringResource(id = R.string.home_today),
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold
@@ -210,7 +251,7 @@ fun SurveyContent(
             numberOfPage = numberOfPage,
             currentPage = selectedSurveyNumber,
             survey = survey,
-            navigator = navigator
+            onClickSurveyDetail = onClickSurveyDetail
         )
     }
 }
@@ -253,7 +294,7 @@ fun BottomView(
     survey: Survey,
     numberOfPage: Int,
     currentPage: Int,
-    navigator: DestinationsNavigator,
+    onClickSurveyDetail: () -> Unit,
     modifier: Modifier
 ) {
     Column(modifier = modifier) {
@@ -266,7 +307,7 @@ fun BottomView(
             space = 5.dp
         )
         Spacer(modifier = Modifier.height(26.dp))
-        SurveyText(
+        SurveyCrossfadeText(
             text = survey.title,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
@@ -274,7 +315,7 @@ fun BottomView(
         )
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (description, detailBtn) = createRefs()
-            SurveyText(
+            SurveyCrossfadeText(
                 text = survey.description,
                 fontSize = 17.sp,
                 color = White70,
@@ -288,17 +329,17 @@ fun BottomView(
                         width = Dimension.fillToConstraints
                     }
             )
-            Button(
-                onClick = { navigator.navigate(SurveyDetailScreenDestination(survey = survey)) },
+            FloatingActionButton(
+                onClick = onClickSurveyDetail,
+                backgroundColor = Color.White,
                 modifier = Modifier
-                    .clip(CircleShape)
-                    .size(56.dp)
                     .constrainAs(detailBtn) {
                         end.linkTo(parent.end, 20.dp)
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
-                    },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+                    }
+                    .clip(CircleShape)
+                    .size(56.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
@@ -311,7 +352,7 @@ fun BottomView(
 }
 
 @Composable
-fun SurveyText(
+fun SurveyCrossfadeText(
     text: String,
     fontSize: TextUnit,
     modifier: Modifier = Modifier,
@@ -335,8 +376,10 @@ fun SurveyText(
     }
 }
 
-@Preview(showBackground = true)
+@DayNightPreviews
 @Composable
-fun HomeContentPreview() {
-    HomeScreen(EmptyDestinationsNavigator)
+fun HomeContentPreview(
+    @PreviewParameter(HomeUiStatePreviewParameterProvider::class) homeUiState: HomeUiState
+) {
+    HomeScreenContent(homeUiState = homeUiState, {}, {}, {}, {})
 }

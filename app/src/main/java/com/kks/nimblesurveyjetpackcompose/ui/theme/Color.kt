@@ -1,4 +1,5 @@
 @file:Suppress("MagicNumber")
+
 package com.kks.nimblesurveyjetpackcompose.ui.theme
 
 import androidx.compose.ui.graphics.Color
@@ -12,6 +13,8 @@ val Concord = Color(0xFF7E7C79)
 val CuriousBlue = Color(0xFF3D85C6)
 val White70 = Color(0xB3FFFFFF)
 val White20 = Color(0x33FFFFFF)
+val White30 = Color(0x4DFFFFFF)
+val White40 = Color(0x66FFFFFF)
 val White50 = Color(0x80FFFFFF)
 val BlackRussian = Color(0xff15151A)
 val Black60 = Color(0x99000000)

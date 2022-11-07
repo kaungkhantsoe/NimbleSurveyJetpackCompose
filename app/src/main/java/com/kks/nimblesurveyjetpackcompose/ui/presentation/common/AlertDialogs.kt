@@ -29,14 +29,20 @@ fun ErrorAlertDialog(
 ) {
     AlertDialog(
         onDismissRequest = { onClickButton() },
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                color = Color.Black
+            )
+        },
         text = {
             Text(
                 text = if (errorModel.errorType == ErrorType.NETWORK) {
                     stringResource(id = R.string.network_error)
                 } else {
                     errorModel.errorMessage.orEmpty()
-                }
+                },
+                color = Color.Black
             )
         },
         backgroundColor = Color.White,
@@ -66,8 +72,18 @@ fun ConfirmAlertDialog(
 ) {
     AlertDialog(
         onDismissRequest = { onClickPositiveButton() },
-        title = { Text(text = title) },
-        text = { Text(text = message) },
+        title = {
+            Text(
+                text = title,
+                color = Color.Black
+            )
+        },
+        text = {
+            Text(
+                text = message,
+                color = Color.Black
+            )
+        },
         backgroundColor = Color.White,
         confirmButton = {
             Row(

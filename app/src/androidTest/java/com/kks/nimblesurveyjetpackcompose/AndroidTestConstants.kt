@@ -22,7 +22,8 @@ val surveyQuestion = SurveyQuestion(
         SurveyAnswer(
             id = "0",
             text = "text",
-            displayOrder = 0
+            displayOrder = 0,
+            answer = "answer"
         )
     )
 )

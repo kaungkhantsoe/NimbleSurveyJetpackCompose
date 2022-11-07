@@ -8,13 +8,13 @@ import com.kks.nimblesurveyjetpackcompose.repo.login.LoginRepo
 import com.kks.nimblesurveyjetpackcompose.ui.theme.NimbleSurveyJetpackComposeTheme
 import com.kks.nimblesurveyjetpackcompose.util.PreferenceManager
 import com.kks.nimblesurveyjetpackcompose.viewmodel.splash.SplashViewModel
+import com.kks.nimblesurveyjetpackcompose.waitUntilExists
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
 import kotlinx.coroutines.Dispatchers
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -132,8 +132,7 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 .performTextInput(VALID_PASSWORD)
             onNodeWithContentDescription(getString(R.string.login_log_in_button))
                 .performClick()
-            waitUntil { splashViewModel.isLoginSuccess.value }
-            assertTrue(splashViewModel.isLoginSuccess.value)
+            onNodeWithText(ERROR_MESSAGE).assertDoesNotExist()
         }
     }
 
@@ -168,5 +167,6 @@ class SplashScreenTest : BaseAndroidComposeTest() {
                 )
             }
         }
+        composeTestRule.waitUntilExists(hasText(getString(R.string.login_log_in_button)))
     }
 }

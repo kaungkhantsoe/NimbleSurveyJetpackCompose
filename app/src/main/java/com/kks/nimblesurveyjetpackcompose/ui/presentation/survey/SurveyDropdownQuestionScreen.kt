@@ -26,18 +26,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
+import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black60
 
 private const val INVALID_INDEX = -1
 
 @Composable
 fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (answers: List<SurveyAnswer>) -> Unit) {
+    if (answers.isEmpty()) return
     val answerIndex = answers.indexOfFirst { it.selected }
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(if (answerIndex == INVALID_INDEX) 0 else answerIndex) }
@@ -58,7 +61,7 @@ fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (a
                 .onGloballyPositioned { rowSize = it.size.toSize() },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SurveyBoldText(
+            SurveyText(
                 text = answers[selectedIndex].text,
                 fontSize = 20.sp,
                 maxLines = 1,
@@ -66,7 +69,8 @@ fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (a
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 12.dp),
+                fontWeight = FontWeight.Bold
             )
             IconButton(onClick = { expanded = true }) {
                 Icon(
@@ -97,10 +101,15 @@ fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (a
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SurveyDropDownQuestionPreview() {
-    SurveyDropDownQuestionScreen(listOf()) {
+    SurveyDropDownQuestionScreen(
+        listOf(
+            SurveyAnswer("", "Text1", 0, true, "answer1"),
+            SurveyAnswer("", "Text2", 1, true, "answer2")
+        )
+    ) {
         // Do nothing
     }
 }

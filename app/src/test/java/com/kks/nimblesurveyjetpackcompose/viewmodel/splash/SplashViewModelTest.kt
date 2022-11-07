@@ -35,7 +35,7 @@ class SplashViewModelTest : BaseViewModelTest() {
 
     @Test
     fun `When splash screen is displayed, shouldNavigateToLogin value is false at first`() {
-        assertEquals(false, viewModel.shouldNavigateToLogin.value)
+        assertEquals(false, viewModel.splashUiState.value.shouldNavigateToLogin)
     }
 
     @Test
@@ -48,7 +48,7 @@ class SplashViewModelTest : BaseViewModelTest() {
             var actual = false
             launch {
                 delay(twoSeconds)
-                actual = viewModel.shouldNavigateToLogin.value
+                actual = viewModel.splashUiState.value.shouldNavigateToLogin
             }
             advanceUntilIdle()
 
@@ -65,7 +65,7 @@ class SplashViewModelTest : BaseViewModelTest() {
         viewModel.login("example@gmail.com", "invalid")
         advanceUntilIdle()
 
-        assertEquals(errorMessage, viewModel.error.value?.errorMessage)
+        assertEquals(errorMessage, viewModel.splashUiState.value.error?.errorMessage)
     }
 
     @Test
@@ -77,6 +77,6 @@ class SplashViewModelTest : BaseViewModelTest() {
         viewModel.login("example@gmail.com", "valid")
         advanceUntilIdle()
 
-        assertEquals(true, viewModel.isLoginSuccess.value)
+        assertEquals(true, viewModel.splashUiState.value.isLoginSuccess)
     }
 }
