@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.Black60
 
 private const val INVALID_INDEX = -1
@@ -61,9 +60,10 @@ fun SurveyDropDownQuestionScreen(answers: List<SurveyAnswer>, onChooseAnswer: (a
                 .onGloballyPositioned { rowSize = it.size.toSize() },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SurveyText(
+            Text(
                 text = answers[selectedIndex].text,
                 fontSize = 20.sp,
+                color = Color.White,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
