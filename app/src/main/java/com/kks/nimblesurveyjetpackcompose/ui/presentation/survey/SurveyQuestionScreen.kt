@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +20,6 @@ import com.kks.nimblesurveyjetpackcompose.model.QuestionDisplayType.*
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestion
 import com.kks.nimblesurveyjetpackcompose.model.SurveyQuestionPickType
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val NUMBER_OF_EMOJI_ANSWERS = 5
@@ -46,11 +46,12 @@ fun SurveyQuestionScreen(
             fontSize = 15.sp,
             color = White50
         )
-        SurveyText(
+        Text(
             text = surveyQuestion.title,
             fontSize = 34.sp,
             modifier = Modifier.fillMaxWidth(),
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
         Box(
             modifier = Modifier.fillMaxSize(),

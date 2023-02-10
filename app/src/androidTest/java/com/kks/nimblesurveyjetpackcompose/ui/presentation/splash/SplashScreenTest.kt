@@ -14,7 +14,8 @@ import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -151,11 +152,12 @@ class SplashScreenTest : BaseAndroidComposeTest() {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupSplashComposeRule() {
         every { preferenceManager.getStringData(any()) } returns ""
         splashViewModel = SplashViewModel(
             loginRepo = loginRepo,
-            ioDispatcher = Dispatchers.IO,
+            ioDispatcher = UnconfinedTestDispatcher(),
             preferenceManager = preferenceManager
         )
         composeTestRule.activity.setContent {

@@ -20,8 +20,8 @@ android {
         applicationId = "com.kks.nimblesurveyjetpackcompose"
         minSdk = 21
         targetSdk = 32
-        versionCode = 6
-        versionName = "0.6.0"
+        versionCode = 7
+        versionName = "0.7.0"
 
         testInstrumentationRunner = "com.kks.nimblesurveyjetpackcompose.di.CustomTestRunner"
         vectorDrawables {
