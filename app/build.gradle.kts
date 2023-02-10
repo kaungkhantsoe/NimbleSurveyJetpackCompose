@@ -115,8 +115,8 @@ android {
     }
     kotlinOptions.jvmTarget = "1.8"
 
-    lintOptions {
-        isAbortOnError = false
+    lint {
+        abortOnError = false
     }
 
     configurations {
