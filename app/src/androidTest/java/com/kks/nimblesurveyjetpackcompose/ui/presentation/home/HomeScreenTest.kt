@@ -21,8 +21,9 @@ import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -47,20 +48,20 @@ class HomeScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_home_screen_starts_show_shimmer() {
+        every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Loading)
+        every { homeRepo.getSurveyListFromDb() } returns flowOf(emptyList())
+        setupHomeComposeRule()
         with(composeTestRule) {
-            every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Loading)
-            every { homeRepo.getSurveyListFromDb() } returns flowOf(emptyList())
-            setupHomeComposeRule()
             onNodeWithContentDescription(getString(R.string.home_shimmer)).assertIsDisplayed()
         }
     }
 
     @Test
     fun when_get_survey_list_is_successful_show_first_survey() {
+        every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Meta()))
+        every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
+        setupHomeComposeRule()
         with(composeTestRule) {
-            every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Meta()))
-            every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
-            setupHomeComposeRule()
             onNodeWithText(surveys.first().title).assertIsDisplayed()
             onNodeWithText(surveys.first().description).assertIsDisplayed()
             onAllNodesWithContentDescription(getString(R.string.home_dot)).assertCountEquals(2)
@@ -69,10 +70,10 @@ class HomeScreenTest : BaseAndroidComposeTest() {
 
     @Test
     fun when_swipe_show_next_survey() {
+        every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Meta()))
+        every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
+        setupHomeComposeRule()
         with(composeTestRule) {
-            every { homeRepo.fetchSurveyList(any(), any(), any()) } returns flowOf(ResourceState.Success(Meta()))
-            every { homeRepo.getSurveyListFromDb() } returns flowOf(surveys)
-            setupHomeComposeRule()
             onNodeWithContentDescription(getString(R.string.home_survey_content)).performTouchInput {
                 swipeLeft()
             }
@@ -82,9 +83,10 @@ class HomeScreenTest : BaseAndroidComposeTest() {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setupHomeComposeRule() {
         every { homeRepo.fetchUserDetail() } returns flowOf(ResourceState.Loading)
-        homeViewModel = HomeViewModel(homeRepo = homeRepo, ioDispatcher = Dispatchers.IO)
+        homeViewModel = HomeViewModel(homeRepo = homeRepo, ioDispatcher = UnconfinedTestDispatcher())
         composeTestRule.activity.setContent {
             NimbleSurveyJetpackComposeTheme {
                 HomeScreen(
