@@ -21,8 +21,9 @@ import com.kks.nimblesurveyjetpackcompose.viewmodel.survey.SurveyDetailViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.every
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Rule
 import javax.inject.Inject
 
@@ -37,11 +38,12 @@ class SurveyHomeDetailScreenKtTest : BaseAndroidComposeTest() {
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         hiltRule.inject()
         every { surveyRepo.getSurveyDetails(any()) } returns flowOf(ResourceState.Success(surveyQuestions))
-        surveyDetailViewModel = SurveyDetailViewModel(surveyRepo = surveyRepo, ioDispatcher = Dispatchers.IO)
+        surveyDetailViewModel = SurveyDetailViewModel(surveyRepo = surveyRepo, ioDispatcher = UnconfinedTestDispatcher())
         setupSurveyHomeDetailScreen(surveys.first())
     }
 
