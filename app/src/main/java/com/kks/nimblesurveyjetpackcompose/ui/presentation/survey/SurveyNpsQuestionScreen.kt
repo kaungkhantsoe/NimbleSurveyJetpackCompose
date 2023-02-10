@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.kks.nimblesurveyjetpackcompose.R
 import com.kks.nimblesurveyjetpackcompose.model.SurveyAnswer
-import com.kks.nimblesurveyjetpackcompose.ui.presentation.common.SurveyText
 import com.kks.nimblesurveyjetpackcompose.ui.theme.White50
 
 private const val START_INDEX = 0
@@ -69,7 +69,7 @@ fun SurveyNpsQuestionScreen(
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
                     modifier = Modifier.size(eachItemWidth, 56.dp)
                 ) {
-                    SurveyText(
+                    Text(
                         text = surveyAnswer.text,
                         color = if (index <= selectedIndex) {
                             Color.White
@@ -83,7 +83,7 @@ fun SurveyNpsQuestionScreen(
                 }
             }
         }
-        SurveyText(
+        Text(
             text = stringResource(id = R.string.survey_question_not_at_all_likely),
             fontSize = 17.sp,
             modifier = Modifier.constrainAs(notAtAll) {
@@ -93,14 +93,15 @@ fun SurveyNpsQuestionScreen(
             color = White50,
             fontWeight = FontWeight.Bold
         )
-        SurveyText(
+        Text(
             text = stringResource(id = R.string.survey_question_extremely_likely),
             fontSize = 17.sp,
             modifier = Modifier.constrainAs(extremely) {
                 top.linkTo(nps.bottom)
                 end.linkTo(nps.end)
             },
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
     }
 }
